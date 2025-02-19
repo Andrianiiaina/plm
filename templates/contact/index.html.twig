@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact index{% endblock %}
+
+{% block body %}
+ <div class="container mt-2">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <h1>Contacts</h1>
+            <a href="{{ path('app_contact_new') }}">Ajouter un contact</a>
+
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact_perso</th>
+                    <th>Contact_pro</th>
+                    <th>Organisation</th>
+                    <th>Function</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.id }}</td>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.contactPerso }}</td>
+                    <td>{{ contact.contactPro }}</td>
+                    <td>{{ contact.organisation }}</td>
+                    <td>{{ contact.function }}</td>
+                    <td>
+                        <a href="{{ path('app_contact_show', {'id': contact.id}) }}" class="btn btn-primary">show</a>
+                        <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn btn-primary">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucun contact</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+ </div>
+{% endblock %}

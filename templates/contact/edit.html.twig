@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Contact{% endblock %}
+
+{% block body %}
+   <div class="container">
+        <div class="row">
+            <h1>Modifier le contact</h1>
+            {{ include('contact/_form.html.twig', {'button_label': 'Modifier'}) }}
+        
+        </div>
+   </div>
+{% endblock %}

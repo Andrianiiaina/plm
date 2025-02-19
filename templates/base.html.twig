@@ -13,20 +13,39 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-light bg-light">
-            <div class="container d-flex justify-content-between">
-              <a class="navbar-brand" href="#">
-                SuperNom
-              </a>
-                {% if app.user %}
-                        <a href="{{ path('app_logout') }}" class="nav-link">Logout</a>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="nav-link">Login</a>
-                {% endif %}
-             
-             
-            </div>
-          </nav>
-        {% block body %}{% endblock %}
+      <div class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+              <span class="fs-4">SuperNom</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  Appel d'offre
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  Flux de tresorerie
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ path('app_contact_index') }}" class="nav-link">
+                  Contacts
+                </a>
+              </li>
+            </ul>
+            <hr>
+        </div>
+            {% block body %}{% endblock %}
+    
+    </div>
+          
     </body>
 </html>
