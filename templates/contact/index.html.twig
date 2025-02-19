@@ -13,20 +13,18 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
+                    <th>Nom</th>
                     <th>Email</th>
-                    <th>Contact_perso</th>
-                    <th>Contact_pro</th>
+                    <th>Contact personnel</th>
+                    <th>Contact professionnel</th>
                     <th>Organisation</th>
-                    <th>Function</th>
+                    <th>Poste</th>
                     <th>actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for contact in contacts %}
                 <tr>
-                    <td>{{ contact.id }}</td>
                     <td>{{ contact.name }}</td>
                     <td>{{ contact.email }}</td>
                     <td>{{ contact.contactPerso }}</td>
