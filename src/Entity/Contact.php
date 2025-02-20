@@ -42,6 +42,9 @@ class Contact
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $contacts;
 
+    #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -163,6 +166,18 @@ class Contact
                 $contact->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

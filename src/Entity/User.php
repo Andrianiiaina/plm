@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,6 +37,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Contact $contact = null;
+
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'responsable_id')]
+    private Collection $projects;
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +135,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($contact === null && $this->contact !== null) {
+            $this->contact->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($contact !== null && $contact->getUser() !== $this) {
+            $contact->setUser($this);
+        }
+
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProjects(Project $projects): static
+    {
+        if (!$this->projects->contains($projects)) {
+            $this->projects->add($projects);
+            $projects->setResponsableId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjects(Project $projects): static
+    {
+        if ($this->projects->removeElement($projects)) {
+            // set the owning side to null (unless already changed)
+            if ($projects->getResponsableId() === $this) {
+                $projects->setResponsableId(null);
+            }
+        }
 
         return $this;
     }

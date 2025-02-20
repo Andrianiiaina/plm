@@ -1,0 +1,70 @@
+{{ form_start(form) }}
+    <div class="mb-3 row">
+        <div class="col-md-6">
+            {{ form_label(form.title) }}
+            {{ form_widget(form.title) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_label(form.contract_number) }}{{ form_widget(form.contract_number) }}
+        </div>
+    </div>
+ 
+
+    <div class="mb-3 row">
+        <div class="col-md-6">
+            {{ form_label(form.start_date) }}{{ form_widget(form.start_date) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_label(form.end_date) }} {{ form_widget(form.end_date) }}
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-md-6">
+            {{ form_label(form.min_budget) }} {{ form_widget(form.min_budget) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_label(form.max_budget) }}{{ form_widget(form.max_budget) }}
+        </div>
+    </div>
+    <div class="mb-3 row">
+        {{ form_label(form.description) }}
+            {{ form_widget(form.description) }}
+    </div>
+
+    
+    <div class="mb-3 row">
+        {{ form_label(form.location) }}
+        <div class="col-sm-9">
+            {{ form_widget(form.location) }}
+        </div>
+    </div>
+    
+    <div class="mb-3 row">
+        {{ form_label(form.url) }}
+        <div class="col-sm-9">
+            {{ form_widget(form.url) }}
+        </div>
+    </div>
+    <div class="mb-3 row">
+        {{ form_label(form.project_type) }}
+        <div class="col-sm-9">
+            {{ form_widget(form.project_type) }}
+        </div>
+    </div>
+    <div class="mb-3 row">
+        {{ form_label(form.responsable_id) }}
+        <div class="col-sm-9">
+            {{ form_widget(form.responsable_id) }}
+        </div>
+    </div>
+    <div class="mb-3 row">
+        {{ form_label(form.status) }}
+        <div class="col-sm-9">
+            {{ form_widget(form.status) }}
+        </div>
+    </div>
+    {{ form_widget(form) }}
+    <div class="container d-flex justify-content-end">
+        <button class="btn btn-primary ">{{ button_label|default('Enregistrer') }}</button>
+    </div>
+{{ form_end(form) }}
