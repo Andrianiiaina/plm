@@ -3,29 +3,25 @@
 {% block title %}Contact index{% endblock %}
 
 {% block body %}
- <div class="container mt-2">
-    <div class="row">
-       <div class="container">
-       <p class="h2"> Groupe actuel: </p>
-        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Créer un groupe </button>
-        {% for group in groups %}
-                <a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-outline-primary">{{ group.Name }}</a>
-        {% else %}
-                <span>no group found</span>
-        {% endfor %}
-       </div>
+ <div class="container-fluid mt-2">
+    <div class="row pb-5 m-2">
+		<div class="container my-3">
+			<a href="{{ path('app_contact_new') }}" class="btn btn-primary m-0 mb-3">Ajouter des Contacts</a>
+			{{ include('contact/_list_contact.html.twig') }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="mx-3">
+			<button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#addGroupModal">Créer un groupe </button><br/>
+			{% for group in groups %}
+				<a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-outline-primary">{{ group.Name }}</a>
+			{% else %}
+				<span>no group found</span>
+			{% endfor %}
+		   </div>
 
-
-        <div class="clearfix mt-5">
-            <p class="float-start h2">Listes des contacts</p>
-            <a href="{{ path('app_contact_new') }}" class="float-end">Ajouter un contact</a>
-
-        </div>
-        {{ include('contact/_list_contact.html.twig') }}
-           
-         
-    </div>
- </div>
+		</div>
+ 	</div>
 
  <div class="modal fade" id="addGroupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
     <div class="modal-dialog">

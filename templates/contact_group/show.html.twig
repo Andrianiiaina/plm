@@ -5,16 +5,15 @@
 {% block body %}
 <div class="container mt-3">
 
-    <h1> Liste des contacts du groupe <b>{{ group.Name }}</b></h1>
+    <p class="h4"> Liste des contacts du groupe <b>{{ group.Name }}</b></p >
          {{ include('contact/_list_contact.html.twig',{contacts:group.contacts}) }}
    
     <div class="container d-flex">
+        <a href="{{ path('app_contact_group_edit', {'id': group.id}) }}" class="btn">Modifier le groupe</a>
         <form method="post" action="{{ path('app_contact_group_delete', {'id': group.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ group.id) }}">
-            <button class="btn">Supprimer</button>
+            <button class="btn">Supprimer le groupe</button>
         </form>
-        
-        <a href="{{ path('app_contact_group_edit', {'id': group.id}) }}" class="btn">Modifier le groupe</a>
     </div>
 
 </div>

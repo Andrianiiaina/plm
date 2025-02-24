@@ -20,8 +20,8 @@
             <td>{{ contact.organisation }}</td>
             <td>{{ contact.function }}</td>
             <td>
-                <a href="{{ path('app_contact_show', {'id': contact.id}) }}" class="btn btn-primary">Voir</a>
-                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn btn-primary">edit</a>
+                <a href="{{ path('app_contact_show', {'id': contact.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
+                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
             </td>
         </tr>
     {% else %}
