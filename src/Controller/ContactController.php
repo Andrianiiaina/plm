@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\ContactGroup;
+use App\Form\ContactGroupType;
 use App\Form\ContactType;
+use App\Repository\ContactGroupRepository;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,22 +17,39 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/contact')]
 final class ContactController extends AbstractController
 {
-    #[Route(name: 'app_contact_index', methods: ['GET'])]
-    public function index(ContactRepository $contactRepository): Response
+    #[Route(name: 'app_contact_index', methods: ['GET','POST'])]
+    public function index(ContactRepository $contactRepository, ContactGroupRepository $contactGroupRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        $contactGroup = new ContactGroup();
+        $form_group = $this->createForm(ContactGroupType::class, $contactGroup);
+        $form_group->handleRequest($request);
+
+        if ($form_group->isSubmitted() && $form_group->isValid()) {
+            $entityManager->persist($contactGroup);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('contact/index.html.twig', [
             'contacts' => $contactRepository->findAll(),
+            'groups' => $contactGroupRepository->findAll(),
+            'form'=>$form_group,
         ]);
     }
+
+
+
 
     #[Route('/new', name: 'app_contact_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $contact = new Contact();
-        $form = $this->createForm(ContactType::class, $contact);
-        $form->handleRequest($request);
+        $form_contact = $this->createForm(ContactType::class, $contact);
+        $form_contact->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form_contact->isSubmitted() && $form_contact->isValid()) {
             $entityManager->persist($contact);
             $entityManager->flush();
 
@@ -38,7 +58,7 @@ final class ContactController extends AbstractController
 
         return $this->render('contact/new.html.twig', [
             'contact' => $contact,
-            'form' => $form,
+            'form' => $form_contact,
         ]);
     }
 

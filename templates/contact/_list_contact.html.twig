@@ -1,0 +1,33 @@
+<table class="table table-sm table-borderless">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Contact personnel</th>
+            <th>Contact professionnel</th>
+            <th>Organisation</th>
+            <th>Poste</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for contact in contacts %}
+        <tr>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.contactPerso }}</td>
+            <td>{{ contact.contactPro }}</td>
+            <td>{{ contact.organisation }}</td>
+            <td>{{ contact.function }}</td>
+            <td>
+                <a href="{{ path('app_contact_show', {'id': contact.id}) }}" class="btn btn-primary">Voir</a>
+                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn btn-primary">edit</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="8">Aucun contact</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

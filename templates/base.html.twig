@@ -14,38 +14,42 @@
     </head>
     <body>
       <div class="d-flex flex-nowrap">
+
+        {% if app.user %}
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
-              <span class="fs-4">SuperNom</span>
-            </a>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">
-              <li class="nav-item">
-                
-                <a href="#" class="nav-link">
-                  <i class="bi bi-house"></i> Accueil
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('app_project_index') }}" class="nav-link">
-                  <i class="bi bi-file-earmark"></i>
-                  Appel d'offre
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="bi bi-credit-card"></i>
-                  Flux de tresorerie
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ path('app_contact_index') }}" class="nav-link">
-                  <i class="bi bi-people"></i> Contacts
-                </a>
-              </li>
-            </ul>
-            <hr>
-        </div>
+          <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+            <span class="fs-4">SuperNom</span>
+          </a>
+          <hr>
+          <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+              
+              <a href="#" class="nav-link">
+                <i class="bi bi-house"></i> Accueil
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ path('app_project_index') }}" class="nav-link">
+                <i class="bi bi-file-earmark"></i>
+                Appel d'offre
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="bi bi-credit-card"></i>
+                Flux de tresorerie
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ path('app_contact_index') }}" class="nav-link">
+                <i class="bi bi-people"></i> Contacts
+              </a>
+            </li>
+          </ul>
+          <hr>
+      </div>
+        {% endif %}
+        
             {% block body %}{% endblock %}
     
     </div>

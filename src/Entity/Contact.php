@@ -45,9 +45,16 @@ class Contact
     #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, ContactGroup>
+     */
+    #[ORM\ManyToMany(targetEntity: ContactGroup::class, mappedBy: 'contacts')]
+    private Collection $contactGroups;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
+        $this->contactGroups = new ArrayCollection();
     }
 
  
@@ -178,6 +185,33 @@ class Contact
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContactGroup>
+     */
+    public function getContactGroups(): Collection
+    {
+        return $this->contactGroups;
+    }
+
+    public function addContactGroup(ContactGroup $contactGroup): static
+    {
+        if (!$this->contactGroups->contains($contactGroup)) {
+            $this->contactGroups->add($contactGroup);
+            $contactGroup->addContact($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactGroup(ContactGroup $contactGroup): static
+    {
+        if ($this->contactGroups->removeElement($contactGroup)) {
+            $contactGroup->removeContact($this);
+        }
 
         return $this;
     }

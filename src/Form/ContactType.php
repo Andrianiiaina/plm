@@ -29,6 +29,7 @@ class ContactType extends AbstractType
             ])
             ->add('contact_pro',TextType::class, [
                 'label' => "Contact professionnel",
+                'required' => false,
             ])
             ->add('organisation',TextType::class, [
                 'required' => true,
@@ -39,6 +40,7 @@ class ContactType extends AbstractType
                 'required' => true,
             ])
             ->add('parent', EntityType::class, [
+                'label' => "Supérieur",
                 'class' => Contact::class,
                 'choice_label' => 'name',
             ])

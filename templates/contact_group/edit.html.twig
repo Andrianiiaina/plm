@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le groupe{% endblock %}
+
+{% block body %}
+ <div class="container">
+        <h1>Modifier le groupe</h1>
+        {{ include('components/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+ </div>
+{% endblock %}

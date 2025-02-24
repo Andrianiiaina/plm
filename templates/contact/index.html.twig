@@ -5,44 +5,46 @@
 {% block body %}
  <div class="container mt-2">
     <div class="row">
-        <div class="d-flex justify-content-between">
-            <h1>Contacts</h1>
-            <a href="{{ path('app_contact_new') }}">Ajouter un contact</a>
+       <div class="container">
+       <p class="h2"> Groupe actuel: </p>
+        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Créer un groupe </button>
+        {% for group in groups %}
+                <a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-outline-primary">{{ group.Name }}</a>
+        {% else %}
+                <span>no group found</span>
+        {% endfor %}
+       </div>
+
+
+        <div class="clearfix mt-5">
+            <p class="float-start h2">Listes des contacts</p>
+            <a href="{{ path('app_contact_new') }}" class="float-end">Ajouter un contact</a>
 
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Contact personnel</th>
-                    <th>Contact professionnel</th>
-                    <th>Organisation</th>
-                    <th>Poste</th>
-                    <th>actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for contact in contacts %}
-                <tr>
-                    <td>{{ contact.name }}</td>
-                    <td>{{ contact.email }}</td>
-                    <td>{{ contact.contactPerso }}</td>
-                    <td>{{ contact.contactPro }}</td>
-                    <td>{{ contact.organisation }}</td>
-                    <td>{{ contact.function }}</td>
-                    <td>
-                        <a href="{{ path('app_contact_show', {'id': contact.id}) }}" class="btn btn-primary">show</a>
-                        <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn btn-primary">edit</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8">Aucun contact</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {{ include('contact/_list_contact.html.twig') }}
+           
+         
     </div>
  </div>
+
+ <div class="modal fade" id="addGroupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addGroupModalLabel">Ajouter des fichiers</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        {{ form_start(form) }}
+        <div class="modal-body">
+                {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">{{ button_label|default('Save') }}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
