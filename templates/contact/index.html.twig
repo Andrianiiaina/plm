@@ -3,18 +3,21 @@
 {% block title %}Contact index{% endblock %}
 
 {% block body %}
- <div class="container-fluid mt-2">
+ <div class="container-fluid">
     <div class="row pb-5 m-2">
-		<div class="container my-3">
-			<a href="{{ path('app_contact_new') }}" class="btn btn-primary m-0 mb-3">Ajouter des Contacts</a>
+		<div class="container">
+			<a href="{{ path('app_contact_new') }}" class="btn btn-primary m-0 mb-3 float-end">Ajouter des Contacts</a>
 			{{ include('contact/_list_contact.html.twig') }}
 		</div>
 	</div>
-	<div class="row">
+	<div class="row pb-5 m-2">
 		<div class="mx-3">
-			<button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#addGroupModal">Créer un groupe </button><br/>
+			<button type="button" class="btn btn-primary my-3 float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Créer un groupe </button><br/>
 			{% for group in groups %}
-				<a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-outline-primary">{{ group.Name }}</a>
+				<a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-lg btn-outline-secondary">Groupe {{ group.Name }}<br>
+          <small>{{group.contacts|length}} membre(s)</small>
+        </a>
+      
 			{% else %}
 				<span>no group found</span>
 			{% endfor %}
@@ -27,7 +30,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addGroupModalLabel">Ajouter des fichiers</h1>
+          <h1 class="modal-title fs-5" id="addGroupModalLabel">Créer un groupe</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         {{ form_start(form) }}
@@ -35,7 +38,7 @@
                 {{ form_widget(form) }}
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="submit">{{ button_label|default('Save') }}</button>
+          <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
         </div>
         {{ form_end(form) }}
