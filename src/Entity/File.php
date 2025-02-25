@@ -20,7 +20,10 @@ class File
     private ?string $url = null;
 
     #[ORM\ManyToOne(inversedBy: 'files')]
-    private ?Project $project_id = null;
+    private ?Project $project = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $filepath = null;
 
     public function getId(): ?int
     {
@@ -51,14 +54,26 @@ class File
         return $this;
     }
 
-    public function getProjectId(): ?Project
+    public function getProject(): ?Project
     {
-        return $this->project_id;
+        return $this->project;
     }
 
-    public function setProjectId(?Project $project_id): static
+    public function setProjectId(?Project $project): static
     {
-        $this->project_id = $project_id;
+        $this->project = $project;
+
+        return $this;
+    }
+
+    public function getFilepath(): ?string
+    {
+        return $this->filepath;
+    }
+
+    public function setFilepath(string $filepath): static
+    {
+        $this->filepath = $filepath;
 
         return $this;
     }

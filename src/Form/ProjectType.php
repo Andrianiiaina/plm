@@ -14,9 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Service\ListService;
 
 class ProjectType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -54,21 +56,12 @@ class ProjectType extends AbstractType
                 'label' => "Budget maximum"])
             ->add('status',ChoiceType::class,[
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
-                'choices'  => [
-                    'En préparation' => 0,
-                    'Soumis' => 1,
-                    'En attente de reponse' => 2,
-                    'Remporté' => 3,
-                    'Fermé' => 4,
-                ],
+                'choices'  => ListService::$project_status,
             ])
             ->add('project_type',ChoiceType::class,[
                 'label'=>'Type du projet',
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
-                'choices'  => [
-                    'Développement informatique' => 0,
-                    'Infrastructure' => 1,
-                ],
+                'choices'  => ListService::$project_type,
             ])
             ->add('url', UrlType::class,[
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],

@@ -1,55 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Project index{% endblock %}
+{% block title %}Projects{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="d-flex justify-content-between">
-            <h1>Projets</h1>
-            <a href="{{ path('app_project_new') }}">Créer un projet</a>
+        <div class="offset-1 col-md-10">
+            <div class="d-flex justify-content-between  mt-5 mb-3">
+                <p class="h2">Projets</p>
+                <a href="{{ path('app_project_new') }}">Créer un projet</a>
+            </div>
+            
+            <table class="table table-sm table-borderless">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Numéro</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Budget min</th>
+                        <th>Budget max</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.title }}</td>
+                        <td>{{ project.contractNumber }}</td>
+                        <td>{{ project.startDate ? project.startDate|date('d-m-Y') : '' }}</td>
+                        <td>{{ project.endDate ? project.endDate|date('d-m-Y') : '' }}</td>
+                        <td>{{ project.minBudget }}</td>
+                        <td>{{ project.maxBudget }}</td>
+                        {% set project_status = get_project_status(project.status)%}
+                        <td>{{project_status}}</td> 
+                        
+                        <td>
+                            <a href="{{ path('app_project_show', {'id': project.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">Aucun projet pour le moment.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Titre</th>
-                    <th>Numéro</th>
-                    <th>Localisation</th>
-                    <th>Date de début</th>
-                    <th>Date de fin</th>
-                    <th>Budget min</th>
-                    <th>Budget max</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Url</th>
-                    <th>actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for project in projects %}
-                <tr>
-                    <td>{{ project.title }}</td>
-                    <td>{{ project.contractNumber }}</td>
-                    <td>{{ project.location }}</td>
-                    <td>{{ project.startDate ? project.startDate|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ project.endDate ? project.endDate|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ project.minBudget }}</td>
-                    <td>{{ project.maxBudget }}</td>
-                    <td>{{ project.status }}</td>
-                    <td>{{ project.projectType }}</td>
-                    <td>{{ project.url }}</td>
-                    <td>
-                        <a href="{{ path('app_project_show', {'id': project.id}) }}">show</a>
-                        <a href="{{ path('app_project_edit', {'id': project.id}) }}">edit</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="13">Aucun projet pour le moment.</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 {% endblock %}
