@@ -25,12 +25,10 @@ class ListService
         "MULTICLOUD & AUTOMATION"=>3,
         "HPC-AI"=>4,
    ];
-   public static array $file_status = [
+   public static array $document_status = [
         "A compléter"=>0,
         "A vérifier"=>1,
         "A signer"=>2,
-        "Signer et valider"=>3,
+        "A archiver"=>3,
     ];
-
-
 }

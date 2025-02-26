@@ -40,7 +40,7 @@ security:
     access_control:
          - { path: ^/project, roles: ROLE_USER }
          - { path: ^/contact, roles: ROLE_USER }
-         - { path: ^/project, roles: ROLE_USER }
+         - { path: ^/document, roles: ROLE_USER }
 
 when@test:
     security:

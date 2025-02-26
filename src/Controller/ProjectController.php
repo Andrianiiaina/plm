@@ -54,11 +54,12 @@ final class ProjectController extends AbstractController
         $file = new File();
         $form = $this->createForm(FileType::class, $file);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $file->setProjectId($project);
             $brochureFile = $form['filepath']->getData();
             if ($brochureFile) {
-                $newFilename = $fileUploader->upload($brochureFile);
+                $newFilename = $fileUploader->upload($brochureFile,"project_tas");
                 try {
                     $file->setFilename($brochureFile->getClientOriginalName());
                     $file->setFilepath($newFilename);
