@@ -4,14 +4,13 @@
 
 {% block body %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="offset-1 col-md-10">
-            <div class="d-flex justify-content-between  mt-5 mb-3">
-                <p class="h2">Projets</p>
-                <a href="{{ path('app_project_new') }}">Créer un projet</a>
-            </div>
+    <div class="row m-5">
+            <div class="clearfix">
+                <p class="h2 float-start">Appels d'offres</p>
+                <a href="{{ path('app_project_new') }}" class="btn btn-primary col-1 my-2 float-end"> + Créer</a>
             
-            <table class="table table-sm table-borderless">
+            </div>
+            <table class="table table-sm table-borderless mt-3">
                 <thead>
                     <tr>
                         <th>Titre</th>
@@ -21,7 +20,7 @@
                         <th>Budget min</th>
                         <th>Budget max</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <td></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,10 +34,15 @@
                         <td>{{ project.maxBudget }}</td>
                         {% set project_status = get_project_status(project.status)%}
                         <td>{{project_status}}</td> 
-                        
-                        <td>
+                        <td class="btn-group">
                             <a href="{{ path('app_project_show', {'id': project.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
-                            <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
+                                <form method="post" action="{{ path('app_project_delete', {'id': project.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
+                                    <button class="btn"><i class="bi bi-trash3-fill"></i></button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% else %}
@@ -48,7 +52,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
     </div>
 </div>
 {% endblock %}

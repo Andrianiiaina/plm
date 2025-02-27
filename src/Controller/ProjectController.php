@@ -7,6 +7,7 @@ use App\Entity\Project;
 use App\Form\FileType;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
+use App\Security\Voter\ProjectVoter;
 use App\Service\FileUploaderService;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/project')]
 final class ProjectController extends AbstractController
@@ -23,8 +24,16 @@ final class ProjectController extends AbstractController
     #[Route(name: 'app_project_index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository,ListService $listService): Response
     {
+        
+         if ($this->isGranted('ROLE_ADMIN')) {
+            $projects= $projectRepository->findAll();
+         }elseif($this->isGranted('ROLE_RESPO')){
+            $projects= $projectRepository->findBy(["responsable_id"=>$this->getUser()]);
+         }else{
+            $projects=[];
+         }
         return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findAll()
+            'projects' => $projects
         ]);
     }
 
@@ -48,7 +57,8 @@ final class ProjectController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_project_show', methods: ['GET', 'POST'])]
-    public function show(Project $project, EntityManagerInterface $entityManager, Request $request, 
+    #[IsGranted('operation', 'project', 'Page not found', 404)]
+    public function show_project_and_add_file(Project $project, EntityManagerInterface $entityManager, Request $request, 
     FileUploaderService $fileUploader): Response
     {
         $file = new File();
@@ -75,7 +85,13 @@ final class ProjectController extends AbstractController
         return $this->render('project/show.html.twig', ['project' => $project, 'form' => $form]);
     }
 
+
+
+
+
+
     #[Route('/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('operation', 'project', 'Page not found', 404)]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProjectType::class, $project);
@@ -93,11 +109,25 @@ final class ProjectController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]   
+    #[IsGranted('operation', 'project', 'Page not found', 404)]
+  
     public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($project);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/file/{id}', name: 'app_file_delete', methods: ['POST'])]   
+    #[IsGranted('operation', 'project', 'Page not found', 404)]
+    public function delete_file(Request $request, File $file, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($file);
             $entityManager->flush();
         }
 

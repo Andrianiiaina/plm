@@ -4,27 +4,53 @@
 
 {% block body %}
  <div class="container-fluid">
-    <div class="row pb-5 m-2">
-		<div class="container">
-			<a href="{{ path('app_contact_new') }}" class="btn btn-primary m-0 mb-3 float-end">Ajouter des Contacts</a>
-			{{ include('contact/_list_contact.html.twig') }}
-		</div>
-	</div>
-	<div class="row pb-5 m-2">
-		<div class="mx-3">
-			<button type="button" class="btn btn-primary my-3 float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Créer un groupe </button><br/>
-			{% for group in groups %}
-				<a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-lg btn-outline-secondary">Groupe {{ group.Name }}<br>
-          <small>{{group.contacts|length}} membre(s)</small>
-        </a>
-      
-			{% else %}
-				<span>no group found</span>
-			{% endfor %}
-		   </div>
+ 
 
-		</div>
- 	</div>
+    <div class="row pb-5 m-2">
+      <div class="container">
+        <p class="h4 float-start">Tous les contacts</p>
+        <a href="{{ path('app_contact_new') }}" class="btn btn-primary m-0 mb-3 float-end">Ajouter</a>
+        {{ include('contact/_list_contact.html.twig') }}
+      </div>
+    </div>
+
+    <div class="row pb-5 m-2">
+      <div class="">
+        <p class="h4 float-start">Listes des groupes</p>
+        <button type="button" class="btn btn-primary my-3 float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal"></i>+ Groupe </button><br/>
+        <div class="accordion accordion-flush" id="accordionGroupUser">
+          {% for group in groups %}
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{group.id}}" aria-expanded="false" aria-controls="#flush-collapse{{group.id}}">
+                Groupe {{group.name}}
+                <span class="badge text-bg-primary mx-3">{{group.contacts | length}} membre(s)</span>
+              </button>
+            </h2>
+            
+            <div id="flush-collapse{{group.id}}" class="accordion-collapse collapse" data-bs-parent="#accordionGroupUser">
+              <div class="accordion-body">
+                {{ include('contact/_list_contact.html.twig',{contacts:group.contacts}) }}
+                {% if is_granted('ROLE_ADMIN') %}
+                <div class="d-flex justify-content-end">
+                  <a href="{{ path('app_contact_group_edit', {'id': group.id}) }}" class="btn">Modifier le groupe</a>
+                  <form method="post" action="{{ path('app_contact_group_delete', {'id': group.id}) }}" onsubmit="return confirm('AÊtes-vous sûr de vouloir supprimer ce groupe?');">
+                      <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ group.id) }}">
+                      <button class="btn link-danger">Supprimer le groupe</button>
+                  </form>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+            <small>Aucun groupe pour le moment.</small>
+          {% endfor %}
+        </div>
+  
+      </div>
+     </div>
+
 
  <div class="modal fade" id="addGroupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
     <div class="modal-dialog">

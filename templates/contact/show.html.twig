@@ -45,19 +45,6 @@
                     </tr>
                 </tbody>
             </table>
-
-           
-                
-
-
-              <div class="container d-flex justify-content-end">
-                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn btn-primary mx-2">Modifier</a>
-                <form method="post" action="{{ path('app_contact_delete', {'id': contact.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce contact?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
-                    <button class="btn btn-danger">Supprimer</button>
-                </form>
-              </div>    
-          
         </div>
     </div>
 {% endblock %}

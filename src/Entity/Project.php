@@ -58,9 +58,16 @@ class Project
     #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'project')]
     private Collection $files;
 
+    /**
+     * @var Collection<int, Document>
+     */
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'project')]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,6 +243,36 @@ class Project
             // set the owning side to null (unless already changed)
             if ($file->getProject() === $this) {
                 $file->setProjectId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getProject() === $this) {
+                $document->setProject(null);
             }
         }
 

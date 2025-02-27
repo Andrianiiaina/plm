@@ -7,7 +7,7 @@
             <th>Contact professionnel</th>
             <th>Organisation</th>
             <th>Poste</th>
-            <th>actions</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -19,10 +19,17 @@
             <td>{{ contact.contactPro }}</td>
             <td>{{ contact.organisation }}</td>
             <td>{{ contact.function }}</td>
-            <td>
-                <a href="{{ path('app_contact_show', {'id': contact.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
-                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
+            <td class="btn-group">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_contact_edit', {'id': contact.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
+                    <form method="post" action="{{ path('app_contact_delete', {'id': contact.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce contact?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
+                        <button class="btn"><i class="bi bi-trash3-fill"></i></button>
+                    </form>
+                    {% endif %}
+                
             </td>
+            
         </tr>
     {% else %}
         <tr>

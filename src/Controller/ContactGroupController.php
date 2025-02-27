@@ -13,20 +13,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/contact/group')]
 final class ContactGroupController extends AbstractController
 {
- 
-    #[Route('/{id}', name: 'app_contact_group_show', methods: ['GET'])]
-    public function show(ContactGroup $contactGroup): Response
-    {
-        return $this->render('contact_group/show.html.twig', [
-            'group' => $contactGroup,
-        ]);
-    }
-
-
 
     #[Route('/{id}/edit', name: 'app_contact_group_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ContactGroup $contactGroup, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(ContactGroupType::class, $contactGroup);
         $form->handleRequest($request);
 
@@ -45,6 +36,7 @@ final class ContactGroupController extends AbstractController
     #[Route('/{id}', name: 'app_contact_group_delete', methods: ['POST'])]
     public function delete(Request $request, ContactGroup $contactGroup, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($this->isCsrfTokenValid('delete'.$contactGroup->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($contactGroup);
             $entityManager->flush();

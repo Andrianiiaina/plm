@@ -3,7 +3,7 @@
 {% block title %}Project{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container-fluid">
        <div class="row p-3">
             <div class="clearfix">
                 <strong class="h2 float-start mb-4">Projet {{ project.title }}.</strong>
@@ -40,33 +40,31 @@
                             <td>{{project_type}}</td> 
                         </dd>
 
-                        
-                        <dt class="col-sm-4">Url</dt>
-                        <dd class="col-sm-8">{{ project.url }}.</dd>
                     </dl>
                 </div>
-            
-            <div class="col">
-                <div class="p-3 row">
-                    <dt class="col-sm-4">Date de début</dt>
-                    <dd class="col-sm-8">{{ project.startDate ? project.startDate|date('Y-m-d H:i:s') : '' }}.</dd>
-                    <dt class="col-sm-4">Date de fin</dt>
-                    <dd class="col-sm-8">{{ project.endDate ? project.endDate|date('Y-m-d H:i:s') : '' }}.</dd>
-                  
-                    <dt class="col-sm-4">Budget minimum</dt>
-                    <dd class="col-sm-8">{{ project.minBudget }}.</dd>
-                    <dt class="col-sm-4">Budget maximum</dt>
-                    <dd class="col-sm-8">{{ project.maxBudget }}.</dd>
-                  
-                    <dt class="col-sm-4 text-truncate">Description</dt>
-                    <dd class="col-sm-8">{{ project.description }}.</dd>
+                <div class="col">
+                    <div class="p-3 row">
+                        <dt class="col-sm-4">Date de début</dt>
+                        <dd class="col-sm-8">{{ project.startDate ? project.startDate|date('Y-m-d H:i:s') : '' }}.</dd>
+                        <dt class="col-sm-4">Date de fin</dt>
+                        <dd class="col-sm-8">{{ project.endDate ? project.endDate|date('Y-m-d H:i:s') : '' }}.</dd>
+                    
+                        <dt class="col-sm-4">Budget minimum</dt>
+                        <dd class="col-sm-8">{{ project.minBudget }}.</dd>
+                        <dt class="col-sm-4">Budget maximum</dt>
+                        <dd class="col-sm-8">{{ project.maxBudget }}.</dd>
+                    
+                    </div>
                 </div>
             </div>
+            <div class="px-4">
+                <strong>Url:</strong> {{ project.url }}.<br/>
+                <strong>Description:</strong> {{ project.description }}.
             </div>
        </div>
        
 
-      <div class="row p-3">
+      <div class="row p-3 mt-5">
         <div class="clearfix mb-2">
             <strong class="h4 float-start">Fichiers associés</strong>
             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addFileModal">
@@ -83,11 +81,10 @@
                     url: {{ file.url }}
                 </div>
 
-                    <a href="{{path('app_file_edit', {'id': file.id}) }}" class="btn">Modifier</a>
-                    {{ include('file/_delete_form.html.twig') }}
+               
                 </li>
             {% else %}
-            <p>Aucun fichier.</p>
+                <p>Aucun fichier.</p>
             {% endfor %}
         </ol>
    </div>
