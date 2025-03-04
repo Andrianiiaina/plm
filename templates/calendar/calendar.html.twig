@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendar index{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="offset-1 col-md-10">
+           <div class="clearfix">
+            <p class="h2 mb-4 float-start">Calendrier</p>
+
+            <a href="{{ path('app_calendar_new') }}" class="btn float-end">Créer - Voir la liste</a>
+           </div>
+            <div id="calendar-holder"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {% block importmap %}{{ importmap('calendar') }}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const calendarEl = document.getElementById('calendar-holder');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                editable: true,
+                eventSources: [
+                    {
+                        url: "{{ path('fc_load_events') }}",
+                        method: 'POST',
+                        extraParams: {
+                            filters: JSON.stringify({})
+                        },
+                        failure: () => {
+                             //alert('There was an error while fetching FullCalendar!');
+                        },
+                    },
+                ],
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                },
+                timeZone: 'UTC',
+            });
+
+            calendar.render();
+        });
+    </script>
+    
+{% endblock %}
