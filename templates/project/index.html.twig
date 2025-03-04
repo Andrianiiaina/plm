@@ -4,23 +4,24 @@
 
 {% block body %}
 <div class="container-fluid">
-    <div class="row m-5">
+    <div class="row my-5">
             <div class="clearfix">
                 <p class="h2 float-start">Appels d'offres</p>
                 <a href="{{ path('app_project_new') }}" class="btn btn-primary col-1 my-2 float-end"> + Créer</a>
             
             </div>
-            <table class="table table-sm table-borderless mt-3">
+            <div class="table-responsive">
+               <table class="table mt-3">
                 <thead>
                     <tr>
-                        <th>Titre</th>
+                        <th class="col-md-3">Titre</th>
                         <th>Numéro</th>
-                        <th>Date de début</th>
-                        <th>Date de fin</th>
-                        <th>Budget min</th>
-                        <th>Budget max</th>
+                        <th class="col-md-2">Date de début</th>
+                        <th class="col-md-2">Date de fin</th>
+                        <th class="col-md-2">Budget min</th>
+                        <th class="col-md-2">Budget max</th>
                         <th>Status</th>
-                        <td></td>
+                        <th class=""></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,8 +33,7 @@
                         <td>{{ project.endDate ? project.endDate|date('d-m-Y') : '' }}</td>
                         <td>{{ project.minBudget }}</td>
                         <td>{{ project.maxBudget }}</td>
-                        {% set project_status = get_project_status(project.status)%}
-                        <td>{{project_status}}</td> 
+                        <td><span class="badge bg-{{project.status | getStatusColor}}">{{project.status | getProjectStatus}}</span></td> 
                         <td class="btn-group">
                             <a href="{{ path('app_project_show', {'id': project.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
                             {% if is_granted('ROLE_ADMIN') %}
@@ -51,7 +51,9 @@
                     </tr>
                 {% endfor %}
                 </tbody>
-            </table>
+            </table> 
+            </div>
+            
     </div>
 </div>
 {% endblock %}

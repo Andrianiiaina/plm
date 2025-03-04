@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Document{% endblock %}
+
+{% block body %}
+   <div class="container">
+        <div class="row offset-2 col-md-8">
+            <div class="clearfix">
+                <strong class="h2 float-start mb-4">{{ document.name }}</strong>
+                <span class="badge text-bg-{{ document.status| getStatusColor}}"> {{ document.status | getDocumentStatus}} par {{document.responsable.email}}</span>
+                <div class="float-end d-flex">
+                    <a href="{{ path('app_document_edit', {'id': document.id}) }}"" class="btn btn-primary mx-1">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    {{ include('document/_delete_form.html.twig') }}
+                </div>
+            </div>
+
+            <p> <a class="icon-link" href="{{ asset('uploads/documents/' ~ document.filepath| e('html')) }}">
+                <i class="bi bi-eye-fill"></i><use xlink:href="#box-seam"></use>
+                Voir le contenu: {{ document.filename}}
+            </a></p>
+           
+            <p><strong>Projet: </strong><i>{{document.project.title}}</i></p>
+            <p><strong>Information: </strong> {{ document.information }}</p>
+          
+        </div>
+   </div>
+{% endblock %}
