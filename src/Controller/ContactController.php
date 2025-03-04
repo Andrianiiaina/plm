@@ -9,6 +9,7 @@ use App\Form\ContactType;
 use App\Repository\ContactGroupRepository;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,9 +27,13 @@ final class ContactController extends AbstractController
         $form_group->handleRequest($request);
 
         if ($form_group->isSubmitted() && $form_group->isValid()) {
-            $entityManager->persist($contactGroup);
-            $entityManager->flush();
-
+            try {
+                $entityManager->persist($contactGroup);
+                $entityManager->flush();
+                $this->addFlash('success','Groupe enregistré!' );
+            } catch (Exception $e) {
+                $this->addFlash('error', "Le groupe n'a pas pu etre enregistré.");
+            }
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -47,9 +52,14 @@ final class ContactController extends AbstractController
         $form_contact->handleRequest($request);
 
         if ($form_contact->isSubmitted() && $form_contact->isValid()) {
-            $entityManager->persist($contact);
-            $entityManager->flush();
-
+           
+            try {
+                $entityManager->persist($contact);
+                $entityManager->flush();
+                $this->addFlash('success','Contact enregistré!' );
+            } catch (Exception $e) {
+                $this->addFlash('error', "Le contact n'a pas pu etre enregistré.");
+            }
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -75,8 +85,12 @@ final class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
+            try {
+                $entityManager->flush();
+                 $this->addFlash('success','Contact modifié!' );
+            } catch (\Throwable $th) {
+                $this->addFlash('error',"Erreur! la modification du contact a échoué." );
+            }
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -93,6 +107,7 @@ final class ContactController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($contact);
             $entityManager->flush();
+            $this->addFlash('success','Contact supprimé!' );
         }
 
         return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);

@@ -45,8 +45,13 @@ final class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($project);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($project);
+                $entityManager->flush();
+                $this->addFlash('success','Projet enregistré!' );
+            } catch (FileException $e) {
+                $this->addFlash('error', "Erreur! Le projet n'a pas pu etre enregistré.");
+            }
             return $this->redirectToRoute('app_project_show', ['id'=>$project->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -75,8 +80,10 @@ final class ProjectController extends AbstractController
                     $file->setFilepath($newFilename);
                     $entityManager->persist($file);
                     $entityManager->flush(); 
+                    $this->addFlash('success','Fichier enregistré!' );
+
                 } catch (FileException $e) {
-                    $this->addFlash('error', 'Error!');
+                    $this->addFlash('error', "Erreur! Le fichier n'a pas pu etre enregistré.");
                    dd($e);
                 }
             }
@@ -98,7 +105,12 @@ final class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
+                 $this->addFlash('success','Projet modifié!' );
+            } catch (\Throwable $th) {
+                $this->addFlash('error',"Erreur! la modification du projet a échoué." );
+            }
 
             return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -117,6 +129,7 @@ final class ProjectController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($project);
             $entityManager->flush();
+            $this->addFlash('success','Projet supprimé!' );
         }
 
         return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
@@ -129,6 +142,7 @@ final class ProjectController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($file);
             $entityManager->flush();
+            $this->addFlash('success','Fichier supprimé!' );
         }
 
         return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);

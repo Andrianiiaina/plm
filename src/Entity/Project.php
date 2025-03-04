@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -64,10 +66,40 @@ class Project
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'project')]
     private Collection $documents;
 
+    /**
+     * @var Collection<int, Calendar>
+     */
+    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'project')]
+    private Collection $calendars;
+
+    #[Assert\Callback]
+    public function validateDates(ExecutionContextInterface $context): void
+    {
+        if ($this->start_date && $this->end_date && $this->start_date >= $this->end_date) {
+            $context->buildViolation('La date de début doit être antérieure à la date de fin.')
+                ->atPath('end_date')
+                ->addViolation();
+        }
+    }
+
+    #[Assert\Callback]
+    public function validateBudget(ExecutionContextInterface $context): void
+    {
+        if ($this->min_budget && $this->max_budget && $this->min_budget >= $this->max_budget) {
+            $context->buildViolation('La budget min doit être inferieur au budget max.')
+                ->atPath('max_budget')
+                ->addViolation();
+        }
+    }
+
+
+
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->calendars = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -273,6 +305,36 @@ class Project
             // set the owning side to null (unless already changed)
             if ($document->getProject() === $this) {
                 $document->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Calendar>
+     */
+    public function getCalendars(): Collection
+    {
+        return $this->calendars;
+    }
+
+    public function addCalendar(Calendar $calendar): static
+    {
+        if (!$this->calendars->contains($calendar)) {
+            $this->calendars->add($calendar);
+            $calendar->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendar(Calendar $calendar): static
+    {
+        if ($this->calendars->removeElement($calendar)) {
+            // set the owning side to null (unless already changed)
+            if ($calendar->getProject() === $this) {
+                $calendar->setProject(null);
             }
         }
 

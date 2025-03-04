@@ -1,32 +1,49 @@
 <?php
     namespace App\Twig;
     use Twig\Extension\AbstractExtension;
-    use Twig\TwigFunction;
+    use Twig\TwigFunction;    
     use App\Service\ListService;
     class  GetStatusValueTwig extends AbstractExtension
     {
-        public function getFunctions():array
-        {
+        
+        public function getFilters(): array{
+          
             return [
-                new TwigFunction('get_project_status', [$this, 'getProjectStatus']),
-                new TwigFunction('get_project_type', [$this, 'getProjectType']),
-                new TwigFunction('get_document_status', [$this, 'getDocumentStatus']),
+                new \Twig\TwigFilter('getProjectStatus', function (int $value) {
+                    return array_search($value,ListService::$project_status) ?? 'inconnu';
+                }),
+                new \Twig\TwigFilter('getProjectType', function (int $value) {
+                    return array_search($value,ListService::$project_type) ?? 'inconnu';
+                }),
+                new \Twig\TwigFilter('getDocumentStatus', function (int $value) {
+                    return array_search($value,ListService::$document_status) ?? 'inconnu';
+                }),
+                new \Twig\TwigFilter('getStatusColor', [$this, 'getStatusColor']),
+                new \Twig\TwigFilter('getrojectStatusColor', [$this, 'getrojectStatusColor']),
             ];
         }
-
-        public function getProjectStatus(int $value):string
-        {
-            return array_search($value,ListService::$project_status) ?? 'inconnu';
+        public function getStatusColor(int $value){
+            $colors=[ 
+                0=>"secondary",
+                1=>"primary",
+                2=>"info",
+                3=>"success",
+                4=>"warning",
+                5=>"danger",
+                6=>"dark",
+            ];
+            return $colors[$value] ?? 'inconnu';
         }
 
-        public function getProjectType(int $value):string
-        {
-            return array_search($value,ListService::$project_type) ?? 'inconnu';
-        }
-
-        public function getDocumentStatus(int $value):string
-        {
-            return array_search($value,ListService::$document_status) ?? 'inconnu';
+        public function getrojectStatusColor(int $value){
+            $colors=[ 
+                0=>"primary",
+                1=>"success",
+                2=>"warning",
+                3=>"danger",
+                4=>"dark",
+            ];
+            return $colors[$value] ?? 'inconnu';
         }
     }
 ?>

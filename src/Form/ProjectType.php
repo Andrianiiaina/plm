@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Service\ListService;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ProjectType extends AbstractType
 {
@@ -43,17 +44,31 @@ class ProjectType extends AbstractType
                 'label' => "Date de début",
                 'widget' => 'single_text',
                 'required' => true,
+                'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             ])
             ->add('end_date', DateType::class, [
                 'label' => "Date de fin",
                 'widget' => 'single_text',
+                'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             ])
             ->add('min_budget', IntegerType::class,[
                 'label' => "Budget minimum",
                 'required' => true,
+                'constraints'=>[new Assert\Range([
+                    'min' => 0,
+                    'max' => 100000000000000,
+                    'notInRangeMessage' => 'Entrez un budget valide',
+                ])]
             ])
             ->add('max_budget', IntegerType::class,[
-                'label' => "Budget maximum"])
+                'label' => "Budget maximum",
+                'constraints'=>[new Assert\Range([
+                    'min' => 0,
+                    'max' => 100000000000000,
+                    'notInRangeMessage' => 'Entrez un budget valide',
+                ])]
+            ]
+                )
             ->add('status',ChoiceType::class,[
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
                 'choices'  => ListService::$project_status,

@@ -23,7 +23,7 @@ final class ContactGroupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success','Groupe modifié!' );
             return $this->redirectToRoute('app_contact_group_show', ['id'=>$contactGroup->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -40,6 +40,7 @@ final class ContactGroupController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$contactGroup->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($contactGroup);
             $entityManager->flush();
+            $this->addFlash('success','Groupe supprimé!' );
         }
 
         return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
