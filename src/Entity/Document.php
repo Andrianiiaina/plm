@@ -31,7 +31,7 @@ class Document
 
     #[ORM\ManyToOne(inversedBy: 'documents')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Project $project = null;
+    private ?Tender $tender = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -101,14 +101,14 @@ class Document
         return $this;
     }
 
-    public function getProject(): ?Project
+    public function getTender(): ?Tender
     {
-        return $this->project;
+        return $this->tender;
     }
 
-    public function setProject(?Project $project): static
+    public function setTender(?Tender $tender): static
     {
-        $this->project = $project;
+        $this->tender = $tender;
 
         return $this;
     }

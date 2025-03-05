@@ -9,11 +9,11 @@
         public function getFilters(): array{
           
             return [
-                new \Twig\TwigFilter('getProjectStatus', function (int $value) {
-                    return array_search($value,ListService::$project_status) ?? 'inconnu';
+                new \Twig\TwigFilter('getTenderStatus', function (int $value) {
+                    return array_search($value,ListService::$tender_status) ?? 'inconnu';
                 }),
-                new \Twig\TwigFilter('getProjectType', function (int $value) {
-                    return array_search($value,ListService::$project_type) ?? 'inconnu';
+                new \Twig\TwigFilter('getTenderType', function (int $value) {
+                    return array_search($value,ListService::$tender_type) ?? 'inconnu';
                 }),
                 new \Twig\TwigFilter('getDocumentStatus', function (int $value) {
                     return array_search($value,ListService::$document_status) ?? 'inconnu';

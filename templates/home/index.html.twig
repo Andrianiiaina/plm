@@ -9,28 +9,23 @@
 			<i class="bi bi-person-circle fs-2"></i> {{user.email | capitalize}} 
 		</div>
 		<div class="mx-auto col mt-3">
-			{% for status,total in statusProject %}
-				<a href="#" class="btn align-items-between btn-outline-{{status |getrojectStatusColor}}"> {{status | getProjectStatus}} {{total}}</a>		
+			{% for status,total in statusTender %}
+				<a href="#" class="btn align-items-between btn-outline-{{status |getrojectStatusColor}}"> {{status | getTenderStatus}} {{total}}</a>		
 			{% endfor %}
 		</div>
 		<div class="row mt-3">
 			<div class="col-md-6 card card-body">
 				<p class="h4">Projets</p>
-				{% for status, project in projects %}
-					<p class="h5 mt-4">{{status | getProjectStatus}}</p>
-					{% for project_ in project %}
+					{% for tender_ in tenders %}
 							
-							<a href="{{path('app_project_show', {'id': project_.id})}}" class="p-1 clearfix link-secondary link-underline link-underline-opacity-0">
+							<a href="{{path('app_tender_show', {'id': tender_.id})}}" class="p-1 clearfix link-secondary link-underline link-underline-opacity-0">
 							
-								<span class=" float-start">{{ project_.title }}</span>
-								<span class="px-3"><small><strong>{{project_.responsableId.email}}</strong></small></span>
+								<span class=" float-start">{{ tender_.title }}</span>
+								<span class="px-3"><small><strong>{{tender_.responsableId.email}}</strong></small></span>
 								
-								<span class="float-end">{{ project_.endDate ? project_.endDate|date('d/m/Y H:i') : '' }}</span>
+								<span class="float-end">{{ tender_.endDate ? tender_.endDate|date('d/m/Y H:i') : '' }}</span>
 							</a>
 					{% endfor %}
-				{% else %}
-					<p>Aucun projet.</p>
-				{% endfor %}
 			</div>
 			<div class="col-md-5">
 				<div class="card card-body">
@@ -40,7 +35,7 @@
 							<a href="{{path('app_document_show', {'id': document.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
 								<strong>{{ document.name | u.truncate(30, '...')}}</strong> 
 								<br/>
-								<small><i>{{document.project.title}}</i></small> 
+								<small><i>{{document.tender.title}}</i></small> 
 							</a>
 							<span class="float-end badge text-bg-{{ document.status| getStatusColor}}"> {{document.status | getDocumentStatus}} </span>
 						</div>
@@ -55,7 +50,7 @@
 							<a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
 								<strong>{{ calendar.endAt ? calendar.endAt|date('d/m/Y H:i') : '' }}</strong>	
 								{{ calendar.title }}<br/>
-								<small><i>{{ calendar.project.title }}</i></small>
+								<small><i>{{ calendar.tender.title }}</i></small>
 							</a>
 						</div>
 					{% else %}

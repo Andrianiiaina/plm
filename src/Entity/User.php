@@ -42,10 +42,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Contact $contact = null;
 
     /**
-     * @var Collection<int, Project>
+     * @var Collection<int, Tender>
      */
-    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'responsable_id')]
-    private Collection $projects;
+    #[ORM\OneToMany(targetEntity: Tender::class, mappedBy: 'responsable_id')]
+    private Collection $tenders;
 
     /**
      * @var Collection<int, Document>
@@ -55,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->projects = new ArrayCollection();
+        $this->tenders = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -169,29 +169,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Project>
+     * @return Collection<int, Tender>
      */
-    public function getProjects(): Collection
+    public function getTenders(): Collection
     {
-        return $this->projects;
+        return $this->tenders;
     }
 
-    public function addProjects(Project $projects): static
+    public function addTenders(Tender $tenders): static
     {
-        if (!$this->projects->contains($projects)) {
-            $this->projects->add($projects);
-            $projects->setResponsableId($this);
+        if (!$this->tenders->contains($tenders)) {
+            $this->tenders->add($tenders);
+            $tenders->setResponsableId($this);
         }
 
         return $this;
     }
 
-    public function removeProjects(Project $projects): static
+    public function removeTenders(Tender $tenders): static
     {
-        if ($this->projects->removeElement($projects)) {
+        if ($this->tenders->removeElement($tenders)) {
             // set the owning side to null (unless already changed)
-            if ($projects->getResponsableId() === $this) {
-                $projects->setResponsableId(null);
+            if ($tenders->getResponsableId() === $this) {
+                $tenders->setResponsableId(null);
             }
         }
 

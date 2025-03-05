@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Document;
-use App\Entity\Project;
+use App\Entity\Tender;
 
 
 final class HomeController extends AbstractController
@@ -22,31 +22,27 @@ final class HomeController extends AbstractController
         if ($this->isGranted('ROLE_ADMIN')) {
             $documents=$entityManager->getRepository(Document::class)->findAll();
             $calendars=$entityManager->getRepository(Calendar::class)->findAll();
-            $projects= $entityManager->getRepository(Project::class)->findAll();
+            $tenders= $entityManager->getRepository(Tender::class)->findAll();
          }elseif($this->isGranted('ROLE_RESPO')){
             $documents=$entityManager->getRepository(Document::class)->findDocs($user, 5);
             $calendars=$entityManager->getRepository(Calendar::class)->findUserCalendar($user, 5);
-            $projects= $entityManager->getRepository(Project::class)->findBy(['responsable_id'=>$user]);
+            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable_id'=>$user]);
          }else{
-            $projects=[];
+            $tenders=[];
             $documents=[];
             $calendars=[];
          }
-        $grouped_projects_by_status = [];
-        foreach ($projects as $project) {
-            $status = $project->getStatus(); 
-            $grouped_projects_by_status[$status][] = $project;
-        }
-        
-        foreach (ListService::$project_status as $status) {
-            $project_status[$status] = key_exists($status,$grouped_projects_by_status)? count($grouped_projects_by_status[$status]) : 0;
+  
+        foreach (ListService::$tender_status as $status) {
+            $result=$entityManager->getRepository(Tender::class)->findBy(['status'=>$status]);
+            $tender_status[$status] = count($result);
         }
    
 
         return $this->render('home/index.html.twig',[
             'user'=>$user,
-            'projects'=>$grouped_projects_by_status,
-            'statusProject'=>$project_status,
+            'tenders'=>$tenders,
+            'statusTender'=>$tender_status,
             'documents'=> $documents,
             'calendars'=>$calendars,
             

@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Document;
-use App\Entity\Project;
+use App\Entity\Tender;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,9 +21,9 @@ class DocumentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('project', EntityType::class, [
+            ->add('tender', EntityType::class, [
                 'label'=>"Le projet associé à ce document",
-                'class' => Project::class,
+                'class' => Tender::class,
                 'choice_label' => 'title',
             ])
             ->add('status',ChoiceType::class,[

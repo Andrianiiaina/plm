@@ -6,12 +6,12 @@
     <div class="container-fluid">
        <div class="row p-3">
             <div class="clearfix">
-                <strong class="h2 float-start mb-4">Projet {{ project.title }}.</strong>
+                <strong class="h2 float-start mb-4">Projet {{ tender.title }}.</strong>
                 <div class="float-end d-flex">
-                    <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn btn-primary mx-1">
+                    <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn btn-primary mx-1">
                         <i class="bi bi-pencil-fill"></i>
                     </a>
-                    {{ include('project/_delete_form.html.twig') }}
+                    {{ include('tender/_delete_form.html.twig') }}
                 </div>
             </div>
             <div class="row px-4">
@@ -20,22 +20,22 @@
                        
 
                         <dt class="col-sm-4">Titre du projet</dt>
-                        <dd class="col-sm-8">{{ project.title }}.</dd>
+                        <dd class="col-sm-8">{{ tender.title }}.</dd>
                     
                         <dt class="col-sm-4">Numero</dt>
-                        <dd class="col-sm-8">{{ project.contractNumber }}</dd>
+                        <dd class="col-sm-8">{{ tender.contractNumber }}</dd>
                     
                         <dt class="col-sm-4">Localisation</dt>
-                        <dd class="col-sm-8">{{ project.location }}</dd>
+                        <dd class="col-sm-8">{{ tender.location }}</dd>
                        
                         <dt class="col-sm-4">Status</dt>
                         <dd class="col-sm-8">
-                            <td>{{project.status | getProjectStatus}}</td>  
+                            <td>{{tender.status | getTenderStatus}}</td>  
                         </dd>
                         
                         <dt class="col-sm-4">Type du projet</dt>
                         <dd class="col-sm-8">
-                            <td>{{project.projectType | getProjectType}}</td> 
+                            <td>{{tender.tenderType | getTenderType}}</td> 
                         </dd>
 
                     </dl>
@@ -43,32 +43,32 @@
                 <div class="col">
                     <div class="p-3 row">
                         <dt class="col-sm-4">Date de début</dt>
-                        <dd class="col-sm-8">{{ project.startDate ? project.startDate|date('Y-m-d H:i:s') : '' }}.</dd>
+                        <dd class="col-sm-8">{{ tender.startDate ? tender.startDate|date('Y-m-d H:i:s') : '' }}.</dd>
                         <dt class="col-sm-4">Date de fin</dt>
-                        <dd class="col-sm-8">{{ project.endDate ? project.endDate|date('Y-m-d H:i:s') : '' }}.</dd>
+                        <dd class="col-sm-8">{{ tender.endDate ? tender.endDate|date('Y-m-d H:i:s') : '' }}.</dd>
                     
                         <dt class="col-sm-4">Budget minimum</dt>
-                        <dd class="col-sm-8">{{ project.minBudget }}.</dd>
+                        <dd class="col-sm-8">{{ tender.minBudget }}.</dd>
                         <dt class="col-sm-4">Budget maximum</dt>
-                        <dd class="col-sm-8">{{ project.maxBudget }}.</dd>
+                        <dd class="col-sm-8">{{ tender.maxBudget }}.</dd>
                     
                     </div>
                 </div>
             </div>
             <div class="px-4">
-                <strong>Url:</strong> {{ project.url }}.<br/>
-                <strong>Description:</strong> {{ project.description }}.
+                <strong>Url:</strong> {{ tender.url }}.<br/>
+                <strong>Description:</strong> {{ tender.description }}.
             </div>
        </div>
        
        <div class="row mt-5">
             <strong class="h4 float-start mb-2">Documents suivis</strong>
           
-        {% for document in project.documents %}
+        {% for document in tender.documents %}
         <div class="card mx-2" style="width: 18rem; height: 17rem;">
             <div class="card-body">
               <h4 class="card-title">{{ document.name }}</h4>
-              <h6 class="card-subtitle mb-2 text-body-secondary">{{document.project.title}}</h6>
+              <h6 class="card-subtitle mb-2 text-body-secondary">{{document.tender.title}}</h6>
               <p class="card-text">{{document.information|u.truncate(80, '...')}}</p>
               <span class="badge rounded-pill bg-{{document.status | getStatusColor}}">
                 {{document.status | getDocumentStatus}}</span>
@@ -93,11 +93,11 @@
             </button>
         </div>
         <ol class="list-group">
-            {% for file in project.files %}
+            {% for file in tender.files %}
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                     <div class="fw-bold">
-                        <a href="{{ asset('uploads/project_tas/' ~ file.filepath| e('html')) }}">{{ file.filename }}</a>
+                        <a href="{{ asset('uploads/tender_tas/' ~ file.filepath| e('html')) }}">{{ file.filename }}</a>
                     </div>
                     url: {{ file.url }}
                 </div>

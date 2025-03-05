@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\File;
-use App\Entity\Project;
+use App\Entity\Tender;
 use App\Form\FileType;
-use App\Form\ProjectType;
-use App\Repository\ProjectRepository;
-use App\Security\Voter\ProjectVoter;
+use App\Form\TenderType;
+use App\Repository\TenderRepository;
+use App\Security\Voter\TenderVoter;
 use App\Service\FileUploaderService;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,52 +18,52 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/project')]
-final class ProjectController extends AbstractController
+#[Route('/tender')]
+final class TenderController extends AbstractController
 {
-    #[Route(name: 'app_project_index', methods: ['GET'])]
-    public function index(ProjectRepository $projectRepository,ListService $listService): Response
+    #[Route(name: 'app_tender_index', methods: ['GET'])]
+    public function index(TenderRepository $tenderRepository,ListService $listService): Response
     {
         
          if ($this->isGranted('ROLE_ADMIN')) {
-            $projects= $projectRepository->findAll();
+            $tenders= $tenderRepository->findAll();
          }elseif($this->isGranted('ROLE_RESPO')){
-            $projects= $projectRepository->findBy(["responsable_id"=>$this->getUser()]);
+            $tenders= $tenderRepository->findBy(["responsable_id"=>$this->getUser()]);
          }else{
-            $projects=[];
+            $tenders=[];
          }
-        return $this->render('project/index.html.twig', [
-            'projects' => $projects
+        return $this->render('tender/index.html.twig', [
+            'tenders' => $tenders
         ]);
     }
 
-    #[Route('/new', name: 'app_project_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_tender_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $project = new Project();
-        $form = $this->createForm(ProjectType::class, $project);
+        $tender = new Tender();
+        $form = $this->createForm(TenderType::class, $tender);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager->persist($project);
+                $entityManager->persist($tender);
                 $entityManager->flush();
                 $this->addFlash('success','Projet enregistré!' );
             } catch (FileException $e) {
                 $this->addFlash('error', "Erreur! Le projet n'a pas pu etre enregistré.");
             }
-            return $this->redirectToRoute('app_project_show', ['id'=>$project->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('project/new.html.twig', [
-            'project' => $project,
+        return $this->render('tender/new.html.twig', [
+            'tender' => $tender,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_project_show', methods: ['GET', 'POST'])]
-    #[IsGranted('operation', 'project', 'Page not found', 404)]
-    public function show_project_and_add_file(Project $project, EntityManagerInterface $entityManager, Request $request, 
+    #[Route('/{id}', name: 'app_tender_show', methods: ['GET', 'POST'])]
+    #[IsGranted('operation', 'tender', 'Page not found', 404)]
+    public function show_tender_and_add_file(Tender $tender, EntityManagerInterface $entityManager, Request $request, 
     FileUploaderService $fileUploader): Response
     {
         $file = new File();
@@ -71,10 +71,10 @@ final class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file->setProjectId($project);
+            $file->setTenderId($tender);
             $brochureFile = $form['filepath']->getData();
             if ($brochureFile) {
-                $newFilename = $fileUploader->upload($brochureFile,"project_tas");
+                $newFilename = $fileUploader->upload($brochureFile,"tender_tas");
                 try {
                     $file->setFilename($brochureFile->getClientOriginalName());
                     $file->setFilepath($newFilename);
@@ -87,9 +87,9 @@ final class ProjectController extends AbstractController
                    dd($e);
                 }
             }
-            return $this->redirectToRoute('app_project_show', ['id'=>$project->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
-        return $this->render('project/show.html.twig', ['project' => $project, 'form' => $form]);
+        return $this->render('tender/show.html.twig', ['tender' => $tender, 'form' => $form]);
     }
 
 
@@ -97,11 +97,11 @@ final class ProjectController extends AbstractController
 
 
 
-    #[Route('/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('operation', 'project', 'Page not found', 404)]
-    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/edit', name: 'app_tender_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('operation', 'tender', 'Page not found', 404)]
+    public function edit(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ProjectType::class, $project);
+        $form = $this->createForm(TenderType::class, $tender);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -112,31 +112,31 @@ final class ProjectController extends AbstractController
                 $this->addFlash('error',"Erreur! la modification du projet a échoué." );
             }
 
-            return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('project/edit.html.twig', [
-            'project' => $project,
+        return $this->render('tender/edit.html.twig', [
+            'tender' => $tender,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]   
-    #[IsGranted('operation', 'project', 'Page not found', 404)]
+    #[Route('/{id}', name: 'app_tender_delete', methods: ['POST'])]   
+    #[IsGranted('operation', 'tender', 'Page not found', 404)]
   
-    public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($project);
+        if ($this->isCsrfTokenValid('delete'.$tender->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($tender);
             $entityManager->flush();
             $this->addFlash('success','Projet supprimé!' );
         }
 
-        return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/file/{id}', name: 'app_file_delete', methods: ['POST'])]   
-    #[IsGranted('operation', 'project', 'Page not found', 404)]
+    #[IsGranted('operation', 'tender', 'Page not found', 404)]
     public function delete_file(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {
@@ -145,6 +145,6 @@ final class ProjectController extends AbstractController
             $this->addFlash('success','Fichier supprimé!' );
         }
 
-        return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
     }
 }

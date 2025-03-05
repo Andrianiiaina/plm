@@ -20,7 +20,7 @@ class File
     private ?string $url = null;
 
     #[ORM\ManyToOne(inversedBy: 'files')]
-    private ?Project $project = null;
+    private ?Tender $tender = null;
 
     #[ORM\Column(length: 255)]
     private ?string $filepath = null;
@@ -54,14 +54,14 @@ class File
         return $this;
     }
 
-    public function getProject(): ?Project
+    public function getTender(): ?Tender
     {
-        return $this->project;
+        return $this->tender;
     }
 
-    public function setProjectId(?Project $project): static
+    public function setTenderId(?Tender $tender): static
     {
-        $this->project = $project;
+        $this->tender = $tender;
 
         return $this;
     }

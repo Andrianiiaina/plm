@@ -10,7 +10,7 @@ class ListService
         "ROLE_USER" => "Simple utilisateur"
     ];
 
-   public static array $project_status=[
+   public static array $tender_status=[
      "En préparation"=>0,
      "En rédaction"=>1,
      "En attente de réponse"=>2,
@@ -18,7 +18,7 @@ class ListService
      "Perdu"=>4,
    ];
 
-   public static array $project_type=[
+   public static array $tender_type=[
         "It Infrastructure"=>0,
         "MULTICLOUD & AUTOMATION"=>1,
         "IoT & EMBEDDED SYSTEMS"=>2,

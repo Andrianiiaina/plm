@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\ProjectRepository;
+use App\Repository\TenderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-#[ORM\Entity(repositoryClass: ProjectRepository::class)]
-class Project
+#[ORM\Entity(repositoryClass: TenderRepository::class)]
+class Tender
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,7 +46,7 @@ class Project
     private ?int $status = null;
 
     #[ORM\Column]
-    private ?int $project_type = null;
+    private ?int $tender_type = null;
 
     #[ORM\ManyToOne(inversedBy: 'url')]
     private ?User $responsable_id = null;
@@ -57,19 +57,19 @@ class Project
     /**
      * @var Collection<int, File>
      */
-    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'project')]
+    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'tender')]
     private Collection $files;
 
     /**
      * @var Collection<int, Document>
      */
-    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'project')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'tender')]
     private Collection $documents;
 
     /**
      * @var Collection<int, Calendar>
      */
-    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'project')]
+    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'tender')]
     private Collection $calendars;
 
     #[Assert\Callback]
@@ -215,14 +215,14 @@ class Project
         return $this;
     }
 
-    public function getProjectType(): ?int
+    public function getTenderType(): ?int
     {
-        return $this->project_type;
+        return $this->tender_type;
     }
 
-    public function setProjectType(int $project_type): static
+    public function setTenderType(int $tender_type): static
     {
-        $this->project_type = $project_type;
+        $this->tender_type = $tender_type;
 
         return $this;
     }
@@ -263,7 +263,7 @@ class Project
     {
         if (!$this->files->contains($file)) {
             $this->files->add($file);
-            $file->setProjectId($this);
+            $file->setTenderId($this);
         }
 
         return $this;
@@ -273,8 +273,8 @@ class Project
     {
         if ($this->files->removeElement($file)) {
             // set the owning side to null (unless already changed)
-            if ($file->getProject() === $this) {
-                $file->setProjectId(null);
+            if ($file->getTender() === $this) {
+                $file->setTenderId(null);
             }
         }
 
@@ -293,7 +293,7 @@ class Project
     {
         if (!$this->documents->contains($document)) {
             $this->documents->add($document);
-            $document->setProject($this);
+            $document->setTender($this);
         }
 
         return $this;
@@ -303,8 +303,8 @@ class Project
     {
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
-            if ($document->getProject() === $this) {
-                $document->setProject(null);
+            if ($document->getTender() === $this) {
+                $document->setTender(null);
             }
         }
 
@@ -323,7 +323,7 @@ class Project
     {
         if (!$this->calendars->contains($calendar)) {
             $this->calendars->add($calendar);
-            $calendar->setProject($this);
+            $calendar->setTender($this);
         }
 
         return $this;
@@ -333,8 +333,8 @@ class Project
     {
         if ($this->calendars->removeElement($calendar)) {
             // set the owning side to null (unless already changed)
-            if ($calendar->getProject() === $this) {
-                $calendar->setProject(null);
+            if ($calendar->getTender() === $this) {
+                $calendar->setTender(null);
             }
         }
 

@@ -26,7 +26,7 @@ class Calendar
     private ?string $title = null;
 
     #[ORM\ManyToOne(inversedBy: 'calendars')]
-    private ?Project $project = null;
+    private ?Tender $tender = null;
 
 
     #[Assert\Callback]
@@ -80,14 +80,14 @@ class Calendar
         return $this;
     }
 
-    public function getProject(): ?Project
+    public function getTender(): ?Tender
     {
-        return $this->project;
+        return $this->tender;
     }
 
-    public function setProject(?Project $project): static
+    public function setTender(?Tender $tender): static
     {
-        $this->project = $project;
+        $this->tender = $tender;
 
         return $this;
     }

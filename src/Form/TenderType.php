@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Project;
+use App\Entity\Tender;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Service\ListService;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProjectType extends AbstractType
+class TenderType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -71,12 +71,12 @@ class ProjectType extends AbstractType
                 )
             ->add('status',ChoiceType::class,[
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
-                'choices'  => ListService::$project_status,
+                'choices'  => ListService::$tender_status,
             ])
-            ->add('project_type',ChoiceType::class,[
+            ->add('tender_type',ChoiceType::class,[
                 'label'=>'Type du projet',
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
-                'choices'  => ListService::$project_type,
+                'choices'  => ListService::$tender_type,
             ])
             ->add('url', UrlType::class,[
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
@@ -94,7 +94,7 @@ class ProjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Project::class,
+            'data_class' => Tender::class,
         ]);
     }
 }

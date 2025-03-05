@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
+    <button class="btn btn-danger"><i class="bi bi-trash3-fill"></i></button>
+</form>
