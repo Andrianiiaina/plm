@@ -33,11 +33,12 @@ final class DocumentController extends AbstractController
 
             $brochureDocument = $form['filepath']->getData();
             if ($brochureDocument) {
-                $newFilename = $fileUploader->upload($brochureDocument,"documents");
+                $newFilename = $fileUploader->upload($brochureDocument,"tender_documents");
                 try {
                     $document->setFilename($brochureDocument->getClientOriginalName());
                     $document->setFilepath($newFilename);
                     $entityManager->persist($document);
+                    //dd($document);
                     $entityManager->flush(); 
                     $this->addFlash('success','Document enregistré!' );
                 } catch (FileException $e) {

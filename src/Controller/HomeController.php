@@ -20,13 +20,13 @@ final class HomeController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_RESPO');
         $user=$this->getUser();
         if ($this->isGranted('ROLE_ADMIN')) {
-            $documents=$entityManager->getRepository(Document::class)->findAll();
-            $calendars=$entityManager->getRepository(Calendar::class)->findAll();
-            $tenders= $entityManager->getRepository(Tender::class)->findAll();
+            $documents=$entityManager->getRepository(Document::class)->findBy([],['createdAt'=>'asc'],5);
+            $calendars=$entityManager->getRepository(Calendar::class)->findBy([],[],5);
+            $tenders= $entityManager->getRepository(Tender::class)->findBy([],['createdAt'=>'asc'],12);
          }elseif($this->isGranted('ROLE_RESPO')){
             $documents=$entityManager->getRepository(Document::class)->findDocs($user, 5);
             $calendars=$entityManager->getRepository(Calendar::class)->findUserCalendar($user, 5);
-            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable_id'=>$user]);
+            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable_id'=>$user],null,10);
          }else{
             $tenders=[];
             $documents=[];

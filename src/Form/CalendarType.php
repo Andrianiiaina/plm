@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Calendar;
-use App\Entity\Project;
+use App\Entity\Tender;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -29,8 +29,8 @@ class CalendarType extends AbstractType
                 'required'=>false,
             ])
             ->add('title',TextType::class,['label'=> "Titre"])
-            ->add('project', EntityType::class, [
-                'class' => Project::class,
+            ->add('tender', EntityType::class, [
+                'class' => Tender::class,
                 'choice_label' => 'title',
                 'multiple' => false,
             ])

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TenderRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -54,6 +55,12 @@ class Tender
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $url = null;
 
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTime $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $modifiedAt;
+
     /**
      * @var Collection<int, File>
      */
@@ -100,6 +107,9 @@ class Tender
         $this->files = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->calendars = new ArrayCollection();
+        $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
+        $this->modifiedAt = null;
+    
     }
 
     public function getId(): ?int
@@ -226,6 +236,31 @@ class Tender
 
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+    public function setCreatedAt(?\DateTime $date): static
+    {
+        $this->createdAt = $date;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTime
+    {
+        return $this->modifiedAt;
+    }
+    public function setModifiedAt(?\DateTime $date): static
+    {
+        $this->modifiedAt = $date;
+
+        return $this;
+    }
+
+
+
 
     public function getResponsableId(): ?User
     {

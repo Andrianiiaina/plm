@@ -29,6 +29,7 @@ class ListService
         "A compléter"=>0,
         "A vérifier"=>1,
         "A signer"=>2,
-        "A archiver"=>3,
+        "A envoyer"=>3,
+        "A archiver"=>4,
     ];
 }

@@ -19,7 +19,7 @@ class CalendarRepository extends ServiceEntityRepository
     public function findUserCalendar($responsable, $number_to_fetch=10): array
     {
         return $this->createQueryBuilder('c')
-            ->join('c.project', 'p')
+            ->join('c.tender', 'p')
             ->where('p.responsable_id = :responsable')
             ->setParameter('responsable', $responsable)
             ->setMaxResults($number_to_fetch)

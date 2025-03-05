@@ -36,6 +36,12 @@ class Contact
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'contacts')]
     private ?self $parent = null;
 
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTime $createdAt;
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTime $modifiedAt;
+
+
     /**
      * @var Collection<int, self>
      */

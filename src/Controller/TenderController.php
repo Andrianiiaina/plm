@@ -74,7 +74,7 @@ final class TenderController extends AbstractController
             $file->setTenderId($tender);
             $brochureFile = $form['filepath']->getData();
             if ($brochureFile) {
-                $newFilename = $fileUploader->upload($brochureFile,"tender_tas");
+                $newFilename = $fileUploader->upload($brochureFile,"tender_files");
                 try {
                     $file->setFilename($brochureFile->getClientOriginalName());
                     $file->setFilepath($newFilename);
@@ -136,7 +136,7 @@ final class TenderController extends AbstractController
     }
 
     #[Route('/file/{id}', name: 'app_file_delete', methods: ['POST'])]   
-    #[IsGranted('operation', 'tender', 'Page not found', 404)]
+   
     public function delete_file(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {

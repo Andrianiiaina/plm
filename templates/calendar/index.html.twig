@@ -6,13 +6,13 @@
    <div class="row">
     <div class=" offset-1 col-md-10">
         <div class="card card-body ">
-            <p class="h3">Ajouter un new event</h1>
+            <p class="h3">Ajouter un event</h1>
 
             {{ include('calendar/_form.html.twig') }}
         </div>
         </div>
     <div class="offset-1 col-md-10 mt-5">
-        <p class="h2">Evènements</p>
+        <p class="h2">Agenda</p>
 
     <table class="table">
         <thead>
@@ -41,7 +41,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">aucun</td>
             </tr>
         {% endfor %}
         </tbody>

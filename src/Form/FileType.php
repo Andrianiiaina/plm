@@ -35,7 +35,7 @@ class FileType extends AbstractType
                     ])
                 ],
                 ])
-            ->add('url',TextType::class)
+            ->add('url',TextType::class,[ 'required' => false])
         ;
     }
 

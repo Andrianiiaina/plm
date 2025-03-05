@@ -36,6 +36,21 @@ class Document
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTime $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $modifiedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime(); 
+        $this->modifiedAt = null;
+    
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +136,27 @@ class Document
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+    public function setCreatedAt(?\DateTime $date): static
+    {
+        $this->createdAt = $date;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTime
+    {
+        return $this->modifiedAt;
+    }
+    public function setModifiedAt(?\DateTime $date): static
+    {
+        $this->modifiedAt = $date;
 
         return $this;
     }

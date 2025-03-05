@@ -49,6 +49,7 @@ class TenderType extends AbstractType
             ->add('end_date', DateType::class, [
                 'label' => "Date de fin",
                 'widget' => 'single_text',
+                'required' => false,
                 'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             ])
             ->add('min_budget', IntegerType::class,[

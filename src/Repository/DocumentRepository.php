@@ -21,7 +21,7 @@ class DocumentRepository extends ServiceEntityRepository
       public function findDocs($responsable,$number_to_fetch=10): array
       {
           return $this->createQueryBuilder('d')
-              ->join('d.project', 'p')
+              ->join('d.tender', 'p')
               ->orWhere('d.responsable = :responsable')
               ->orWhere('p.responsable_id = :responsable')
               ->setParameter('responsable', $responsable)
