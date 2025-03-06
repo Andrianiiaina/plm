@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Calendar;
+use App\Entity\Reminder;
 use App\Form\CalendarType;
 use App\Repository\CalendarRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,11 +32,19 @@ final class CalendarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             try {
                 $entityManager->persist($calendar);
-                $entityManager->flush();
-                $this->addFlash('success','Evènement enregistré!' );
+              
+                 //si on recoit reminder-> on enregistre
+             if($form['reminder']->getData() != null){
+                $reminder = new Reminder();
+                $reminder->setTitle($calendar->getTitle());
+                $reminder->addUser($this->getUser());
+                $reminder->setDate($form['reminder']->getData());
+                $entityManager->persist($reminder);
+            }
+            $entityManager->flush();
+            $this->addFlash('success','Evènement enregistré!' );
             } catch (Exception $e) {
                 $this->addFlash('error', "Erreur! L'évènement n'a pas pu etre enregistré.");
             }

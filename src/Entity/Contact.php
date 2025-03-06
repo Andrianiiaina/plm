@@ -36,10 +36,12 @@ class Contact
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'contacts')]
     private ?self $parent = null;
 
+   
     #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTime $createdAt;
-    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTime $modifiedAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $modifiedAt;
 
 
     /**
@@ -61,6 +63,8 @@ class Contact
     {
         $this->contacts = new ArrayCollection();
         $this->contactGroups = new ArrayCollection();
+        $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
+        $this->modifiedAt = null;
     }
 
  

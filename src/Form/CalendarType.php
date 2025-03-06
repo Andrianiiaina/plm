@@ -34,6 +34,12 @@ class CalendarType extends AbstractType
                 'choice_label' => 'title',
                 'multiple' => false,
             ])
+            ->add('reminder', DateType::class, [
+                'label'=> "reminder",
+                'widget' => 'single_text',
+                'required'=>false,
+                'mapped' => false,
+            ])
         ;
     }
 
