@@ -65,21 +65,20 @@
             <strong class="h4 float-start mb-2">Documents suivis</strong>
           
         {% for document in tender.documents %}
-        <div class="card mx-2" style="width: 18rem; height: 17rem;">
+        <!--div class="card mx-2" style="width: 18rem;">
             <div class="card-body">
               <h4 class="card-title">{{ document.name }}</h4>
               <h6 class="card-subtitle mb-2 text-body-secondary">{{document.tender.title}}</h6>
-              <p class="card-text">{{document.information|u.truncate(80, '...')}}</p>
               <span class="badge rounded-pill bg-{{document.status | getStatusColor}}">
                 {{document.status | getDocumentStatus}}</span>
                 <small>@{{document.responsable.email}}</small>
               <div class="btn-group">
-                <a href="{{ path('app_document_edit', {'id': document.id}) }}" class="btn">Modifier</a>
-                  {{ include('document/_delete_form.html.twig') }}
+                <a href="{{ path('app_document_edit', {'id': document.id}) }}" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+             
               </div>
             </div>
             
-          </div>
+          </div-->
         {% else %}
             <small>Aucun document pour le moment.</small>
         {% endfor %}

@@ -11,6 +11,7 @@
 				<a href="{{ path('app_tender_new') }}" class="btn"> + Tender</a>
 				<a href="{{ path('app_document_index') }}" class="btn"> + Document</a>
 				<a href="{{ path('app_calendar_new') }}" class="btn"> + Agenda</a>
+				<a href="{{ path('app_reminder_new') }}" class="btn"> <i class="bi bi-bell"></i></a>
 
 			</div>
 		</div>
@@ -65,7 +66,7 @@
 							<a href="{{path('app_document_show', {'id': document.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
 								<strong>{{ document.name | u.truncate(35, '...')}}</strong> 
 								<br/>
-								<small><i>{{document.tender.title}}</i></small> 
+								<small><i>{{document.tender.title| u.truncate(45, '...')}}</i></small> 
 							</a>
 							<span class="float-end badge text-bg-{{ document.status| getStatusColor}}"> {{document.status | getDocumentStatus}} </span>
 						</div>
