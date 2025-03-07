@@ -69,7 +69,7 @@ final class CalendarController extends AbstractController
     #[Route('/{id}/edit', name: 'app_calendar_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(CalendarType::class, $calendar);
+        $form = $this->createForm(CalendarType::class, $calendar,['is_edited'=>true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

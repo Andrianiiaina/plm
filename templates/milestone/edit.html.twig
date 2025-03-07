@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Milestone{% endblock %}
+
+{% block body %}
+    <h1>Modifier le Milestone</h1>
+
+    {{ include('milestone/_form.html.twig', {'button_label': 'Update'}) }}
+
+{% endblock %}

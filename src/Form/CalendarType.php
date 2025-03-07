@@ -18,7 +18,7 @@ class CalendarType extends AbstractType
     {
         $builder
             ->add('beginAt', DateType::class, [
-                'input'  => 'datetime_immutable',
+                'input'  => 'datetime',
                 'label'=> 'Le',
                 'widget' => 'single_text',
                 'constraints' => [new Assert\GreaterThanOrEqual('today') ],
@@ -33,6 +33,7 @@ class CalendarType extends AbstractType
                 'class' => Tender::class,
                 'choice_label' => 'title',
                 'multiple' => false,
+                'disabled' => $options['is_edited'],
             ])
             ->add('reminder', DateType::class, [
                 'label'=> "reminder",
@@ -47,6 +48,7 @@ class CalendarType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Calendar::class,
+            'is_edited' => false
         ]);
     }
 }

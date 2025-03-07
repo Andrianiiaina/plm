@@ -35,18 +35,18 @@ class ListService
     public static array $task_status = [
         "A faire"=>0,
         "En cours"=>1,
-        "En validation"=>2,
+        "A valider"=>2,
         "Terminé"=>3,
-        "Annulée"=>4,
+        "Annulé"=>4,
     ];
 
     public static array $project_status = [
         "Non commencé"=>0,
         "En cours"=>1,
-        "Suspendu"=>2,
-        "A risque"=>3,
-        "Terminé"=>4,
-        "Annulée"=>5,
+        "A valider"=>2,
+        "Terminé"=>3,
+        "Suspendu"=>4,
+        "Annulé"=>5,
     ];
 
 }

@@ -40,11 +40,13 @@ class AppFixtures extends Fixture
         return ['tender'=>TenderFactory::random()];
     });
 
+    $rate=[0 =>0, 1=>20, 2=>80, 3=>100, 4=>0,5=>0];
+
     foreach (ListService::$task_status as $key=>$value) {
-        $projectStatus = new TaskStatus();
-        $projectStatus->setCode($value);
-        $projectStatus->setLabel($key);
-        $manager->persist($projectStatus);
+        $taskStatus = new TaskStatus();
+        $taskStatus->setCode($value);
+        $taskStatus->setLabel($key);
+        $manager->persist($taskStatus);
     }
     foreach (ListService::$project_status as $key=>$value) {
         $projectStatus = new ProjectStatus();
