@@ -44,7 +44,7 @@
 									<span class="badge bg-{{ tender_.status |getTenderStatusColor }}"> </span> {{ tender_.title| u.truncate(40, '...')}}
 								</a>
 							</td>
-							<td><small>{{tender_.responsableId.email}}</small></td>
+							<td><small>{{tender_.responsable.email}}</small></td>
 							<td>{{ tender_.endDate ? tender_.endDate|date('d/m/Y H:i') : '' }}</td>
 						
 						
@@ -82,9 +82,9 @@
 					{% for calendar in calendars %}
 						<div class="col mb-3">
 							<a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-								<strong>{{ calendar.endAt ? calendar.endAt|date('d/m/Y H:i') : '' }}</strong>	
-								{{ calendar.title }}<br/>
-								<small><i>{{ calendar.tender.title }}</i></small>
+								<strong>{{ calendar.getBeginAt ? calendar.getBeginAt|date('d/m/Y H:i') : '' }}</strong>	
+								{{ calendar.title | u.truncate(30, '...')}}<br/>
+								<small><i>{{ calendar.tender.title | u.truncate(70, '...')}}</i></small>
 							</a>
 						</div>
 					{% else %}

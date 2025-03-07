@@ -20,7 +20,7 @@ class CalendarRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->join('c.tender', 'p')
-            ->where('p.responsable_id = :responsable')
+            ->where('p.responsable = :responsable')
             ->setParameter('responsable', $responsable)
             ->setMaxResults($number_to_fetch)
             ->getQuery()

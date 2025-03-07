@@ -71,7 +71,7 @@ class File
         return $this->tender;
     }
 
-    public function setTenderId(?Tender $tender): static
+    public function setTender(?Tender $tender): static
     {
         $this->tender = $tender;
 

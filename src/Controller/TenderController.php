@@ -28,7 +28,7 @@ final class TenderController extends AbstractController
          if ($this->isGranted('ROLE_ADMIN')) {
             $tenders= $tenderRepository->findAll();
          }elseif($this->isGranted('ROLE_RESPO')){
-            $tenders= $tenderRepository->findBy(["responsable_id"=>$this->getUser()]);
+            $tenders= $tenderRepository->findBy(["responsable"=>$this->getUser()]);
          }else{
             $tenders=[];
          }
@@ -71,7 +71,7 @@ final class TenderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file->setTenderId($tender);
+            $file->setTender($tender);
             $brochureFile = $form['filepath']->getData();
             if ($brochureFile) {
                 $newFilename = $fileUploader->upload($brochureFile,"tender_files");

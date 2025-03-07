@@ -83,7 +83,7 @@ class TenderType extends AbstractType
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
 
             ])
-            ->add('responsable_id', EntityType::class, [
+            ->add('responsable', EntityType::class, [
                 'label'=>'Responsable',
                 'class' => User::class,
                 'choice_label' => 'email',

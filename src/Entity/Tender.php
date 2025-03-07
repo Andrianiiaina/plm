@@ -50,7 +50,7 @@ class Tender
     private ?int $tender_type = null;
 
     #[ORM\ManyToOne(inversedBy: 'url')]
-    private ?User $responsable_id = null;
+    private ?User $responsable = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $url = null;
@@ -262,14 +262,14 @@ class Tender
 
 
 
-    public function getResponsableId(): ?User
+    public function getResponsable(): ?User
     {
-        return $this->responsable_id;
+        return $this->responsable;
     }
 
-    public function setResponsableId(?User $responsable_id): static
+    public function setResponsable(?User $responsable): static
     {
-        $this->responsable_id = $responsable_id;
+        $this->responsable = $responsable;
 
         return $this;
     }
@@ -298,7 +298,7 @@ class Tender
     {
         if (!$this->files->contains($file)) {
             $this->files->add($file);
-            $file->setTenderId($this);
+            $file->setTender($this);
         }
 
         return $this;
@@ -309,7 +309,7 @@ class Tender
         if ($this->files->removeElement($file)) {
             // set the owning side to null (unless already changed)
             if ($file->getTender() === $this) {
-                $file->setTenderId(null);
+                $file->setTender(null);
             }
         }
 

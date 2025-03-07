@@ -32,4 +32,21 @@ class ListService
         "A envoyer"=>3,
         "A archiver"=>4,
     ];
+    public static array $task_status = [
+        "A faire"=>0,
+        "En cours"=>1,
+        "En validation"=>2,
+        "Terminé"=>3,
+        "Annulée"=>4,
+    ];
+
+    public static array $project_status = [
+        "Non commencé"=>0,
+        "En cours"=>1,
+        "Suspendu"=>2,
+        "A risque"=>3,
+        "Terminé"=>4,
+        "Annulée"=>5,
+    ];
+
 }

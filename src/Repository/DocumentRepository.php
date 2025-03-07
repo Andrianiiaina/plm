@@ -23,7 +23,7 @@ class DocumentRepository extends ServiceEntityRepository
           return $this->createQueryBuilder('d')
               ->join('d.tender', 'p')
               ->orWhere('d.responsable = :responsable')
-              ->orWhere('p.responsable_id = :responsable')
+              ->orWhere('p.responsable = :responsable')
               ->setParameter('responsable', $responsable)
               ->setMaxResults($number_to_fetch)
               ->getQuery()

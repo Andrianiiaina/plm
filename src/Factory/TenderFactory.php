@@ -32,7 +32,7 @@ final class TenderFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        $date=self::faker()->dateTime();
+        $date=self::faker()->dateTimeBetween('now','+6 months');
         return [
             'title' => self::faker()->unique()->sentence(),
             'contract_number' => self::faker()->text(15),
@@ -40,10 +40,10 @@ final class TenderFactory extends PersistentProxyObjectFactory
             'description' => self::faker()->text(225),
             'min_budget' => self::faker()->randomFloat(),
             'start_date' => \DateTimeImmutable::createFromMutable($date),
-            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+10 days')),
+            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
             'status' => self::faker()->numberBetween(0, 4),
             'tender_type' => self::faker()->numberBetween(0, 4),
-            'responsable_id'=>UserFactory::new(),
+            'responsable'=>UserFactory::new(),
         ];
     }
 

@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Tender>
      */
-    #[ORM\OneToMany(targetEntity: Tender::class, mappedBy: 'responsable_id')]
+    #[ORM\OneToMany(targetEntity: Tender::class, mappedBy: 'responsable')]
     private Collection $tenders;
 
     /**
@@ -59,11 +59,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Reminder::class, mappedBy: 'user')]
     private Collection $reminders;
 
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'responsable')]
+    private Collection $projects;
+
     public function __construct()
     {
         $this->tenders = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->reminders = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,7 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->tenders->contains($tenders)) {
             $this->tenders->add($tenders);
-            $tenders->setResponsableId($this);
+            $tenders->setResponsable($this);
         }
 
         return $this;
@@ -197,8 +204,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->tenders->removeElement($tenders)) {
             // set the owning side to null (unless already changed)
-            if ($tenders->getResponsableId() === $this) {
-                $tenders->setResponsableId(null);
+            if ($tenders->getResponsable() === $this) {
+                $tenders->setResponsable(null);
             }
         }
 
@@ -257,6 +264,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->reminders->removeElement($reminder)) {
             $reminder->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->setResponsable($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getResponsable() === $this) {
+                $project->setResponsable(null);
+            }
         }
 
         return $this;

@@ -26,7 +26,7 @@ final class HomeController extends AbstractController
          }elseif($this->isGranted('ROLE_RESPO')){
             $documents=$entityManager->getRepository(Document::class)->findDocs($user, 5);
             $calendars=$entityManager->getRepository(Calendar::class)->findUserCalendar($user, 5);
-            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable_id'=>$user],null,10);
+            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable'=>$user],null,10);
          }else{
             $tenders=[];
             $documents=[];
