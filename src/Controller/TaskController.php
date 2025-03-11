@@ -29,7 +29,7 @@ final class TaskController extends AbstractController
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_milestone_show', ['id'=>$task->getMilestone()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_milestone_show', ['id'=>$task->getMilestone()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('task/new.html.twig', [

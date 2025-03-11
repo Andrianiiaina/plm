@@ -42,7 +42,10 @@ class Project
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?ProjectStatus $status = null; #[ORM\Column]
+    private ?ProjectStatus $status = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $devise = 'EUR';
 
     public function __construct()
     {
@@ -181,11 +184,31 @@ class Project
         }
 
         if($total_rate!=0){
-             return ($total_rate/$milestone_points);
+             return (number_format($total_rate/$milestone_points));
         }else{
              return $this->getStatus()->getPercentage();
         }
     }
+    
+    public function getMilestonesWeight(): float
+    {
+        $total_weight=0;
+        foreach ($this->getMilestones() as $milestone) {
+            $total_weight+=$milestone->getRate();
+        }
+        return $total_weight;
+    }
 
+    public function getDevise(): ?string
+    {
+        return $this->devise;
+    }
+
+    public function setDevise(string $devise): static
+    {
+        $this->devise = $devise;
+
+        return $this;
+    }
    
 }

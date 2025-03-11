@@ -3,8 +3,11 @@
 {% block title %}Edit Task{% endblock %}
 
 {% block body %}
-    <h1>Edit Task</h1>
-
-    {{ include('task/_form.html.twig', {'button_label': 'Modifier'}) }}
+    <div class="row">
+        <div class="offset-3 col-md-6">
+            <h1>Modifier la tache</h1>
+            {{ include('task/_form.html.twig', {'button_label': 'Modifier'}) }}
+        </div>
+    </div>
 
 {% endblock %}

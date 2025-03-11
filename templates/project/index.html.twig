@@ -17,25 +17,16 @@
                         <th>Progression</th>
                         <th>Deadline</th>
                         <th>Responsable</th>
-                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for project in projects %}
                     <tr>
-                        <td>{{ project.title }}</td>
+                        <td><a href="{{ path('app_project_show', {'id': project.id}) }}" class="link-secondary link-underline link-underline-opacity-0">{{ project.title }}</a></td>
                         <td>{{ project.budget }}</td>
                         <td>{{ project.getProgress }}%</td>
-                        <td>{{ project.deadline ? project.deadline|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ project.deadline ? project.deadline|date('d/m/Y') : '' }}</td>
                         <td>{{ project.responsable.email }}</td>
-
-                        <td class="btn-group">
-                            <a href="{{ path('app_project_show', {'id': project.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
-                         
-                                <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
-                                {{ include('project/_delete_form.html.twig') }}
-                           
-                        </td>
                     </tr>
                    
                 {% else %}

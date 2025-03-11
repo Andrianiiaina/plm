@@ -185,11 +185,26 @@ class Milestone
             $total_rate+=$task->getRate();
         }
        if($total_rate!=0){
-             return ($finished/$total_rate)*100;
+             return  (number_format(($finished/$total_rate)*100));
         }else{
             return $this->getStatus()->getPercentage();
         }
     }
 
+
+    public function getMilestoneWeight(): float
+    {
+        
+       return number_format($this->getRate() / $this->getProject()->getMilestonesWeight()*100);
+    }
+
+    public function totalTasksWeight(): float
+    {
+        $total_weight=0;
+        foreach ($this->getTasks() as $milestone) {
+            $total_weight+=$milestone->getRate();
+        }
+        return $total_weight;
+    }
 
 }

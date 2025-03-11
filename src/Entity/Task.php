@@ -113,5 +113,10 @@ class Task
         return $this;
     }
 
+    public function getTaskWeight(): float
+    {
+        
+       return number_format($this->getRate() / $this->getMilestone()->totalTasksWeight()*100);
+    }
 
 }

@@ -11,7 +11,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Title</th>
+                <th>Titre</th>
                 <th>Date</th>
                 <th>actions</th>
             </tr>
@@ -40,13 +40,13 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             {{ form_start(form) }}
-            <div class="modal-body">
-                    {{ form_widget(form) }}
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-primary" type="submit">{{ button_label|default('Ajouter') }}</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
+              <div class="modal-body">
+                      {{ form_widget(form) }}
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">{{ button_label|default('Ajouter') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              </div>
             {{ form_end(form) }}
           </div>
         </div>

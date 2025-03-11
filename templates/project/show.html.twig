@@ -3,48 +3,72 @@
 {% block title %}Projets{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <p class="h3">{{project.title}} à {{project.getProgress}}</p>
+    <div class="clearfix">
+        <p class="h2 float-start">{{project.title}}</p>
+        <a href="{{path('app_milestone_new',{'id':project.id})}}" class="btn float-end">Ajouter un Milestones</a>
     </div>
-    <div class="clearfix mb-2">
-        <p class="h4 float-start">Listes des milestone</p>
-        <a href="{{path('app_milestone_new',{'id':project.id})}}" class="btn float-end">Ajouter un Milestone</a>
-    </div>
-   <table class="table">
-    <thead>
-       <tr>
-        <th>Nom</th>
-        <th>Nbr de tache</th>
-        <th>Progression</th>
-        <th>Poids</th>
-        <th>Status</th>
-        <th>Fin estimé</th>
-       </tr>
-    </thead>
-    <tbody>
-        {% for milestone in project.milestones %}
-        <tr>
-            <td>{{ milestone.name }}</td>
-            <td><a href="{{ path('app_milestone_show', {'id': milestone.id}) }}" class="btn">{{ milestone.getTasks | length }} taches</a></td>
-            <td>{{ milestone.getProgress }}%</td>
-            <td>{{ milestone.rate }}</td>
-            <td>{{ milestone.status.label }}</td>
-            <td>{{ milestone.dueDate ? milestone.dueDate|date('d/m/Y') : '' }}</td>
+
+    <div class="row my-2">
+           <div class="accordion accordion-flush" id="accordionMilestone">
+            {% for milestone in project.milestones %}
+            <div class="accordion-item mt-4 pt-3">
+              <div class="accordion-header m-0 p-0">
+                <div class="container-fluid d-flex justify-content-between">
+                 <div class="">
+                    <a href="{{path('app_task_new',{'id':milestone.id})}}" class="btn btn-sm btn-outline-{{milestone.status.code |getStatusColor}}"><i class="bi bi-plus-lg"></i>Task </a>
+                    
+                    <a href="{{path('app_milestone_show',{'id': milestone.id})}}" 
+                    class="link-{{milestone.status.code |getStatusColor}} link-underline-{{milestone.status.code |getStatusColor}} link-offset-2 fs-3 p-2 pt-5">{{milestone.name | upper}}</a>
+                   
+                 </div>
+                    <div class="hstack">
+                        <div class="p-2"><em>Fin prévu: {{ milestone.dueDate ? milestone.dueDate|date('d/m/Y') : '' }}.</em></div>
+                        <div class="p-2"><em>Poids attribués: {{milestone.getMilestoneWeight}}% ({{milestone.rate}} sur {{project.getMilestonesWeight}})</em></div>
+                       
+                        <div class="p-2">
+                            <button class="collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{milestone.id}}" aria-expanded="true" aria-controls="#flush-collapse{{milestone.id}}">
+                                <em>Progression: {{milestone.getProgress() }}% ({{milestone.tasks | length}} taches)</em><i class="bi bi-chevron-down"></i>
+                            </button>
+                        </div>
+                       
+                    </div>
+                        
+                </div>
+              </div>
+              
+              <div id="flush-collapse{{milestone.id}}" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    {% if milestone.tasks.count() > 0%}
+                        {{ include('task/_tasks_list.html.twig',{'tasks':milestone.tasks})}}
+                    {% endif %}
+                    
+                
+                </div>
+              </div>
+            </div>
+            {% else %}
+              <small>Aucun milestone pour le moment.</small>
+            {% endfor %}
+          </div>
     
-            <td class="btn-group">
-                <a href="{{ path('app_milestone_show', {'id': milestone.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
-             
-                    <a href="{{ path('app_milestone_edit', {'id': milestone.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
-                    {{ include('milestone/_delete_form.html.twig') }}
-               
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">aucun</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-   </table>
+    </div>
+    <p class="h3 mt-5">Informations</p>
+    <ul class="list-group ">
+        <li class="list-group-item">Deadline: {{ project.deadline ? project.deadline|date('d/m/Y') : '' }}</li>
+        <li class="list-group-item">Budget: {{project.Budget}}</li>
+        <li class="list-group-item">Responsable: {{ project.responsable.email }}</li>
+        <li class="list-group-item">Fini à {{project.getProgress}}%</li>
+        <li class="list-group-item">
+            <form method="post" action="{{ path('app_project_delete', {'id': project.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
+                <button class="btn link-primary p-0 m-0"> Supprimer le projet</button>
+            </form>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn link-danger p-0 m-0">Modifier les informations</a>
+        </li>
+    </ul>
+
+       
 
 {% endblock %}

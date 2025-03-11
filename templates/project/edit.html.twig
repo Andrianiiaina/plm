@@ -3,8 +3,11 @@
 {% block title %}Edit Project{% endblock %}
 
 {% block body %}
-    <h1>Modification du project</h1>
-
-    {{ include('project/_form.html.twig', {'button_label': 'Modifier'}) }}
+    <div class="row">
+        <div class="offset-3 col-md-6">
+            <h1>Modification du project</h1>
+            {{ include('project/_form.html.twig', {'button_label': 'Modifier'}) }}
+        </div>
+    </div>
 
 {% endblock %}

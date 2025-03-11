@@ -16,10 +16,11 @@
                     </div>
                       <div class="list-group">
                         {% for document in documents %}
-                          <a href="{{path('app_document_show', {'id':document.id})}}" class="list-group-item list-group-item-action" aria-current="true">
-                            <div class="h5">{{ document.name }}</div>
-                            {{document.tender.title}}<br/>
-                            <small> {{document.responsable.email}}</small>
+                          <a href="{{path('app_document_show', {'id':document.id})}}" class="list-group-item list-group-item-action pb-3" aria-current="true">
+                            <span class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</span><br/>
+                            <span class="text-body-secondary">{{document.tender.title| u.truncate(40, '...')}}</span> 
+                            <br/>
+                            <small class="text-{{status | getStatusColor}}"> {{document.responsable.email}}</small>
                           </a>
                        
                         {% else %}

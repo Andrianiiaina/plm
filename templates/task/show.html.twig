@@ -3,13 +3,15 @@
 {% block title %}Task{% endblock %}
 
 {% block body %}
-    <h1>Task</h1>
+    <div class="row">
+        <div class="offset-3 col-md-6">
+            <h1>Informations</h1>
 
     <table class="table">
         <tbody>
           
             <tr>
-                <th>Name</th>
+                <th>Nom</th>
                 <td>{{ task.name }}</td>
             </tr>
             <tr>
@@ -17,17 +19,32 @@
                 <td>{{ task.status.label }}</td>
             </tr>
             <tr>
-                <th>Start_date</th>
+                <th>Début prévu</th>
                 <td>{{ task.startDate ? task.startDate|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>End_date</th>
+                <th>Fin prévu</th>
                 <td>{{ task.endDate ? task.endDate|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>rate</th>
-                <td>{{ task.rate }}</td>
+                <th>Poids attribués</th>
+                <td>{{ task.rate }} ({{task.getTaskWeight}}% par rapport aux taches du milestone <strong>{{task.milestone.name}}</strong> )</td>
+            </tr>
+            <tr>
+                <td colspan="2">   
+                    <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="btn link-primary"><i class="bi bi-pencil-fill"></i> Modifie cette tache</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <form method="post" action="{{ path('app_task_delete', {'id': task.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                        <button class="btn link-danger"><i class="bi bi-trash3-fill"></i> Supprimer cette tache</button>
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>
+        </div>
+    </div>
 {% endblock %}

@@ -49,4 +49,10 @@ class ListService
         "Annulé"=>5,
     ];
 
+    public static array $devise = [
+        "Euro"=>"EUR",
+        "Dollar"=>'USD',
+        "Ariary"=>'MGA',
+    ];
+
 }
