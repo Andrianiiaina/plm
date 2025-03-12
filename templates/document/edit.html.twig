@@ -35,7 +35,9 @@
                     A remplacer par:
                     {{ form_widget(form.filepath) }}
                 </div>
-                {{ form_widget(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_rest(form) }}
+
                     <button class="btn btn-primary col-3">{{ button_label|default('Enregistrer') }}</button>
                 {{ form_end(form) }}
 

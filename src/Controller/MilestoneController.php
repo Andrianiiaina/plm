@@ -34,12 +34,12 @@ final class MilestoneController extends AbstractController
         }
 
         return $this->render('milestone/new.html.twig', [
-            'milestone' => $milestone,
+            'project_id' => $project->getId(),
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_milestone_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_milestone_show', methods: ['GET'])]
     public function show(Milestone $milestone): Response
     {
         return $this->render('milestone/show.html.twig', [
@@ -47,7 +47,7 @@ final class MilestoneController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_milestone_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_milestone_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Milestone $milestone, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(MilestoneType::class, $milestone,['is_edit'=>true]);
@@ -65,7 +65,7 @@ final class MilestoneController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_milestone_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_milestone_delete', methods: ['POST'])]
     public function delete(Request $request, Milestone $milestone, EntityManagerInterface $entityManager): Response
     {
         $project=$milestone->getProject();

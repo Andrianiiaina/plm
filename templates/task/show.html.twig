@@ -2,9 +2,13 @@
 
 {% block title %}Task{% endblock %}
 
+{% block navbar %}
+    {{ include('components/project_navbar.html.twig',{'project_id':task.milestone.project.id})}}
+{% endblock %}
+
 {% block body %}
     <div class="row">
-        <div class="offset-3 col-md-6">
+        <div class="offset-2 col-md-8">
             <h1>Informations</h1>
 
     <table class="table">
