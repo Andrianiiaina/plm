@@ -16,6 +16,22 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
+
+    public function getProjectsWithExpense()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('p.id, p.title, p.budget, p.deadline ,respo.email as responsable, 
+        SUM(c.amount) as expense')
+        ->from('App\Entity\Project', 'p')
+        ->leftJoin('p.cashFlows', 'c')
+        ->leftJoin('p.milestones', 'm')
+        ->join('p.responsable','respo')
+        ->groupBy('p.id');
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Project[] Returns an array of Project objects
 //     */

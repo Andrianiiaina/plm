@@ -29,16 +29,16 @@ final class TaskController extends AbstractController
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_milestone_show', ['id'=>$task->getMilestone()->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_milestone_show', ['id'=>$milestone->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('task/new.html.twig', [
-            'task' => $task,
+            'project_id' => $milestone->getId(),
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_task_show', methods: ['GET'])]
+    #[Route('show/{id}', name: 'app_task_show', methods: ['GET'])]
     public function show(Task $task): Response
     {
         return $this->render('task/show.html.twig', [
@@ -46,7 +46,7 @@ final class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_task_edit', methods: ['GET', 'POST'])]
+    #[Route('edit/{id}', name: 'app_task_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TaskType::class, $task,['is_edit'=>true]);
@@ -64,7 +64,7 @@ final class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
+    #[Route('delete/{id}', name: 'app_task_delete', methods: ['POST'])]
     public function delete(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
         $milestone=$task->getMilestone();

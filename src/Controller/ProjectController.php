@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CashFlow;
 use App\Entity\Project;
 use App\Entity\ProjectStatus;
 use App\Form\ProjectType;
@@ -18,8 +19,11 @@ final class ProjectController extends AbstractController
     #[Route(name: 'app_project_index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
     {
+        $projects_with_expenses=$projectRepository->getProjectsWithExpense();
+        dd($projects_with_expenses);
         return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findAll(),
+            //'projects' => $projectRepository->findAll(),
+            'projects' =>$projects_with_expenses,
         ]);
     }
 
@@ -46,12 +50,16 @@ final class ProjectController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_project_show', methods: ['GET'])]
-    public function show(Project $project): Response
+    public function show(Project $project, EntityManagerInterface $entityManager): Response
     {
         return $this->render('project/show.html.twig', [
             'project' => $project,
+            'expenses'=> $entityManager->getRepository(CashFlow::class)->getTotalProjectExpense($project->getId()),
         ]);
     }
+
+
+
 
     #[Route('/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response

@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Projects{% endblock %}
 
 {% block body %}
@@ -12,8 +11,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Title</th>
+                        <th>Titre</th>
                         <th>Budget</th>
+                        <th>Dépense</th>
+                        <th>Reste</th>
                         <th>Progression</th>
                         <th>Deadline</th>
                         <th>Responsable</th>
@@ -24,9 +25,10 @@
                     <tr>
                         <td><a href="{{ path('app_project_show', {'id': project.id}) }}" class="link-secondary link-underline link-underline-opacity-0">{{ project.title }}</a></td>
                         <td>{{ project.budget }}</td>
-                        <td>{{ project.getProgress }}%</td>
+                        <td>{{ project.expense }}</td>
+                        <td>{{ project.budget - project.expense }}</td>
                         <td>{{ project.deadline ? project.deadline|date('d/m/Y') : '' }}</td>
-                        <td>{{ project.responsable.email }}</td>
+                        <td>{{ project.responsable }}</td>
                     </tr>
                    
                 {% else %}

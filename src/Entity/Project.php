@@ -47,11 +47,18 @@ class Project
     #[ORM\Column(length: 50)]
     private ?string $devise = 'EUR';
 
+    /**
+     * @var Collection<int, CashFlow>
+     */
+    #[ORM\OneToMany(targetEntity: CashFlow::class, mappedBy: 'project')]
+    private Collection $cashFlows;
+
     public function __construct()
     {
         $this->milestones = new ArrayCollection();
         $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
         $this->modifiedAt = null;
+        $this->cashFlows = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,6 +180,49 @@ class Project
         return $this;
     }
 
+    public function getDevise(): ?string
+    {
+        return $this->devise;
+    }
+
+    public function setDevise(string $devise): static
+    {
+        $this->devise = $devise;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CashFlow>
+     */
+    public function getCashFlows(): Collection
+    {
+        return $this->cashFlows;
+    }
+
+    public function addCashFlow(CashFlow $cashFlow): static
+    {
+        if (!$this->cashFlows->contains($cashFlow)) {
+            $this->cashFlows->add($cashFlow);
+            $cashFlow->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCashFlow(CashFlow $cashFlow): static
+    {
+        if ($this->cashFlows->removeElement($cashFlow)) {
+            // set the owning side to null (unless already changed)
+            if ($cashFlow->getProject() === $this) {
+                $cashFlow->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
     public function getProgress(): float
     {
         $total_rate=0;
@@ -197,18 +247,6 @@ class Project
             $total_weight+=$milestone->getRate();
         }
         return $total_weight;
-    }
-
-    public function getDevise(): ?string
-    {
-        return $this->devise;
-    }
-
-    public function setDevise(string $devise): static
-    {
-        $this->devise = $devise;
-
-        return $this;
     }
    
 }

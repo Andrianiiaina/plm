@@ -175,21 +175,7 @@ class Milestone
         return $this;
     }
 
-    public function getProgress(): float
-    {
-        $total_rate=0;
-        $finished=0;
-        foreach ($this->getTasks() as $task) {
-           if($task->getStatus()->getCode()== "3")
-            $finished += $task->getRate();
-            $total_rate+=$task->getRate();
-        }
-       if($total_rate!=0){
-             return  (number_format(($finished/$total_rate)*100));
-        }else{
-            return $this->getStatus()->getPercentage();
-        }
-    }
+
 
 
     public function getMilestoneWeight(): float
@@ -205,6 +191,22 @@ class Milestone
             $total_weight+=$milestone->getRate();
         }
         return $total_weight;
+    }
+
+    public function getProgress(): float
+    {
+        $total_rate=0;
+        $finished=0;
+        foreach ($this->getTasks() as $task) {
+           if($task->getStatus()->getCode()== "3")
+            $finished += $task->getRate();
+            $total_rate+=$task->getRate();
+        }
+       if($total_rate!=0){
+             return  (number_format(($finished/$total_rate)*100));
+        }else{
+            return $this->getStatus()->getPercentage();
+        }
     }
 
 }
