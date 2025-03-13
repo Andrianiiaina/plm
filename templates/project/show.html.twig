@@ -1,31 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Projets{% endblock %}
+{% block title %}Projet{% endblock %}
+
+{% block navbar %}
+    {{ include('components/project_navbar.html.twig',{'project_id':project.id})}}
+{% endblock %}
 
 {% block body %}
     <div class="clearfix">
-        <p class="h2 float-start">{{project.title}}</p>
+        <p class="h3 float-start">{{project.title}}</p>
         <a href="{{path('app_milestone_new',{'id':project.id})}}" class="btn float-end">Ajouter un Milestones</a>
     </div>
 
     <div class="row my-2">
            <div class="accordion accordion-flush" id="accordionMilestone">
             {% for milestone in project.milestones %}
-            <div class="accordion-item mt-4 pt-3">
+            <div class="accordion-item pt-3">
               <div class="accordion-header m-0 p-0">
                 <div class="container-fluid d-flex justify-content-between">
                  <div class="">
                     <a href="{{path('app_task_new',{'id':milestone.id})}}" class="btn btn-sm btn-outline-{{milestone.status.code |getStatusColor}}"><i class="bi bi-plus-lg"></i>Task </a>
-                    
                     <a href="{{path('app_milestone_show',{'id': milestone.id})}}" 
-                    class="link-{{milestone.status.code |getStatusColor}} link-underline-{{milestone.status.code |getStatusColor}} link-offset-2 fs-3 p-2 pt-5">{{milestone.name | upper}}</a>
+                    class="link-{{milestone.status.code |getStatusColor}} link-underline-{{milestone.status.code |getStatusColor}} link-offset-2 fs-4 p-2 pt-5">{{milestone.name | upper}}</a>
                    
                  </div>
                     <div class="hstack">
-                        <div class="p-2"><em>Fin prévu: {{ milestone.dueDate ? milestone.dueDate|date('d/m/Y') : '' }}.</em></div>
-                        <div class="p-2"><em>Poids attribués: {{milestone.getMilestoneWeight}}% ({{milestone.rate}} sur {{project.getMilestonesWeight}})</em></div>
+                        <div class="px-2"><em>Fin prévu: {{ milestone.dueDate ? milestone.dueDate|date('d/m/Y') : '' }}.</em></div>
+                        <div class="px-2"><em>Poids attribués: {{milestone.getMilestoneWeight}}% ({{milestone.rate}} sur {{project.getMilestonesWeight}})</em></div>
                        
-                        <div class="p-2">
+                        <div class="px-2">
                             <button class="collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{milestone.id}}" aria-expanded="true" aria-controls="#flush-collapse{{milestone.id}}">
                                 <em>Progression: {{milestone.getProgress() }}% ({{milestone.tasks | length}} taches)</em><i class="bi bi-chevron-down"></i>
                             </button>
@@ -55,7 +58,9 @@
     <p class="h3 mt-5">Informations</p>
     <ul class="list-group ">
         <li class="list-group-item">Deadline: {{ project.deadline ? project.deadline|date('d/m/Y') : '' }}</li>
-        <li class="list-group-item">Budget: {{project.Budget}}</li>
+        <li class="list-group-item">Budget: {{ project.Budget }}</li>
+        <li class="list-group-item">Dépense: {{ expenses }}</li>
+        
         <li class="list-group-item">Responsable: {{ project.responsable.email }}</li>
         <li class="list-group-item">Fini à {{project.getProgress}}%</li>
         <li class="list-group-item">

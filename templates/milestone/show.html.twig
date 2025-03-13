@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Milestone{% endblock %}
-
+{% block navbar %}
+    {{ include('components/project_navbar.html.twig',{'project_id':milestone.project.id})}}
+{% endblock %}
 {% block body %}
     <p class="h2">Milestone: {{ milestone.name }}</p>
       
