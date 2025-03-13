@@ -12,9 +12,10 @@
     <div class="col-md-6">
         {{ form_label(form.responsable) }}{{ form_widget(form.responsable) }}
     </div>
-</div>
-    {{ form_widget(form) }}
+    </div>
+        {{ form_widget(form) }}
+        {{ form_rest(form) }}
     <button class="btn btn-primary col-3">{{ button_label|default('Enregistrer') }}</button>
-    {{ form_rest(form) }}
+   
 
 {{ form_end(form) }}

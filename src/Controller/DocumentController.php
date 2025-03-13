@@ -50,7 +50,7 @@ final class DocumentController extends AbstractController
         }
 
         if ($this->isGranted('ROLE_ADMIN')) {
-            $documents= $entityManager->getRepository(Document::class)->findAll();
+            $documents= $entityManager->getRepository(Document::class)->findBy([], ['createdAt' => 'ASC']);
 
          }elseif($this->isGranted('ROLE_RESPO')){
            $documents=$entityManager->getRepository(Document::class)->findDocs($this->getUser());
@@ -87,7 +87,7 @@ final class DocumentController extends AbstractController
     #[Route('/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Document $document, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(DocumentType::class, $document);
+        $form = $this->createForm(DocumentType::class, $document,['is_edited'=>true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

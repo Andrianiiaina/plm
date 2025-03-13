@@ -43,7 +43,7 @@ class DocumentType extends AbstractType
             ->add('filepath',DropzoneType::class,[
                 'label' => 'Fichier (pdf ou txt)',
                 'mapped' => false,
-                'required' => false,
+                'required' => !$options['is_edited'],
                 
                 'constraints' => [
                    
@@ -62,12 +62,14 @@ class DocumentType extends AbstractType
                 'required' => false,
             ])
         ;
+      
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Document::class,
+            'is_edited' => false,
         ]);
     }
 }

@@ -49,7 +49,7 @@ class Tender
     #[ORM\Column]
     private ?int $tender_type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'url')]
+    #[ORM\ManyToOne(inversedBy: 'tenders')]
     private ?User $responsable = null;
 
     #[ORM\Column(length: 255, nullable: true)]
