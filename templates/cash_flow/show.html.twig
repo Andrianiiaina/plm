@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CashFlow{% endblock %}
+
+{% block navbar %}
+    {{ include('components/project_navbar.html.twig',{'project_id':cash_flow.project.id})}}
+{% endblock %}
+
+{% block body %}
+ 
+  <div class="row">
+    <div class="offset-3 col-md-6">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Libellé</th>
+                    <td>{{ cash_flow.label }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{ cash_flow.isExpense ? 'Sortie' : 'Entrée' }}</td>
+                </tr>
+                <tr>
+                    <th>Montant</th>
+                    <td>{{ cash_flow.amount }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ cash_flow.description }}</td>
+                </tr>
+                <tr>
+                    <th>Date de création</th>
+                    <td>{{ cash_flow.createdAt ? cash_flow.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    
+    
+        <a href="{{ path('app_cash_flow_edit', {'id': cash_flow.id}) }}">edit</a>
+        {{ include('cash_flow/_delete_form.html.twig') }}
+    </div>
+  </div>
+
+{% endblock %}

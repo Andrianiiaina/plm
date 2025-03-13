@@ -46,6 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Tender::class, mappedBy: 'responsable')]
     private Collection $tenders;
+    
 
     /**
      * @var Collection<int, Document>
@@ -178,36 +179,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->contact = $contact;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Tender>
-     */
-    public function getTenders(): Collection
-    {
-        return $this->tenders;
-    }
-
-    public function addTenders(Tender $tenders): static
-    {
-        if (!$this->tenders->contains($tenders)) {
-            $this->tenders->add($tenders);
-            $tenders->setResponsable($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTenders(Tender $tenders): static
-    {
-        if ($this->tenders->removeElement($tenders)) {
-            // set the owning side to null (unless already changed)
-            if ($tenders->getResponsable() === $this) {
-                $tenders->setResponsable(null);
-            }
-        }
 
         return $this;
     }

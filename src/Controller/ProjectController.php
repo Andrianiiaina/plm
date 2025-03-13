@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/project')]
 final class ProjectController extends AbstractController
@@ -49,7 +50,9 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_project_show', methods: ['GET'])]
+    #[IsGranted('PROJECT_VIEW', 'project', 'Page not found', 404)]
     public function show(Project $project, EntityManagerInterface $entityManager): Response
     {
         return $this->render('project/show.html.twig', [
@@ -62,6 +65,7 @@ final class ProjectController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('PROJECT_EDIT', 'project', 'Page not found', 404)]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProjectType::class, $project,['is_edit'=>true]);
@@ -82,6 +86,8 @@ final class ProjectController extends AbstractController
     #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]
     public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($project);
             $entityManager->flush();

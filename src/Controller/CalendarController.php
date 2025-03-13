@@ -73,12 +73,9 @@ final class CalendarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $entityManager->flush();
-                $this->addFlash('success', 'Evènement bien modifié!' );
-            } catch (Exception $e) {
-                $this->addFlash('error', "Erreur! la modification de l'évènement a échoué.");
-            }
+            $entityManager->flush();
+            $this->addFlash('success', 'Evènement bien modifié!' );
+            
             return $this->redirectToRoute('app_calendar_new', [], Response::HTTP_SEE_OTHER);
         }
 

@@ -6,7 +6,6 @@ use App\Entity\Milestone;
 use App\Entity\Project;
 use App\Entity\TaskStatus;
 use App\Form\MilestoneType;
-use App\Repository\MilestoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

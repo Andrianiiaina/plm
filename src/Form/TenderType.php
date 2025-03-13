@@ -90,6 +90,7 @@ class TenderType extends AbstractType
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
             ])
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

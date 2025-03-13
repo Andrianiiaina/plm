@@ -7,7 +7,6 @@ use App\Entity\Tender;
 use App\Form\FileType;
 use App\Form\TenderType;
 use App\Repository\TenderRepository;
-use App\Security\Voter\TenderVoter;
 use App\Service\FileUploaderService;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,22 +17,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 #[Route('/tender')]
 final class TenderController extends AbstractController
 {
     #[Route(name: 'app_tender_index', methods: ['GET'])]
     public function index(TenderRepository $tenderRepository,ListService $listService): Response
     {
-        
-         if ($this->isGranted('ROLE_ADMIN')) {
-            $tenders= $tenderRepository->findAll();
-         }elseif($this->isGranted('ROLE_RESPO')){
-            $tenders= $tenderRepository->findBy(["responsable"=>$this->getUser()]);
-         }else{
-            $tenders=[];
-         }
         return $this->render('tender/index.html.twig', [
-            'tenders' => $tenders
+            'tenders' => $this->isGranted('ROLE_ADMIN')? $tenderRepository->findAll():$tenderRepository->findBy(["responsable"=>$this->getUser()]),
         ]);
     }
 
@@ -45,18 +37,14 @@ final class TenderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $entityManager->persist($tender);
+            $entityManager->persist($tender);
                 $entityManager->flush();
                 $this->addFlash('success','Projet enregistré!' );
-            } catch (FileException $e) {
-                $this->addFlash('error', "Erreur! Le projet n'a pas pu etre enregistré.");
-            }
+         
             return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('tender/new.html.twig', [
-            'tender' => $tender,
             'form' => $form,
         ]);
     }
@@ -93,10 +81,6 @@ final class TenderController extends AbstractController
     }
 
 
-
-
-
-
     #[Route('/{id}/edit', name: 'app_tender_edit', methods: ['GET', 'POST'])]
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
     public function edit(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
@@ -105,13 +89,8 @@ final class TenderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $entityManager->flush();
-                 $this->addFlash('success','Projet modifié!' );
-            } catch (\Throwable $th) {
-                $this->addFlash('error',"Erreur! la modification du projet a échoué." );
-            }
-
+            $entityManager->flush();
+            $this->addFlash('success','Projet modifié!' );
             return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -123,7 +102,6 @@ final class TenderController extends AbstractController
 
     #[Route('/{id}', name: 'app_tender_delete', methods: ['POST'])]   
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
-  
     public function delete(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$tender->getId(), $request->getPayload()->getString('_token'))) {

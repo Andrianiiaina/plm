@@ -27,13 +27,9 @@ final class ContactController extends AbstractController
         $form_group->handleRequest($request);
 
         if ($form_group->isSubmitted() && $form_group->isValid()) {
-            try {
-                $entityManager->persist($contactGroup);
-                $entityManager->flush();
-                $this->addFlash('success','Groupe enregistré!' );
-            } catch (Exception $e) {
-                $this->addFlash('error', "Le groupe n'a pas pu etre enregistré.");
-            }
+            $entityManager->persist($contactGroup);
+            $entityManager->flush();
+            $this->addFlash('success','Groupe enregistré!' );
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -53,13 +49,10 @@ final class ContactController extends AbstractController
 
         if ($form_contact->isSubmitted() && $form_contact->isValid()) {
            
-            try {
-                $entityManager->persist($contact);
-                $entityManager->flush();
-                $this->addFlash('success','Contact enregistré!' );
-            } catch (Exception $e) {
-                $this->addFlash('error', "Le contact n'a pas pu etre enregistré.");
-            }
+            $entityManager->persist($contact);
+            $entityManager->flush();
+            $this->addFlash('success','Contact enregistré!' );
+            
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -85,12 +78,8 @@ final class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $entityManager->flush();
-                 $this->addFlash('success','Contact modifié!' );
-            } catch (\Throwable $th) {
-                $this->addFlash('error',"Erreur! la modification du contact a échoué." );
-            }
+            $entityManager->flush();
+            $this->addFlash('success','Contact modifié!' );
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 

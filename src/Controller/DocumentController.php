@@ -49,21 +49,12 @@ final class DocumentController extends AbstractController
             return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $documents= $entityManager->getRepository(Document::class)->findAll();
-
-         }elseif($this->isGranted('ROLE_RESPO')){
-           $documents=$entityManager->getRepository(Document::class)->findDocs($this->getUser());
-          
-         }else{
-            
-            $documents=[];
-         }
-
+         $documents=$this->isGranted('ROLE_ADMIN')? $entityManager->getRepository(Document::class)->findAll():$entityManager->getRepository(Document::class)->findDocs($this->getUser());
          $grouped_documents_by_status = [];
          foreach (ListService::$document_status as $status) {
                 $grouped_documents_by_status[$status]=[];
         }
+        
          foreach ($documents as $document) {
              $status = $document->getStatus(); 
              $grouped_documents_by_status[$status][] = $document;
@@ -87,17 +78,12 @@ final class DocumentController extends AbstractController
     #[Route('/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Document $document, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(DocumentType::class, $document);
+        $form = $this->createForm(DocumentType::class, $document,['is_edited'=>true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-           
-            try {
-                $entityManager->flush();
-                $this->addFlash('success', 'Document bien modifié!' );
-            } catch (Exception $e) {
-                $this->addFlash('error', "Erreur! la modification du document a échoué.");
-            }
+            $entityManager->flush();
+            $this->addFlash('success', 'Document bien modifié!' );  
             return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
         }
 

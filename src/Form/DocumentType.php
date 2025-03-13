@@ -25,6 +25,7 @@ class DocumentType extends AbstractType
                 'label'=>"Le projet associé à ce document",
                 'class' => Tender::class,
                 'choice_label' => 'title',
+                'disabled' => $options['is_edited'],
             ])
             ->add('status',ChoiceType::class,[
                 'label'=>'Opération',
@@ -38,6 +39,7 @@ class DocumentType extends AbstractType
             ])
             ->add('name',TextType::class,[
                 'label' => 'Titre du document',
+                'disabled' => $options['is_edited'],
                 ])
 
             ->add('filepath',DropzoneType::class,[
@@ -68,6 +70,7 @@ class DocumentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Document::class,
+            'is_edited' =>false,
         ]);
     }
 }
