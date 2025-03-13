@@ -79,6 +79,7 @@ final class DocumentController extends AbstractController
     public function edit(Request $request, Document $document, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(DocumentType::class, $document,['is_edited'=>true]);
+        $form = $this->createForm(DocumentType::class, $document,['is_edited'=>true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

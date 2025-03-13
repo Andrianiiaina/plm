@@ -54,7 +54,7 @@ final class CalendarController extends AbstractController
         return $this->render('calendar/index.html.twig', [
             'calendar' => $calendar,
             'form' => $form,
-            'calendars' => $calendarRepository->findAll(),
+            'calendars' => $calendarRepository->findBy([], ['beginAt' => 'ASC']),
         ]);
     }
 

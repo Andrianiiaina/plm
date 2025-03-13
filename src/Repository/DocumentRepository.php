@@ -26,6 +26,7 @@ class DocumentRepository extends ServiceEntityRepository
               ->orWhere('p.responsable = :responsable')
               ->setParameter('responsable', $responsable)
               ->setMaxResults($number_to_fetch)
+              ->orderBy('d.createdAt', 'DESC')
               ->getQuery()
               ->getResult()
           ;
