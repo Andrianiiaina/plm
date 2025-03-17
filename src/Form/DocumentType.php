@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Document;
 use App\Entity\Tender;
 use App\Entity\User;
+use App\Repository\TenderRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,13 +21,19 @@ class DocumentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        
         $builder
-            ->add('tender', EntityType::class, [
-                'label'=>"Le projet associé à ce document",
-                'class' => Tender::class,
-                'choice_label' => 'title',
-                'disabled' => $options['is_edited'],
-            ])
+        ->add('tender', EntityType::class, [
+            'label' => "Le projet associé à ce document",
+            'class' => Tender::class,
+            'choice_label' => 'title',
+            'disabled' => $options['is_edited'],
+            'query_builder' => function (TenderRepository $tenderRepository) use ($options) {
+                return $tenderRepository->createQueryBuilder('t')
+                    ->where('t.responsable = :user')
+                    ->setParameter('user', $options['user']);
+            }
+        ])
             ->add('status',ChoiceType::class,[
                 'label'=>'Opération',
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
@@ -72,6 +79,7 @@ class DocumentType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Document::class,
             'is_edited' =>false,
+            'user'=>User::class,
         ]);
     }
 }

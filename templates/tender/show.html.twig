@@ -87,9 +87,8 @@
       <div class="row p-3 mt-5">
         <div class="clearfix mb-2">
             <strong class="h4 float-start">Fichiers associés</strong>
-            <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addFileModal">
-                Ajouter un fichier
-            </button>
+            <a href="{{path('app_file_new',{'id':tender.id})}}" class="btn float-end">Ajouter un fichier</a>
+
         </div>
         <ol class="list-group">
             {% for file in tender.files %}
@@ -112,25 +111,4 @@
         </ol>
    </div>
     
-
-  <div class="modal fade" id="addFileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addFileModalLabel">Ajouter des fichiers</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        {{ form_start(form) }}
-        <div class="modal-body">
-                {{ form_widget(form) }}
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" type="submit">{{ button_label|default('Save') }}</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        </div>
-        {{ form_end(form) }}
-      </div>
-    </div>
-  </div>
-
 {% endblock %}

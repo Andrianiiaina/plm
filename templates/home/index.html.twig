@@ -11,7 +11,14 @@
 				<a href="{{ path('app_tender_new') }}" class="btn"> + Tender</a>
 				<a href="{{ path('app_document_index') }}" class="btn"> + Document</a>
 				<a href="{{ path('app_calendar_new') }}" class="btn"> + Agenda</a>
-				<a href="{{ path('app_reminder_new') }}" class="btn"> <i class="bi bi-bell"></i></a>
+				<!--a href="{{ path('app_reminder_new') }}" class="btn"> <i class="bi bi-bell"></i></a-->
+
+				<div class="dropdown">
+					<button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="bi bi-bell"></i> Notifications <span class="badge bg-danger">{{ notifications|filter(n => not n.isRead)|length }}</span>
+					</button>
+					{{ include('components/_notification.html.twig',{'notifications':notifications})}}
+				</div>
 
 			</div>
 		</div>

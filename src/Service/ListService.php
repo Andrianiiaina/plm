@@ -14,8 +14,8 @@ class ListService
      "En préparation"=>0,
      "En rédaction"=>1,
      "En attente de réponse"=>2,
-     "Remporté"=>3,
-     "Perdu"=>4,
+     "Perdu"=>3,
+     "Remporté"=>4,
    ];
 
    public static array $tender_type=[
@@ -30,7 +30,7 @@ class ListService
         "A vérifier"=>1,
         "A signer"=>2,
         "A envoyer"=>3,
-        "A archiver"=>4,
+        "Archiver"=>4
     ];
     public static array $task_status = [
         "A faire"=>0,
@@ -53,6 +53,11 @@ class ListService
         "Euro"=>"EUR",
         "Dollar"=>'USD',
         "Ariary"=>'MGA',
+    ];
+    public static array $notification_type = [
+        "0"=>"Un projet vous a été attribué.",
+        "1"=>'Un tender vous a été attribué',
+        "2"=>'Un document vous a été attribué',
     ];
 
 }

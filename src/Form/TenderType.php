@@ -63,6 +63,7 @@ class TenderType extends AbstractType
             ])
             ->add('max_budget', IntegerType::class,[
                 'label' => "Budget maximum",
+                'required' => false,
                 'constraints'=>[new Assert\Range([
                     'min' => 0,
                     'max' => 100000000000000,

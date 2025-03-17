@@ -23,6 +23,7 @@ class CalendarRepository extends ServiceEntityRepository
             ->where('p.responsable = :responsable')
             ->setParameter('responsable', $responsable)
             ->setMaxResults($number_to_fetch)
+            ->orderBy('c.beginAt','ASC')
             ->getQuery()
             ->getResult()
         ;

@@ -9,34 +9,41 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Document;
+use App\Entity\Notification;
+use App\Entity\Task;
 use App\Entity\Tender;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(EntityManagerInterface $entityManager, ): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {   
-        $this->denyAccessUnlessGranted('ROLE_RESPO');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user=$this->getUser();
         if ($this->isGranted('ROLE_ADMIN')) {
-            $documents=$entityManager->getRepository(Document::class)->findBy([],['createdAt'=>'asc'],5);
-            $calendars=$entityManager->getRepository(Calendar::class)->findBy([],[],5);
-            $tenders= $entityManager->getRepository(Tender::class)->findBy([],['createdAt'=>'asc'],12);
+            $documents=$entityManager->getRepository(Document::class)->findBy([],['createdAt'=>'DESC'],5);
+            $calendars=$entityManager->getRepository(Calendar::class)->findBy([],['beginAt'=>'ASC'],5);
+            $tenders= $entityManager->getRepository(Tender::class)->findBy([],['createdAt'=>'DESC'],12);
          }elseif($this->isGranted('ROLE_RESPO')){
             $documents=$entityManager->getRepository(Document::class)->findDocs($user, 5);
             $calendars=$entityManager->getRepository(Calendar::class)->findUserCalendar($user, 5);
-            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable'=>$user],null,10);
-         }else{
-            $tenders=[];
-            $documents=[];
-            $calendars=[];
+            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable'=>$user],['createdAt'=>'DESC'],null,10);
+         }elseif($this->isGranted('ROLE_USER')){
+            return $this->render('home/reader.html.twig');
+         }
+
+         $grouped_tenders_by_status = array_fill_keys(ListService::$tender_status, []);
+
+         foreach ($tenders as $tender) {
+             $grouped_tenders_by_status[$tender->getStatus()][] = $tender;
          }
   
-        foreach (ListService::$tender_status as $status) {
-            $result=$entityManager->getRepository(Tender::class)->findBy(['status'=>$status]);
-            $tender_status[$status] = count($result);
+        foreach ($grouped_tenders_by_status as $key=>$value) {
+            $tender_status[$key] = count($value);
         }
+ 
+        $notifications= $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],10);
    
 
         return $this->render('home/index.html.twig',[
@@ -45,7 +52,35 @@ final class HomeController extends AbstractController
             'statusTender'=>$tender_status,
             'documents'=> $documents,
             'calendars'=>$calendars,
+            'notifications'=>$notifications,
             
         ]);
+    }
+
+
+    #[Route('/gantt',name: 'app_dashboard', methods: ['GET'])]
+    public function dashboard(EntityManagerInterface $entityManager)
+    {
+       
+       
+        return $this->render('home/projects.html.twig');
+    }
+
+    #[Route('/gantt/data',name: 'app_data_gantt')]
+    public function getData(EntityManagerInterface $entityManager)
+    {
+        $tasks= $entityManager->getRepository(Task::class)->findAll();
+        $data=[];
+        foreach ($tasks as $key=>$task) {
+           $data[$key]['id']=$task->getId();
+           $data[$key]['text']=$task->getName();
+           $data[$key]['start_date']=$task->getStartDate()->format('d-m-Y');
+           $data[$key]['end_date']=$task->getEndDate()->format('d-m-Y');
+        }
+        $response = [
+            "data" => $data,
+            "links" => [] // Vous pouvez ajouter des liens entre les tâches ici, si nécessaire
+        ];
+        return new JsonResponse($response);
     }
 }

@@ -29,7 +29,7 @@ final class ReminderController extends AbstractController
             return $this->redirectToRoute('app_reminder_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('reminder/index.html.twig', [
-            'reminders' => $entityManager->getRepository(Reminder::class)->findAll(),
+            'reminders' => $entityManager->getRepository(Reminder::class)->findBy([],['beginAt'=>'ASC']),
             'form' => $form,
         ]);
     }

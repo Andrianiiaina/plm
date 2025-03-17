@@ -46,4 +46,7 @@ return [
     'bootstrap/dist/js/bootstrap.bundle.min.js' => [
         'version' => '5.3.3',
     ],
+    'chart.js' => [
+        'version' => '3.9.1',
+    ],
 ];

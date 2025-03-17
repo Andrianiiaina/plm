@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-
 class FileUploaderService
 {
     public function __construct(
@@ -34,4 +33,14 @@ class FileUploaderService
     {
         return $this->targetDirectory;
     }
+    
+    public function removeFile($folder,$file){
+        $path=$this->getTargetDirectory()."/".$folder."/".$file;
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
+
+
+
 }

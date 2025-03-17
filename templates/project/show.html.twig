@@ -30,7 +30,7 @@
                        
                         <div class="px-2">
                             <button class="collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{milestone.id}}" aria-expanded="true" aria-controls="#flush-collapse{{milestone.id}}">
-                                <em>Progression: {{milestone.getProgress() }}% ({{milestone.tasks | length}} taches)</em><i class="bi bi-chevron-down"></i>
+                                <em>Progression: {{milestone.getProgress() }}%</em><i class="bi bi-chevron-down"></i>
                             </button>
                         </div>
                        
@@ -59,18 +59,18 @@
     <ul class="list-group ">
         <li class="list-group-item">Deadline: {{ project.deadline ? project.deadline|date('d/m/Y') : '' }}</li>
         <li class="list-group-item">Budget: {{ project.Budget }}</li>
-        <li class="list-group-item">Dépense: {{ expenses }}</li>
         
         <li class="list-group-item">Responsable: {{ project.responsable.email }}</li>
         <li class="list-group-item">Fini à {{project.getProgress}}%</li>
+     
+        <li class="list-group-item">
+            <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn link-primary p-0 m-0">Modifier les informations</a>
+        </li>
         <li class="list-group-item">
             <form method="post" action="{{ path('app_project_delete', {'id': project.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
-                <button class="btn link-primary p-0 m-0"> Supprimer le projet</button>
+                <button class="btn link-danger p-0 m-0"> Supprimer le projet</button>
             </form>
-        </li>
-        <li class="list-group-item">
-            <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn link-danger p-0 m-0">Modifier les informations</a>
         </li>
     </ul>
 

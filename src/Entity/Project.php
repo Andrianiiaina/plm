@@ -248,5 +248,6 @@ class Project
         }
         return $total_weight;
     }
+
    
 }

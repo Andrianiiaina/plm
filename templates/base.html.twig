@@ -18,7 +18,9 @@
         <div class="container-fluid">
           <div class="row">
             {% block navbar %}
+              {% if app.user %}
                 {{ include('components/navbar.html.twig')}}
+              {% endif %}
             {% endblock %}
               <div class="col-sm p-3 min-vh-100">
                 {# read and display all flash messages #}

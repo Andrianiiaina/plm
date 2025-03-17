@@ -315,64 +315,11 @@ class Tender
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Document>
+     /**
+     * @return Collection<int, File>
      */
     public function getDocuments(): Collection
     {
         return $this->documents;
-    }
-
-    public function addDocument(Document $document): static
-    {
-        if (!$this->documents->contains($document)) {
-            $this->documents->add($document);
-            $document->setTender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDocument(Document $document): static
-    {
-        if ($this->documents->removeElement($document)) {
-            // set the owning side to null (unless already changed)
-            if ($document->getTender() === $this) {
-                $document->setTender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Calendar>
-     */
-    public function getCalendars(): Collection
-    {
-        return $this->calendars;
-    }
-
-    public function addCalendar(Calendar $calendar): static
-    {
-        if (!$this->calendars->contains($calendar)) {
-            $this->calendars->add($calendar);
-            $calendar->setTender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCalendar(Calendar $calendar): static
-    {
-        if ($this->calendars->removeElement($calendar)) {
-            // set the owning side to null (unless already changed)
-            if ($calendar->getTender() === $this) {
-                $calendar->setTender(null);
-            }
-        }
-
-        return $this;
     }
 }

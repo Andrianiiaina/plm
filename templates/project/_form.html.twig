@@ -10,7 +10,7 @@
         {{ form_widget(form.budget) }}
         <span class="input-group-text">.00</span>
       </div>
-    {{ form_widget(form) }}
+      {{ form_rest(form) }}
     <button class="btn">{{ button_label|default('Enregistrer') }}</button>
-    {{ form_rest(form) }}
+    
 {{ form_end(form) }}

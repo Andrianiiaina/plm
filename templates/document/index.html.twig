@@ -6,8 +6,8 @@
   <div class="container">
     <div class="row">
 		<p class="h2">Suivis des documents</p>
-      <button type="button" class="btn btn-primary col-2 mx-2 mb-4" data-bs-toggle="modal" data-bs-target="#addDocumentModal">Suivre un document </button><br/>
-            <div class="row mt-2">
+    <a href="{{path('app_document_new')}}" class="btn btn-primary col-2 mx-2 mb-4">Suivre un document</a>
+    <div class="row mt-2">
 						{% for status, documents in groupedDocuments %}
               <div class="col p-1">
                   <div class="card border-{{status | getStatusColor}}">
@@ -35,26 +35,4 @@
 					</div>
     </div>
   </div>
-
-  
-  <div class="modal fade" id="addDocumentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addDocumentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addDocumentModalLabel">Ajouter un document</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        {{ form_start(form) }}
-        <div class="modal-body">
-                {{ form_widget(form) }}
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" type="submit">{{ button_label|default('Ajouter') }}</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        </div>
-        {{ form_end(form) }}
-      </div>
-    </div>
-  </div>
-
 {% endblock %}
