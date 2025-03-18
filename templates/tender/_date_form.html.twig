@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit date{% endblock %}
+{% block navbar %}
+    {{ include('components/tender_navbar.html.twig',{'tender_id':tender.id})}}
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row my-3">
+            <div class="offset-2 col-md-8">
+                <p class="h3 my-3">Dates associées au projet {{tender.title}}</p>
+                {{ form_start(form) }}
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            {{ form_label(form.submissionDate) }}{{ form_widget(form.submissionDate) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.negotiationDate) }} {{ form_widget(form.negotiationDate) }}
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            {{ form_label(form.responseDate) }}{{ form_widget(form.responseDate) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.attributionDate) }} {{ form_widget(form.attributionDate) }}
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            {{ form_label(form.start_date) }}{{ form_widget(form.start_date) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.end_date) }} {{ form_widget(form.end_date) }}
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            {{ form_label(form.duration) }}
+
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_widget(form.duration) }}
+                        </div>
+                    </div>
+
+                    
+
+                    {{ form_rest(form) }}
+                    <div class="container d-flex justify-content-end">
+                        <button class="btn btn-lg btn-primary col-4">{{ button_label|default('Enregistrer') }}</button>
+                    </div>
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

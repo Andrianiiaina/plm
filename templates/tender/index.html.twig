@@ -4,34 +4,49 @@
 
 {% block body %}
 <div class="container-fluid">
-    <div class="row my-5">
-            <div class="clearfix">
-                <p class="h2 float-start">Appels d'offres</p>
-                <a href="{{ path('app_tender_new') }}" class="btn btn-primary col-1 my-2 float-end"> + Créer</a>
-            
+    <div class="row mb-5">
+            <div class="row">
+                <div class="col">
+                    <p class="h2">Appels d'offres</p>
+                </div>
+                <div class="col row">
+                    <form method="get" action="{{ path('app_tender_index') }}" class="col-md-10 row">
+                        <div class="col-8">
+                            <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un appel d'offres..." class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+                        </div>
+                    </form>
+                    <a href="{{ path('app_tender_new') }}" class="col-md-2 btn btn-primary mb-2"> + Créer</a>
+
+                </div>
+                
             </div>
+            
+
             <div class="table-responsive">
                <table class="table mt-3">
                 <thead>
                     <tr>
+                        <th>Référence</th>
                         <th class="col-md-3">Titre</th>
-                        <th>Numéro</th>
-                        <th class="col-md-2">Date de début</th>
-                        <th class="col-md-2">Date de fin</th>
-                        <th class="col-md-2">Budget min</th>
-                        <th class="col-md-2">Budget max</th>
+                        <th>Date de soumission</th>
+                        <th>Date de négociation</th>
+                        <th>Date de réponse</th>
+                        <th>Date d'attribution</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for tender in tenders %}
                     <tr>
-                        <td><a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn">{{ tender.title }}</a></td>
-                        <td>{{ tender.contractNumber }}</td>
-                        <td>{{ tender.startDate ? tender.startDate|date('d-m-Y') : '' }}</td>
-                        <td>{{ tender.endDate ? tender.endDate|date('d-m-Y') : '' }}</td>
-                        <td>{{ tender.minBudget }}</td>
-                        <td>{{ tender.maxBudget }}</td>
+                        <td><a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn">{{ tender.contractNumber }}</a></td>
+                        <td>{{ tender.title }}</td>
+                        <td>{{ tender.submissionDate ? tender.submissionDate|date('d F Y') : '' }}</td>
+                        <td>{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y') : '' }}</td>
+                        <td>{{ tender.responseDate ? tender.responseDate|date('d F Y') : '' }}</td>
+                        <td>{{ tender.attributionDate ? tender.attributionDate|date('d F Y') : '' }}</td>
                         <td><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></td> 
                       
                     </tr>

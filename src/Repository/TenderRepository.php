@@ -43,6 +43,29 @@ class TenderRepository extends ServiceEntityRepository
            ;
        }
 
+       public function searchTenderUser(string $term,$user): array
+        {
+            return $this->createQueryBuilder('t')
+            ->andWhere('t.responsable = :user')
+            ->where('t.title LIKE :term OR t.contract_number LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->setParameter('user', $user)
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+        }
+
+        public function search(string $term): array
+        {
+            return $this->createQueryBuilder('t')
+            ->where('t.title LIKE :term OR t.contract_number LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+        }
+
+
     //    /**
     //     * @return Tender[] Returns an array of Tender objects
     //     */

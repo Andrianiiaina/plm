@@ -27,11 +27,6 @@
         </div>
     </div>
 
-    <div class="mb-3 row">
-        {{ form_label(form.parent) }}
-            {{ form_widget(form.parent) }}
-    </div>
-
     {{ form_widget(form) }}
     <div class="container d-flex justify-content-end">
         <button class="btn btn-primary ">{{ button_label|default('Enregistrer') }}</button>

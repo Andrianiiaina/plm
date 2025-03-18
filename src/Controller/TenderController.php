@@ -2,17 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\File;
+use App\Entity\Contact;
 use App\Entity\Tender;
 use App\Event\UserAssignedToProjectEvent;
-use App\Form\FileType;
+use App\Form\ContactType;
+use App\Form\TenderDateType;
 use App\Form\TenderType;
 use App\Repository\TenderRepository;
-use App\Service\FileUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,14 +22,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class TenderController extends AbstractController
 {
     #[Route(name: 'app_tender_index', methods: ['GET'])]
-    public function index(TenderRepository $tenderRepository): Response
+    public function index(TenderRepository $tenderRepository, Request $request): Response
     {
+        if($request->query->get('q')){
+            $searchTerm = $request->query->get('q');
+            $tenders = $this->isGranted('ROLE_ADMIN')? $tenderRepository->search($searchTerm) :$tenderRepository->searchTenderUser($searchTerm,$this->getUser()); 
+        }else{
+            $tenders = $this->isGranted('ROLE_ADMIN')?
+            $tenderRepository->findAll():
+            $tenderRepository->findRespoTenders($this->getUser());
+        }
+
+
         return $this->render('tender/index.html.twig', [
-            'tenders' => $this->isGranted('ROLE_ADMIN')?
-             $tenderRepository->findAll():
-             $tenderRepository->findRespoTenders($this->getUser()),
+            'tenders' =>  $tenders,
+            'searchTerm' => $searchTerm??""
         ]);
     }
+
 
     #[Route('/new', name: 'app_tender_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
@@ -43,9 +52,8 @@ final class TenderController extends AbstractController
             $entityManager->persist($tender);
                 $entityManager->flush();
                 $dispatcher->dispatch(new UserAssignedToProjectEvent($tender->getResponsable(),$tender->getId(),1));
-                $this->addFlash('success','Projet enregistré!' );
-         
-            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+                $this->addFlash('success','Tender enregistré!' );
+            return $this->redirectToRoute('app_tender_edit_date', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('tender/new.html.twig', [
@@ -53,51 +61,59 @@ final class TenderController extends AbstractController
         ]);
     }
 
+    #[Route('/edit_date/{id}', name: 'app_tender_edit_date', methods: ['GET', 'POST'])]
+    public function edit_date(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(TenderDateType::class, $tender);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success','Opération réussie' );
+            if($tender->getContact()){
+                return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+            }
+            return $this->redirectToRoute('app_tender_edit_contact', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('tender/_date_form.html.twig', [
+            'tender' => $tender,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/edit_contact/{id}', name: 'app_tender_edit_contact', methods: ['GET', 'POST'])]
+    public function edit_contact(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
+    {
+        
+        $contact =$tender->getContact()? $tender->getContact():new Contact();
+        $form_contact = $this->createForm(ContactType::class, $contact);
+        $form_contact->handleRequest($request);
+        if ($form_contact->isSubmitted() && $form_contact->isValid()) {
+            $entityManager->persist($contact);
+            $entityManager->flush();
+            $tender->setContact($contact);
+            $entityManager->flush();
+            $this->addFlash('success','Information enregistrée!' );
+            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('tender/_contact_form.html.twig', [
+            'tender' => $tender,
+            'form' => $form_contact,
+        ]);
+    }
+
 
     #[Route('/show/{id}', name: 'app_tender_show', methods: ['GET'])]
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
-    public function show_tender_and_add_file(Tender $tender): Response
+    public function show_tender(Tender $tender): Response
     {
         return $this->render('tender/show.html.twig', ['tender' => $tender]);
     }
 
 
-    #[Route('/new_file/{id}', name: 'app_file_new', methods: ['GET', 'POST'])]
-    #[IsGranted('operation', 'tender', 'Page not found', 404)]
-    public function add_file(Tender $tender, EntityManagerInterface $entityManager, Request $request, 
-    FileUploaderService $fileUploader): Response
-    {
-        $file = new File();
-        $form = $this->createForm(FileType::class, $file);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $file->setTender($tender);
-            $brochureFile = $form['filepath']->getData();
-            if ($brochureFile) {
-                $newFilename = $fileUploader->upload($brochureFile,"tender_files");
-                try {
-                    $file->setFilename($brochureFile->getClientOriginalName());
-                    $file->setFilepath($newFilename);
-                    $entityManager->persist($file);
-                    $entityManager->flush(); 
-                    $this->addFlash('success','Fichier enregistré!' );
-
-                } catch (FileException $e) {
-                    $this->addFlash('error', "Erreur! Le fichier n'a pas pu etre enregistré.");
-                   dd($e);
-                }
-            }
-            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
-        }
-        return $this->render('tender/new_file.html.twig', ['form' => $form]);
-    }
-
-
-
-
-
-    #[Route('edit/{id}/', name: 'app_tender_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit_tenderinfo/{id}/', name: 'app_tender_edit', methods: ['GET', 'POST'])]
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
     public function edit(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
     {
@@ -124,20 +140,6 @@ final class TenderController extends AbstractController
             $entityManager->remove($tender);
             $entityManager->flush();
             $this->addFlash('success','Projet supprimé!' );
-        }
-
-        return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/file/{id}', name: 'app_file_delete', methods: ['POST'])]   
-   
-    public function delete_file(Request $request, File $file, EntityManagerInterface $entityManager,  FileUploaderService $fileUploader): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($file);
-           $fileUploader->removeFile("tender_files",$file->getFilepath());
-            $entityManager->flush();
-            $this->addFlash('success','Fichier supprimé!' );
         }
 
         return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);

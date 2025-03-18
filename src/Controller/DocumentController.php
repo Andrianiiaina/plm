@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Document;
+use App\Entity\Tender;
 use App\Event\UserAssignedToProjectEvent;
 use App\Form\DocumentType;
 use App\Service\FileUploaderService;
@@ -33,10 +34,31 @@ final class DocumentController extends AbstractController
         return $this->render('document/index.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status]);
     }
 
+    #[Route('/{id}', name: 'app_document_show', methods: ['GET'])]
+    public function show(Document $document): Response
+    {
+        return $this->render('document/show.html.twig', [
+            'document' => $document,
+        ]);
+    }
+
+    #[Route('/tender/show/{id}', name: 'app_document_tender', methods: ['GET'])]
+    public function document_tender(Tender $tender,EntityManagerInterface $entityManager): Response
+    {
+        $documents=$entityManager->getRepository(Document::class)->findTenderDocuments($tender);
+        $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
+
+        foreach ($documents as $document) {
+            $grouped_documents_by_status[$document->getStatus()][] = $document;
+        }
+
+        return $this->render('tender/documents.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status,'tender'=>$tender]);
+    }
 
 
-    #[Route('/new', name: 'app_document_new', methods: ['GET','POST'])]
-    public function new(
+    #[Route('/tender/new/{id}', name: 'app_document_tender_new', methods: ['GET','POST'])]
+    public function new_document_tender(
+    Tender $tender,
     Request $request, 
     EntityManagerInterface $entityManager, 
     FileUploaderService $fileUploader,
@@ -54,6 +76,7 @@ final class DocumentController extends AbstractController
                 try {
                     $document->setFilename($brochureDocument->getClientOriginalName());
                     $document->setFilepath($newFilename);
+                    $document->setTender($tender);
                     $entityManager->persist($document);
                     $entityManager->flush(); 
                     $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
@@ -64,20 +87,13 @@ final class DocumentController extends AbstractController
                    
                 }
             }
-            return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_document_tender', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
         return $this->render('document/new.html.twig', [
             'form'=>$form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_document_show', methods: ['GET'])]
-    public function show(Document $document): Response
-    {
-        return $this->render('document/show.html.twig', [
-            'document' => $document,
-        ]);
-    }
 
     #[Route('/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(
@@ -94,7 +110,7 @@ final class DocumentController extends AbstractController
             $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
             
             $this->addFlash('success', 'Document bien modifié!' );  
-            return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_document_tender', ['id'=>$document->getTender()], Response::HTTP_SEE_OTHER);
         }
 
 
@@ -107,13 +123,14 @@ final class DocumentController extends AbstractController
     #[Route('/{id}', name: 'app_document_delete', methods: ['POST'])]
     public function delete(Request $request, Document $document, EntityManagerInterface $entityManager): Response
     {
+        $tender=$document->getTender();
         if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($document);
             $entityManager->flush();
             $this->addFlash('success','Document supprimé!' );
         }
 
-        return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_document_tender', ['id'=>$tender], Response::HTTP_SEE_OTHER);
     }
 
 

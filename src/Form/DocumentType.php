@@ -23,17 +23,6 @@ class DocumentType extends AbstractType
     {
         
         $builder
-        ->add('tender', EntityType::class, [
-            'label' => "Le projet associé à ce document",
-            'class' => Tender::class,
-            'choice_label' => 'title',
-            'disabled' => $options['is_edited'],
-            'query_builder' => function (TenderRepository $tenderRepository) use ($options) {
-                return $tenderRepository->createQueryBuilder('t')
-                    ->where('t.responsable = :user')
-                    ->setParameter('user', $options['user']);
-            }
-        ])
             ->add('status',ChoiceType::class,[
                 'label'=>'Opération',
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],

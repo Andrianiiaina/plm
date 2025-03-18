@@ -1,13 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Document index{% endblock %}
-
+{% block navbar %}
+    {{ include('components/tender_navbar.html.twig',{'tender_id':tender.id})}}
+{% endblock %}
 {% block body %}
   <div class="container">
     <div class="row">
-		<p class="h2">Suivis des documents</p>
+		<p class="h2">Document du projet {{tender.title}}</p>
+    <a href="{{path('app_document_tender_new',{'id':tender.id})}}" class="btn btn-primary col-2 mx-2 mb-4">Suivre un document</a>
     <div class="row mt-2">
-						{% for status, documents in groupedDocuments %}
+        {% for status, documents in groupedDocuments %}
               <div class="col p-1">
                   <div class="card border-{{status | getStatusColor}}">
                     <div class="card-header text-{{status | getStatusColor}}">

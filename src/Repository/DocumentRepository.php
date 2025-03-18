@@ -32,6 +32,17 @@ class DocumentRepository extends ServiceEntityRepository
           ;
       }
 
+      public function findTenderDocuments($tender): array
+      {
+          return $this->createQueryBuilder('d')
+              ->Where('d.tender = :tender')
+              ->setParameter('tender', $tender)
+              ->orderBy('d.createdAt', 'DESC')
+              ->getQuery()
+              ->getResult()
+          ;
+      }
+
     //    /**
     //     * @return Document[] Returns an array of Document objects
     //     */

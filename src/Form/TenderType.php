@@ -7,7 +7,6 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,29 +27,17 @@ class TenderType extends AbstractType
                 'required' => true,
             ])
             ->add('contract_number',TextType::class, [
-                'label' => "Numéro du marché",
+                'label' => "Référence",
                 'required' => true,
             ])
             ->add('description',TextareaType::class, [
-                'label' => "Description",
+                'label' => "Préstation",
                 'required' => false,
             ])
             ->add('location',TextType::class, [
-                'label' => "Localisation",
+                'label' => "Adresse",
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
                 'required' => true,
-            ])
-            ->add('start_date', DateType::class, [
-                'label' => "Date de début",
-                'widget' => 'single_text',
-                'required' => true,
-                'constraints' => [new Assert\GreaterThanOrEqual('today') ],
-            ])
-            ->add('end_date', DateType::class, [
-                'label' => "Date de fin",
-                'widget' => 'single_text',
-                'required' => false,
-                'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             ])
             ->add('min_budget', IntegerType::class,[
                 'label' => "Budget minimum",
@@ -76,8 +63,7 @@ class TenderType extends AbstractType
                 'choices'  => ListService::$tender_status,
             ])
             ->add('tender_type',ChoiceType::class,[
-                'label'=>'Type du projet',
-                'label_attr' => ['class'=>'col-sm-3 col-form-label'],
+                'label'=>'Type de marché',
                 'choices'  => ListService::$tender_type,
             ])
             ->add('url', UrlType::class,[
@@ -85,11 +71,12 @@ class TenderType extends AbstractType
 
             ])
             ->add('responsable', EntityType::class, [
-                'label'=>'Responsable',
+                'label'=>'Bid Manager responsable',
                 'class' => User::class,
                 'choice_label' => 'email',
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
             ])
+           
         ;
 
     }

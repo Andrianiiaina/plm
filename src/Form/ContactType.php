@@ -39,11 +39,11 @@ class ContactType extends AbstractType
                 'label' => "Poste",
                 'required' => true,
             ])
-            ->add('parent', EntityType::class, [
-                'label' => "Supérieur",
-                'class' => Contact::class,
-                'choice_label' => 'name',
-            ])
+           // ->add('parent', EntityType::class, [
+            //    'label' => "Supérieur",
+           //     'class' => Contact::class,
+           //     'choice_label' => 'name',
+           // ])
         ;
     }
 

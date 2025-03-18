@@ -20,52 +20,44 @@ class Tender
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private ?string $title = "";
 
     #[ORM\Column(length: 255)]
-    private ?string $contract_number = null;
+    private ?string $contract_number = "";
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
+    private ?string $description = "";
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $location = null;
+    private ?string $location = "";
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $start_date = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $end_date = null;
 
     #[ORM\Column]
-    private ?float $min_budget = null;
+    private ?float $min_budget = 0;
 
     #[ORM\Column(nullable: true)]
-    private ?float $max_budget = null;
+    private ?float $max_budget = 0;
 
     #[ORM\Column]
-    private ?int $status = null;
+    private ?string $status = "0";
 
     #[ORM\Column]
-    private ?int $tender_type = null;
+    private ?string $tender_type = "0";
 
     #[ORM\ManyToOne(inversedBy: 'tenders')]
     private ?User $responsable = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $url = null;
+    private ?string $url = "";
 
     #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTime $createdAt;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTime $modifiedAt;
-
-    /**
-     * @var Collection<int, File>
-     */
-    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'tender')]
-    private Collection $files;
 
     /**
      * @var Collection<int, Document>
@@ -79,6 +71,25 @@ class Tender
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'tender')]
     private Collection $calendars;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $submissionDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $responseDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $attributionDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $negotiationDate = null;
+
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Contact $contact = null;
+
+    #[ORM\Column]
+    private ?float $duration = 0;
+
     #[Assert\Callback]
     public function validateDates(ExecutionContextInterface $context): void
     {
@@ -87,6 +98,8 @@ class Tender
                 ->atPath('end_date')
                 ->addViolation();
         }
+
+        
     }
 
     #[Assert\Callback]
@@ -104,11 +117,10 @@ class Tender
 
     public function __construct()
     {
-        $this->files = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->calendars = new ArrayCollection();
         $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
-        $this->modifiedAt = null;
+      
     
     }
 
@@ -170,7 +182,7 @@ class Tender
         return $this->start_date;
     }
 
-    public function setStartDate(\DateTimeImmutable $start_date): static
+    public function setStartDate(?\DateTimeImmutable $start_date): static
     {
         $this->start_date = $start_date;
 
@@ -213,24 +225,24 @@ class Tender
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): static
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getTenderType(): ?int
+    public function getTenderType(): ?string
     {
         return $this->tender_type;
     }
 
-    public function setTenderType(int $tender_type): static
+    public function setTenderType(string $tender_type): static
     {
         $this->tender_type = $tender_type;
 
@@ -247,21 +259,6 @@ class Tender
 
         return $this;
     }
-
-    public function getModifiedAt(): ?\DateTime
-    {
-        return $this->modifiedAt;
-    }
-    public function setModifiedAt(?\DateTime $date): static
-    {
-        $this->modifiedAt = $date;
-
-        return $this;
-    }
-
-
-
-
     public function getResponsable(): ?User
     {
         return $this->responsable;
@@ -285,41 +282,83 @@ class Tender
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, File>
-     */
-    public function getFiles(): Collection
-    {
-        return $this->files;
-    }
-
-    public function addFile(File $file): static
-    {
-        if (!$this->files->contains($file)) {
-            $this->files->add($file);
-            $file->setTender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFile(File $file): static
-    {
-        if ($this->files->removeElement($file)) {
-            // set the owning side to null (unless already changed)
-            if ($file->getTender() === $this) {
-                $file->setTender(null);
-            }
-        }
-
-        return $this;
-    }
      /**
      * @return Collection<int, File>
      */
     public function getDocuments(): Collection
     {
         return $this->documents;
+    }
+
+    public function getSubmissionDate(): ?\DateTimeInterface
+    {
+        return $this->submissionDate;
+    }
+
+    public function setSubmissionDate(?\DateTimeInterface $submissionDate): static
+    {
+        $this->submissionDate = $submissionDate;
+
+        return $this;
+    }
+
+    public function getResponseDate(): ?\DateTimeInterface
+    {
+        return $this->responseDate;
+    }
+
+    public function setResponseDate(?\DateTimeInterface $responseDate): static
+    {
+        $this->responseDate = $responseDate;
+
+        return $this;
+    }
+
+    public function getAttributionDate(): ?\DateTimeInterface
+    {
+        return $this->attributionDate;
+    }
+
+    public function setAttributionDate(?\DateTimeInterface $attributionDate): static
+    {
+        $this->attributionDate = $attributionDate;
+
+        return $this;
+    }
+
+    public function getNegotiationDate(): ?\DateTimeInterface
+    {
+        return $this->negotiationDate;
+    }
+
+    public function setNegotiationDate(?\DateTimeInterface $negotiationDate): static
+    {
+        $this->negotiationDate = $negotiationDate;
+
+        return $this;
+    }
+
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): static
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    public function getDuration(): ?float
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(float $duration): static
+    {
+        $this->duration = $duration;
+
+        return $this;
     }
 }

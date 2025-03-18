@@ -11,19 +11,16 @@ class ListService
     ];
 
    public static array $tender_status=[
-     "En préparation"=>0,
-     "En rédaction"=>1,
-     "En attente de réponse"=>2,
-     "Perdu"=>3,
+     "A résumer"=>0,
+     "A soumettre"=>1,
+     "Soumis"=>2,
+     "Recalé"=>3,
      "Remporté"=>4,
    ];
 
    public static array $tender_type=[
-        "It Infrastructure"=>0,
-        "MULTICLOUD & AUTOMATION"=>1,
-        "IoT & EMBEDDED SYSTEMS"=>2,
-        "MULTICLOUD & AUTOMATION"=>3,
-        "HPC-AI"=>4,
+        "Marché privé"=>0,
+        "Marché public"=>1,
    ];
    public static array $document_status = [
         "A compléter"=>0,

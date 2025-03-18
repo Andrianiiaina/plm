@@ -1,114 +1,135 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Project{% endblock %}
+{% block title %}Tender{% endblock %}
+
+{% block navbar %}
+    {{ include('components/tender_navbar.html.twig',{'tender_id':tender.id})}}
+{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
        <div class="row p-3">
-            <div class="clearfix">
-                <strong class="h2 float-start mb-4">Projet {{ tender.title }}.</strong>
-                <div class="float-end d-flex">
-                    <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn btn-primary mx-1">
-                        <i class="bi bi-pencil-fill"></i>
-                    </a>
-                    {{ include('tender/_delete_form.html.twig') }}
-                </div>
+            <strong class="h2 float-start mb-4 ">{{ tender.contractNumber }}.</strong>
+            <div class="table px-4 my-3">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Date de soumission</th>
+                        <th scope="col">Date de négociation</th>
+                        <th scope="col">Date de réponse</th>
+                        <th scope="col">Date d'attribution</th>
+                        <th scope="col">Début prévu</th>
+                        <th scope="col">Fin prévue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{ tender.submissionDate ? tender.submissionDate|date('d F Y H:i') : '' }}</td>
+                        <td>{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y H:i') : '' }}</td>
+                        <td>{{ tender.responseDate ? tender.responseDate|date('d F Y H:i') : '' }}</td>
+                        <td>{{ tender.attributionDate ? tender.attributionDate|date('d F Y H:i') : '' }}</td>
+                        <td>{{ tender.startDate ? tender.startDate|date('d F Y H:i') : '' }}</td>
+                        <td>{{ tender.endDate ? tender.endDate|date('d F Y H:i') : '' }}</td>
+                      </tr>
+                    </tbody>
+                </table>
+
+
             </div>
-            <div class="row px-4">
+            
+            <div class="row px-4 my-3">
+                <strong class="h4">Informations sur l'appel d'offre:</strong> 
                 <div class="col">
                     <dl class="row">
-                       
 
-                        <dt class="col-sm-4">Titre du projet</dt>
+                        <dt class="col-sm-4">Nom du projet</dt>
                         <dd class="col-sm-8">{{ tender.title }}.</dd>
                     
-                        <dt class="col-sm-4">Numero</dt>
+                        <dt class="col-sm-4">Réference</dt>
                         <dd class="col-sm-8">{{ tender.contractNumber }}</dd>
-                    
-                        <dt class="col-sm-4">Localisation</dt>
-                        <dd class="col-sm-8">{{ tender.location }}</dd>
                        
-                        <dt class="col-sm-4">Status</dt>
-                        <dd class="col-sm-8">
-                            <td>{{tender.status | getTenderStatus}}</td>  
-                        </dd>
+                        <dt class="col-sm-4">Type du marché</dt>
+                        <dd class="col-sm-8">{{tender.tenderType | getTenderType}}</dd>
+
                         
-                        <dt class="col-sm-4">Type du projet</dt>
+                    
+                        <dt class="col-sm-4">Adresse</dt>
+                        <dd class="col-sm-8">{{ tender.location }}</dd>
+
+                        <dt class="col-sm-4">Site web</dt>
                         <dd class="col-sm-8">
-                            <td>{{tender.tenderType | getTenderType}}</td> 
+                            <a href="{{ tender.url }} ">{{ tender.url }} </a>
                         </dd>
 
                     </dl>
                 </div>
                 <div class="col">
                     <div class="p-3 row">
-                        <dt class="col-sm-4">Date de début</dt>
-                        <dd class="col-sm-8">{{ tender.startDate ? tender.startDate|date('Y-m-d H:i:s') : '' }}.</dd>
-                        <dt class="col-sm-4">Date de fin</dt>
-                        <dd class="col-sm-8">{{ tender.endDate ? tender.endDate|date('Y-m-d H:i:s') : '' }}.</dd>
-                    
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8"><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></dd>
+                        <dt class="col-sm-4">Durrée</dt>
+                        <dd class="col-sm-8">{{ tender.duration }} ans</dd>
                         <dt class="col-sm-4">Budget minimum</dt>
                         <dd class="col-sm-8">{{ tender.minBudget }}.</dd>
                         <dt class="col-sm-4">Budget maximum</dt>
                         <dd class="col-sm-8">{{ tender.maxBudget }}.</dd>
-                    
                     </div>
                 </div>
             </div>
-            <div class="px-4">
-                <strong>Url:</strong> {{ tender.url }}.<br/>
-                <strong>Description:</strong> {{ tender.description }}.
+
+            <div class="px-4 my-3">
+                <div class="row">
+                    <strong class="h4">Informations sur l'organisation:</strong> 
+                    {% if tender.contact %}
+                    <div class="col row">
+                        <dt class="col-sm-4">Organisation</dt>
+                        <dd class="col-sm-8">{{tender.contact.organisation}}</dd>
+                        <dt class="col-sm-4">Name</dt>
+                        <dd class="col-sm-8">{{tender.contact.name}}</dd>
+                        <dt class="col-sm-4">Function</dt>
+                        <dd class="col-sm-8">{{tender.contact.function}}</dd>
+
+                    </div>
+                    <div class="col row">
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">{{ tender.contact.email }}</dd>
+                        <dt class="col-sm-4">Contact perso</dt>
+                        <dd class="col-sm-8">{{ tender.contact.contactPerso }}.</dd>
+                        <dt class="col-sm-4">Contact pro</dt>
+                        <dd class="col-sm-8">{{ tender.contact.contactPro }}.</dd>
+
+                    </div>
+                    {% else %}
+                        <p>Aucune. <a href="{{path('app_tender_edit_contact',{'id':tender.id})}}" class="btn">Completer les informations</a>
+                        </p> 
+                   {% endif %}
+                </div>
             </div>
-       </div>
-       
-       <div class="row mt-5">
-            <strong class="h4 float-start mb-2">Documents suivis</strong>
-          
-        {% for document in tender.documents %}
-        <!--div class="card mx-2" style="width: 18rem;">
-            <div class="card-body">
-              <h4 class="card-title">{{ document.name }}</h4>
-              <h6 class="card-subtitle mb-2 text-body-secondary">{{document.tender.title}}</h6>
-              <span class="badge rounded-pill bg-{{document.status | getStatusColor}}">
-                {{document.status | getDocumentStatus}}</span>
-                <small>@{{document.responsable.email}}</small>
-              <div class="btn-group">
-                <a href="{{ path('app_document_edit', {'id': document.id}) }}" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
-             
-              </div>
+
+            <div class="row px-4 my-3">
+                <strong class="h4">Prestation:</strong> 
+                {{ tender.description }}
             </div>
             
-          </div-->
-        {% else %}
-            <small>Aucun document pour le moment.</small>
-        {% endfor %}
-       </div>
+            <div class="">
+                <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn link-primary">
+                    <i class="bi bi-pencil-fill"></i> Modifier les informations sur le projet
+                </a><br/>
+                <a href="{{ path('app_tender_edit_date', {'id': tender.id}) }}" class="btn link-primary">
+                    <i class="bi bi-pencil-fill"></i> Modifier les informations sur les dates
+                </a>
 
-      <div class="row p-3 mt-5">
-        <div class="clearfix mb-2">
-            <strong class="h4 float-start">Fichiers associés</strong>
-            <a href="{{path('app_file_new',{'id':tender.id})}}" class="btn float-end">Ajouter un fichier</a>
-
-        </div>
-        <ol class="list-group">
-            {% for file in tender.files %}
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold">
-                        <a href="{{ asset('uploads/tender_files/' ~ file.filepath| e('html')) }}">{{ file.filename }}</a>
-                    </div>
-                    url: {{ file.url }}
-                </div>
-
-                <form method="post" action="{{ path('app_file_delete', {'id': file.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce fichier?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ file.id) }}">
-                    <button class="btn">supprimer</button>
+              
+             
+                {% if is_granted('ROLE_ADMIN') %}
+                <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
+                    <button class="btn link-danger"><i class="bi bi-trash"></i> Supprimer ce projet</button>
                 </form>
-                </li>
-            {% else %}
-                <p>Aucun fichier.</p>
-            {% endfor %}
-        </ol>
+                {% endif %}
+            </div>
+
+       </div>
    </div>
     
 {% endblock %}

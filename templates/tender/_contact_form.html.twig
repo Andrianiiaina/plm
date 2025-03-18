@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Organisation info{% endblock %}
+{% block navbar %}
+    {{ include('components/tender_navbar.html.twig',{'tender_id':tender.id})}}
+{% endblock %}
+{% block body %}
+ <div class="container">
+    <div class="row">
+        <div class="offset-2 col-md-8">
+            <p class="h4 mt-5 mb-3">Information sur l'organisation du projet {{tender.title}}</p>
+            {{ include('contact/_form.html.twig') }}
+        </div>
+    </div>
+ </div>
+{% endblock %}
