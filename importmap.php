@@ -20,6 +20,7 @@ return [
         'path' => './assets/calendar.js',
         'entrypoint' => true,
     ],
+
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
@@ -48,5 +49,8 @@ return [
     ],
     'chart.js' => [
         'version' => '3.9.1',
+    ],
+    'sortablejs' => [
+        'version' => '1.15.6',
     ],
 ];

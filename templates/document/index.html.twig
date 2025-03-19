@@ -3,19 +3,23 @@
 {% block title %}Document index{% endblock %}
 
 {% block body %}
-  <div class="container">
+{% block navbar %}
+{{ include('components/tender_navbar.html.twig',{'tender_id':document.tender.id})}}
+{% endblock %}
+
+<div class="container">
     <div class="row">
-		<p class="h2">Suivis des documents</p>
+	<p class="h2">Suivis des documents</p>
     <div class="row mt-2">
-						{% for status, documents in groupedDocuments %}
+		{% for status, documents in groupedDocuments %}
               <div class="col p-1">
                   <div class="card border-{{status | getStatusColor}}">
                     <div class="card-header text-{{status | getStatusColor}}">
                       <p class="h4"> {{status | getDocumentStatus}}</p>
                     </div>
-                      <div class="list-group">
+                      <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
                         {% for document in documents %}
-                          <a href="{{path('app_document_show', {'id':document.id})}}" class="list-group-item list-group-item-action pb-3" aria-current="true">
+                          <a href="{{path('app_document_show', {'id':document.id})}}" data-id="{{document.id}}" class="list-group-item list-group-item-action pb-3" aria-current="true">
                             <span class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</span><br/>
                             <span class="text-body-secondary">{{document.tender.title| u.truncate(40, '...')}}</span> 
                             <br/>

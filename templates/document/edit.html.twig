@@ -2,6 +2,10 @@
 
 {% block title %}Edit Document{% endblock %}
 
+{% block navbar %}
+    {{ include('components/tender_navbar.html.twig',{'tender_id':document.tender.id})}}
+{% endblock %}
+
 {% block body %}
    <div class="container">
     <div class="row">
@@ -10,11 +14,6 @@
         <h1>Modifier le document</h1>
         
         {{ form_start(form) }}
-
-                <div class="mb-3 row">
-                    {{ form_label(form.tender) }}
-                        {{ form_widget(form.tender) }}
-                </div>
                 <div class="mb-3 row">
                     <div class="col-md-6">
                         {{ form_label(form.status) }}
@@ -28,14 +27,23 @@
                     {{ form_label(form.name) }}
                     {{ form_widget(form.name) }}
                 </div>
-                <p class="h6">
-                    Fichier actuel: {{ document.filename }}
-                </p>
+                <div class="mb-3 row">
+                    Fichier actuel:
+                    <p class="h6">
+                        <a class="icon-link" href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}">{{ document.filename }}</a>
+                    </p>
+                </div>
+                
                 <div class="mb-3 row">
                     A remplacer par:
                     {{ form_widget(form.filepath) }}
                 </div>
-                    {{ form_widget(form) }}
+                <div class="mb-3 row">
+                    {{ form_label(form.information) }}
+                    {{ form_widget(form.information) }}
+
+                </div>
+                
                     {{ form_rest(form) }}
 
                     <button class="btn btn-primary col-3">{{ button_label|default('Enregistrer') }}</button>

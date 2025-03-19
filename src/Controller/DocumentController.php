@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -34,7 +35,7 @@ final class DocumentController extends AbstractController
         return $this->render('document/index.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status]);
     }
 
-    #[Route('/{id}', name: 'app_document_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
     public function show(Document $document): Response
     {
         return $this->render('document/show.html.twig', [
@@ -52,7 +53,7 @@ final class DocumentController extends AbstractController
             $grouped_documents_by_status[$document->getStatus()][] = $document;
         }
 
-        return $this->render('tender/documents.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status,'tender'=>$tender]);
+        return $this->render('document/documents.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status,'tender'=>$tender]);
     }
 
 
@@ -91,11 +92,12 @@ final class DocumentController extends AbstractController
         }
         return $this->render('document/new.html.twig', [
             'form'=>$form,
+            'tender_id'=>$tender->getId()
         ]);
     }
 
 
-    #[Route('/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request, Document $document, 
         EntityManagerInterface $entityManager,
@@ -120,7 +122,7 @@ final class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_document_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_document_delete', methods: ['POST'])]
     public function delete(Request $request, Document $document, EntityManagerInterface $entityManager): Response
     {
         $tender=$document->getTender();
@@ -133,6 +135,25 @@ final class DocumentController extends AbstractController
         return $this->redirectToRoute('app_document_tender', ['id'=>$tender], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/update_status', name: 'update_status', methods: ['POST'])]
+    public function updateOrder(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
 
+       
+        if (!$data) {
+            return $this->json(['error' => 'Aucune donnée reçue'], 400);
+        }
+
+        $document=$em->getRepository(Document::class)->findOneBy(['id'=>$data['document_id']]);
+        $document->setStatus($data['status_id']);
+        $em->persist($document);
+        $em->flush();
+        
+        return $this->json([
+            'message' => 'JSON bien reçu',
+            'data' => $data
+        ]);
+    }
 
 }

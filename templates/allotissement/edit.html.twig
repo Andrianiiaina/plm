@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Allotissement{% endblock %}
+{% block navbar %}
+    {{ include('components/tender_navbar.html.twig',{'tender_id':allotissement.tender.id})}}
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="offset-3 col-md-6">
+            <h1>Modifier l'Allotissement</h1>
+            {{ include('allotissement/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

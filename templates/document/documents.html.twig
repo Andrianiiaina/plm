@@ -16,14 +16,20 @@
                     <div class="card-header text-{{status | getStatusColor}}">
                       <p class="h4"> {{status | getDocumentStatus}}</p>
                     </div>
-                      <div class="list-group">
+                      <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
                         {% for document in documents %}
-                          <a href="{{path('app_document_show', {'id':document.id})}}" class="list-group-item list-group-item-action pb-3" aria-current="true">
-                            <span class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</span><br/>
-                            <span class="text-body-secondary">{{document.tender.title| u.truncate(40, '...')}}</span> 
-                            <br/>
-                            <small class="text-{{status | getStatusColor}}"> {{document.responsable.email}}</small>
-                          </a>
+                        <div class="card"  data-id="{{document.id}}">
+                            <a href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" class="list-group-item list-group-item-action" aria-current="true">
+                              {{ document.filename}}  <br/>
+                              <small class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</small>
+                              <br/>
+                            </a>
+                            <a href="{{path('app_document_edit', {'id':document.id})}}" data-id="{{document.id}}" class="btn text-{{status | getStatusColor}} clearfix" aria-current="true">
+                              <small class="float-start">@{{document.responsable.email}}</small>
+                              <span class="float-end">Modifier</span>
+                            </a>
+                        </div>
+                        
                        
                         {% else %}
                         {% endfor %}

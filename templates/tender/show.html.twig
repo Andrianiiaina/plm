@@ -38,7 +38,7 @@
             </div>
             
             <div class="row px-4 my-3">
-                <strong class="h4">Informations sur l'appel d'offre:</strong> 
+                <p class="fs-4 fw-medium text-uppercase my-2">Informations sur l'appel d'offre</p> 
                 <div class="col">
                     <dl class="row">
 
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col">
                     <div class="p-3 row">
-                        <dt class="col-sm-4">Status</dt>
+                        <dt class="col-sm-4 ">Status</dt>
                         <dd class="col-sm-8"><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></dd>
                         <dt class="col-sm-4">Durrée</dt>
                         <dd class="col-sm-8">{{ tender.duration }} ans</dd>
@@ -79,7 +79,7 @@
 
             <div class="px-4 my-3">
                 <div class="row">
-                    <strong class="h4">Informations sur l'organisation:</strong> 
+                    <p class="fs-4 fw-medium text-uppercase my-2">Informations sur l'organisation</p> 
                     {% if tender.contact %}
                     <div class="col row">
                         <dt class="col-sm-4">Organisation</dt>
@@ -107,16 +107,16 @@
             </div>
 
             <div class="row px-4 my-3">
-                <strong class="h4">Prestation:</strong> 
+                <p class="fs-4 fw-medium text-uppercase my-2">Prestation</p> 
                 {{ tender.description }}
             </div>
             
             <div class="">
                 <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn link-primary">
-                    <i class="bi bi-pencil-fill"></i> Modifier les informations sur le projet
+                     Modifier les informations sur le projet
                 </a><br/>
                 <a href="{{ path('app_tender_edit_date', {'id': tender.id}) }}" class="btn link-primary">
-                    <i class="bi bi-pencil-fill"></i> Modifier les informations sur les dates
+                    Modifier les informations sur les dates
                 </a>
 
               
@@ -124,7 +124,7 @@
                 {% if is_granted('ROLE_ADMIN') %}
                 <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
-                    <button class="btn link-danger"><i class="bi bi-trash"></i> Supprimer ce projet</button>
+                    <button class="btn link-danger">Supprimer ce projet</button>
                 </form>
                 {% endif %}
             </div>
