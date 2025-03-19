@@ -3,15 +3,47 @@
 {% block title %}Calendar index{% endblock %}
 {% block body %}
     <div class="row">
-        <div class="offset-1 col-md-10">
-           <div class="clearfix">
-            <p class="h2 mb-4 float-start">Calendrier</p>
-
-            <a href="{{ path('app_calendar_new') }}" class="btn float-end">Créer - Voir la liste</a>
-           </div>
+        <div class="col-md-4">
+            <div class="clearfix">
+                <p class="h4 float-start">Agenda</p>
+                <a href="{{ path('app_calendar') }}" class="btn float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Nouveau</a>
+            </div>
+            {% for calendar in calendars %}
+                <div class="col mb-3">
+                    <a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
+                        <strong>{{ calendar.getBeginAt ? calendar.getBeginAt|date('d/m/Y H:i') : '' }}</strong>	
+                        {{ calendar.title | u.truncate(30, '...')}}<br/>
+                        <small><i>{{ calendar.tender.title | u.truncate(70, '...')}}</i></small>
+                    </a>
+                </div>
+            {% else %}
+                <p>aucun.</p>
+            {% endfor %}
+        </div>
+        <div class="col-md-8">
+            
             <div id="calendar-holder"></div>
         </div>
     </div>
+    <div class="modal fade" id="addGroupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addGroupModalLabel">Nouveau</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(form) }}
+            <div class="modal-body">
+                    {{ form_widget(form) }}
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
 {% endblock %}
 {% block javascripts %}
     {% block importmap %}{{ importmap('calendar') }}{% endblock %}

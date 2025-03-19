@@ -35,12 +35,6 @@ class CalendarType extends AbstractType
                 'multiple' => false,
                 'disabled' => $options['is_edited'],
             ])
-            ->add('reminder', DateType::class, [
-                'label'=> "reminder",
-                'widget' => 'single_text',
-                'required'=>false,
-                'mapped' => false,
-            ])
         ;
     }
 

@@ -16,15 +16,6 @@
     <div class="col-md-2">
         {{ form_label(form.tender) }}{{ form_widget(form.tender) }}
     </div>
-    <button class="btn col-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
-        <i class="bi bi-bell"></i>
-      </button><div style="min-height: 120px;">
-        <div class="collapse collapse-horizontal" id="collapseWidthExample">
-            <div class="float-end" style="width: 300px;">   
-                {{ form_widget(form.reminder) }}
-            </div>
-          </div>
-
     <div class="col-md-2">
         <button class="btn btn-primary mt-4">{{ button_label|default('Enregistrer') }}</button>
     </div>

@@ -55,12 +55,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $documents;
 
     /**
-     * @var Collection<int, Reminder>
-     */
-    #[ORM\ManyToMany(targetEntity: Reminder::class, mappedBy: 'user')]
-    private Collection $reminders;
-
-    /**
      * @var Collection<int, Notification>
      */
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user', orphanRemoval: true)]
@@ -70,7 +64,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->tenders = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->reminders = new ArrayCollection();
         $this->notifications = new ArrayCollection();
     }
 
@@ -208,33 +201,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($document->getResponsable() === $this) {
                 $document->setResponsable(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reminder>
-     */
-    public function getReminders(): Collection
-    {
-        return $this->reminders;
-    }
-
-    public function addReminder(Reminder $reminder): static
-    {
-        if (!$this->reminders->contains($reminder)) {
-            $this->reminders->add($reminder);
-            $reminder->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReminder(Reminder $reminder): static
-    {
-        if ($this->reminders->removeElement($reminder)) {
-            $reminder->removeUser($this);
         }
 
         return $this;

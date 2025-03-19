@@ -7,13 +7,16 @@ use CalendarBundle\Entity\Event;
 use CalendarBundle\Event\SetDataEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class CalendarSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly CalendarRepository $calendarRepository,
-        private readonly UrlGeneratorInterface $router
-    ) {}
+        private readonly UrlGeneratorInterface $router,
+        private readonly Security $security
+    ){
+    }
 
     public static function getSubscribedEvents():array
     {
@@ -24,28 +27,27 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     public function onCalendarSetData(SetDataEvent $setDataEvent)
     {
+        $user = $this->security->getUser();
         $start = $setDataEvent->getStart();
         $end = $setDataEvent->getEnd();
-        $filters = $setDataEvent->getFilters();
-
-        // Modify the query to fit to your entity and needs
-        // Change calendar.beginAt by your start date property
         $calendars = $this->calendarRepository
-            ->createQueryBuilder('calendar')
-            ->where('calendar.beginAt BETWEEN :start and :end OR calendar.endAt BETWEEN :start and :end')
-            ->setParameter('start', $start->format('Y-m-d H:i:s'))
-            ->setParameter('end', $end->format('Y-m-d H:i:s'))
-            ->getQuery()
-            ->getResult()
-        ;
-
-        foreach ($calendars as $calendar) {
-            // this create the events with your data (here calendar data) to fill calendar
-            $calendarEvent = new Event(
-                $calendar->getTitle(),
-                $calendar->getBeginAt(),
-                $calendar->getEndAt() // If the end date is null or not defined, a all day event is created.
-            );
+        ->createQueryBuilder('c')
+        ->join('c.tender', 'p')
+        ->where('p.responsable = :responsable')
+        ->andWhere('c.beginAt BETWEEN :start and :end OR c.endAt BETWEEN :start and :end')
+        ->setParameter('start', $start->format('Y-m-d H:i:s'))
+        ->setParameter('end', $end->format('Y-m-d H:i:s'))
+        ->setParameter('responsable', $user)
+        ->orderBy('c.beginAt','ASC')
+        ->getQuery()
+        ->getResult()
+    ;
+    foreach ($calendars as $calendar) {
+        $calendarEvent = new Event(
+            $calendar->getTitle(),
+            $calendar->getBeginAt(),
+            $calendar->getEndAt() 
+        );
 
             /*
              * Add custom options to events
@@ -63,7 +65,6 @@ class CalendarSubscriber implements EventSubscriberInterface
                 ])
             );
 
-            // finally, add the event to the CalendarEvent to fill the calendar
             $setDataEvent->addEvent($calendarEvent);
         }
     }
