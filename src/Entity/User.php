@@ -61,12 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $reminders;
 
     /**
-     * @var Collection<int, Project>
-     */
-    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'responsable')]
-    private Collection $projects;
-
-    /**
      * @var Collection<int, Notification>
      */
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user', orphanRemoval: true)]
@@ -77,7 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tenders = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->reminders = new ArrayCollection();
-        $this->projects = new ArrayCollection();
         $this->notifications = new ArrayCollection();
     }
 
@@ -242,36 +235,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->reminders->removeElement($reminder)) {
             $reminder->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Project>
-     */
-    public function getProjects(): Collection
-    {
-        return $this->projects;
-    }
-
-    public function addProject(Project $project): static
-    {
-        if (!$this->projects->contains($project)) {
-            $this->projects->add($project);
-            $project->setResponsable($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProject(Project $project): static
-    {
-        if ($this->projects->removeElement($project)) {
-            // set the owning side to null (unless already changed)
-            if ($project->getResponsable() === $this) {
-                $project->setResponsable(null);
-            }
         }
 
         return $this;

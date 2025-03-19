@@ -2,7 +2,6 @@
     namespace App\Event;
 
     use App\Entity\User;
-    use App\Entity\Project;
     use Symfony\Contracts\EventDispatcher\Event;
 
     class UserAssignedToProjectEvent extends Event

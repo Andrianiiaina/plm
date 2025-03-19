@@ -2,8 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\ProjectStatus;
-use App\Entity\TaskStatus;
 use App\Factory\CalendarFactory;
 use App\Factory\ContactFactory;
 use App\Factory\ContactGroupFactory;
@@ -12,8 +10,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Factory\TenderFactory;
 use App\Factory\UserFactory;
-use App\Factory\FileFactory;
-use App\Service\ListService;
 
 class AppFixtures extends Fixture
 {
@@ -30,9 +26,6 @@ class AppFixtures extends Fixture
         return ['responsable' => UserFactory::random()]; 
     });
 
-    FileFactory::createMany(10, function() { 
-        return ['tender' => TenderFactory::random()]; 
-    });
     DocumentFactory::createMany(20,function() { 
         return ['responsable'=>UserFactory::random(), 'tender' => TenderFactory::random()]; 
     });
@@ -41,19 +34,6 @@ class AppFixtures extends Fixture
     });
 
     $rate=[0 =>0, 1=>20, 2=>80, 3=>100, 4=>0,5=>0];
-
-    foreach (ListService::$task_status as $key=>$value) {
-        $taskStatus = new TaskStatus();
-        $taskStatus->setCode($value);
-        $taskStatus->setLabel($key);
-        $manager->persist($taskStatus);
-    }
-    foreach (ListService::$project_status as $key=>$value) {
-        $projectStatus = new ProjectStatus();
-        $projectStatus->setCode($value);
-        $projectStatus->setLabel($key);
-        $manager->persist($projectStatus);
-    }
 
     $manager->flush();
 
