@@ -18,6 +18,12 @@
                 new \Twig\TwigFilter('getDocumentStatus', function (int $value) {
                     return array_search($value,ListService::$document_status) ?? 'inconnu';
                 }),
+
+                new \Twig\TwigFilter('highlight', function ($date) {
+                    
+                    return $date<new \DateTime()?'fw-light small':'';
+                }),
+
                 new \Twig\TwigFilter('getStatusColor', [$this, 'getStatusColor']),
                 new \Twig\TwigFilter('getTenderStatusColor', [$this, 'getTenderStatusColor']),
             ];
@@ -43,5 +49,7 @@
             ];
             return $colors[$value] ?? 'inconnu';
         }
+
+      
     }
 ?>

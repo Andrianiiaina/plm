@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -54,7 +55,7 @@ class TenderDateType extends AbstractType
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
         ])
-        ->add('duration', IntegerType::class,[
+        ->add('duration', NumberType::class,[
             'label' => "Durrée (en année)",
             'required' => true,
             'label_attr' => ['class'=>'col-form-label'],
@@ -79,6 +80,8 @@ class TenderDateType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Tender::class,
+            'csrf_protection' => true, 
+            'csrf_token_id' => 'form_tender_date',
         ]);
     }
 }

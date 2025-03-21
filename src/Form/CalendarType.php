@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-
 class CalendarType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -42,7 +41,9 @@ class CalendarType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Calendar::class,
-            'is_edited' => false
+            'is_edited' => false,
+            'csrf_protection' => true, 
+            'csrf_token_id' => 'form_calendar',
         ]);
     }
 }

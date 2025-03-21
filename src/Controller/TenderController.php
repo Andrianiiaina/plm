@@ -32,8 +32,6 @@ final class TenderController extends AbstractController
             $tenderRepository->findAll():
             $tenderRepository->findRespoTenders($this->getUser());
         }
-
-
         return $this->render('tender/index.html.twig', [
             'tenders' =>  $tenders,
             'searchTerm' => $searchTerm??""
@@ -82,6 +80,20 @@ final class TenderController extends AbstractController
         ]);
     }
 
+    
+
+    #[Route('/archive_tender/{id}', name: 'app_tender_archive', methods: ['GET'])]
+    public function archive_tender(Tender $tender,EntityManagerInterface $entityManager): Response
+    {
+        
+        $tender->setIsArchived(true);
+        $entityManager->persist($tender);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_tender_index', []);
+    }
+
+
+
     #[Route('/edit_contact/{id}', name: 'app_tender_edit_contact', methods: ['GET', 'POST'])]
     public function edit_contact(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
     {
@@ -105,12 +117,14 @@ final class TenderController extends AbstractController
     }
 
 
-    #[Route('/show/{id}', name: 'app_tender_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_tender_show', methods: ['GET','POST'])]
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
     public function show_tender(Tender $tender): Response
     {
+
         return $this->render('tender/show.html.twig', ['tender' => $tender]);
     }
+
 
 
     #[Route('/edit_tenderinfo/{id}/', name: 'app_tender_edit', methods: ['GET', 'POST'])]

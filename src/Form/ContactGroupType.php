@@ -30,6 +30,8 @@ class ContactGroupType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ContactGroup::class,
+            'csrf_protection' => true, 
+            'csrf_token_id' => 'form_calendar_group',
         ]);
     }
 }

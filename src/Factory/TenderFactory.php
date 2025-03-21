@@ -32,18 +32,27 @@ final class TenderFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        $date=self::faker()->dateTimeBetween('now','+6 months');
+        $date=self::faker()->dateTimeBetween('-1 month','+1 months');
+        $budget=self::faker()->randomFloat();
         return [
-            'title' => self::faker()->unique()->sentence(),
+            'title' => self::faker()->unique()->text(40),
             'contract_number' => self::faker()->text(15),
             'location' => self::faker()->address(),
             'description' => self::faker()->text(225),
-            'min_budget' => self::faker()->randomFloat(),
-            'start_date' => \DateTimeImmutable::createFromMutable($date),
-            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
+            'min_budget' => $budget,
+            'max_budget' => $budget+1000,
+            'duration' => 4,
+            'submissionDate' => \DateTimeImmutable::createFromMutable($date->modify('+10 days')),
+            'responseDate' => \DateTimeImmutable::createFromMutable($date->modify('+15 days')),
+            'attributionDate' => \DateTimeImmutable::createFromMutable($date->modify('+20 days')),
+            'negotiationDate' => \DateTimeImmutable::createFromMutable($date->modify('+25 days')),
+            'start_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
+            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+35 days')),
             'status' => self::faker()->numberBetween(0, 4),
             'tender_type' => self::faker()->numberBetween(0, 4),
             'responsable'=>UserFactory::new(),
+            'isArchived'=>false,
+            'url'=>self::faker()->url(),
         ];
     }
 

@@ -10,9 +10,8 @@ use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Document;
 use App\Entity\Notification;
-use App\Entity\Task;
 use App\Entity\Tender;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\TenderRepository;
 
 final class HomeController extends AbstractController
 {
@@ -28,11 +27,11 @@ final class HomeController extends AbstractController
          }elseif($this->isGranted('ROLE_RESPO')){
             $documents=$entityManager->getRepository(Document::class)->findDocs($user, 5);
             $calendars=$entityManager->getRepository(Calendar::class)->findUserCalendar($user, 5);
-            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable'=>$user],['createdAt'=>'DESC'],null,10);
+            $tenders= $entityManager->getRepository(Tender::class)->findBy(['responsable'=>$user],['createdAt'=>'DESC'],10);
          }elseif($this->isGranted('ROLE_USER')){
             return $this->render('home/reader.html.twig');
          }
-
+        
          $grouped_tenders_by_status = array_fill_keys(ListService::$tender_status, []);
 
          foreach ($tenders as $tender) {
@@ -57,30 +56,17 @@ final class HomeController extends AbstractController
         ]);
     }
 
-
-    #[Route('/gantt',name: 'app_dashboard', methods: ['GET'])]
-    public function dashboard(EntityManagerInterface $entityManager)
+    #[Route('app_tender_status/{status}', name: 'app_tender_status', methods: ['GET'])]
+    public function tender_status($status,TenderRepository $tenderRepository): Response
     {
-       
-       
-        return $this->render('home/projects.html.twig');
-    }
-
-    #[Route('/gantt/data',name: 'app_data_gantt')]
-    public function getData(EntityManagerInterface $entityManager)
-    {
-        $tasks= $entityManager->getRepository(Task::class)->findAll();
-        $data=[];
-        foreach ($tasks as $key=>$task) {
-           $data[$key]['id']=$task->getId();
-           $data[$key]['text']=$task->getName();
-           $data[$key]['start_date']=$task->getStartDate()->format('d-m-Y');
-           $data[$key]['end_date']=$task->getEndDate()->format('d-m-Y');
-        }
-        $response = [
-            "data" => $data,
-            "links" => [] // Vous pouvez ajouter des liens entre les tâches ici, si nécessaire
-        ];
-        return new JsonResponse($response);
+        
+        $tenders = $this->isGranted('ROLE_ADMIN')?
+        $tenderRepository->findBy(['status'=>$status]):
+        $tenderRepository->getTenderByStatus($this->getUser(),$status);
+        
+        return $this->render('tender/index.html.twig', [
+            'tenders' =>  $tenders,
+            'searchTerm' => ""
+        ]);
     }
 }

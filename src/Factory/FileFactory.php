@@ -2,13 +2,13 @@
 
 namespace App\Factory;
 
-use App\Entity\Document;
+use App\Entity\File;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<Document>
+ * @extends PersistentProxyObjectFactory<File>
  */
-final class DocumentFactory extends PersistentProxyObjectFactory
+final class FileFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -21,7 +21,7 @@ final class DocumentFactory extends PersistentProxyObjectFactory
 
     public static function class(): string
     {
-        return Document::class;
+        return File::class;
     }
 
     /**
@@ -32,11 +32,9 @@ final class DocumentFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'filename' => "WHAT-IS-CLOUD-COMPUTING.pdf",
-            'filepath' => "WHAT-IS-CLOUD-COMPUTING-67c83f1ee3599.pdf",
-            'information' => self::faker()->text(),
-            'name' => "Cahier de charge du projet Ay",
-            'status' => self::faker()->numberBetween(0,4),
+            'is_finished' => self::faker()->boolean(),
+            'tender' => TenderFactory::new(),
+            'title' => self::faker()->text(70),
         ];
     }
 
@@ -46,7 +44,7 @@ final class DocumentFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Document $document): void {})
+            // ->afterInstantiate(function(File $file): void {})
         ;
     }
 }

@@ -225,4 +225,29 @@ class Contact
 
         return $this;
     }
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+    public function setCreatedAt(?\DateTime $date): static
+    {
+        $this->createdAt = $date;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTime
+    {
+        return $this->modifiedAt;
+    }
+    public function setModifiedAt(?\DateTime $date): static
+    {
+        $this->modifiedAt = $date;
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->name ?? 'N/A'; 
+    }
 }

@@ -6,7 +6,7 @@
         <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center">
             <li class="nav-item">
                 <a href="{{path('app_tender_show',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                    <i class="bi-house fs-3"></i>
+                    <i class="bi bi-info-circle fs-3"></i>
                 </a>
             </li>
             <li>
@@ -15,10 +15,16 @@
               </a>
           </li>
           <li>
-            <a href="{{path('app_allotissement_tender',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Allotissement" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
-                <i class="bi bi-bookshelf fs-3"></i>
-            </a>
-        </li>
+              <a href="{{path('app_file_index',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Allotissement" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+                  <i class="bi bi-card-checklist fs-3"></i>
+              </a>
+          </li>
+           <li>
+                <a href="{{path('app_allotissement_tender',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Allotissement" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+                    <i class="bi bi-grid fs-3"></i>
+                </a>
+            </li>
+
         </ul>
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">

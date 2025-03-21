@@ -9,7 +9,6 @@
 			<i class="bi bi-person-circle fs-2"></i> {{user.email | capitalize}} 
 			<div class="btn-group float-end">
 				<a href="{{ path('app_tender_new') }}" class="btn"> + Tender</a>
-				<a href="{{ path('app_document_index') }}" class="btn"> + Document</a>
 				
 				<div class="dropdown">
 					<button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -22,7 +21,7 @@
 		</div>
 		<div class="mx-auto col mt-3">
 			{% for status,total in statusTender %}
-				<a href="#" class="btn align-items-between btn-outline-{{status |getTenderStatusColor}}"> {{status | getTenderStatus}} {{total}}</a>		
+				<a href="{{path('app_tender_status',{'status':status})}}" class="btn align-items-between btn-outline-{{status |getTenderStatusColor}}"> {{status | getTenderStatus}} {{total}}</a>		
 			{% endfor %}
 		</div>
 		<div class="row mt-3">
@@ -35,9 +34,9 @@
 				<table class="table table-sm table-borderless">
 					<thead>
 					  <tr>
+						<th scope="col">Référence</th>
 						<th scope="col">Titre</th>
-						<th scope="col">Responsable</th>
-						<th scope="col">Date de fin</th>
+						<th scope="col">Lien</th>
 					  </tr>
 					</thead>
 					<tbody>
@@ -45,14 +44,15 @@
 					{% for tender_ in tenders %}
 					<tr>
 							<td>
-								<a href="{{path('app_tender_show', {'id': tender_.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-									<span class="badge bg-{{ tender_.status |getTenderStatusColor }}"> </span> {{ tender_.title| u.truncate(40, '...')}}
+							<a href="{{path('app_tender_show', {'id': tender_.id})}}" class="link-secondary link-underline link-underline-opacity-0">
+									<span class="badge py-2 bg-{{ tender_.status |getTenderStatusColor }}"> </span> {{tender_.contractNumber}}
 								</a>
 							</td>
-							<td><small>{{tender_.responsable.email}}</small></td>
-							<td>{{ tender_.endDate ? tender_.endDate|date('d/m/Y H:i') : '' }}</td>
-						
-						
+							<td>
+								{{ tender_.title| u.truncate(40, '...')}}
+								
+							</td>
+							<td><small>{{tender_.url}}</small></td>
 						</tr>
 					{% endfor %}
 					</tbody>

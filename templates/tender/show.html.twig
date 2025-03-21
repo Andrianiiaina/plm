@@ -9,7 +9,7 @@
 {% block body %}
     <div class="container-fluid">
        <div class="row p-3">
-            <strong class="h2 float-start mb-4 ">{{ tender.contractNumber }}.</strong>
+            <strong class="h2 float-start mb-4 text-center text-{{tender.status | getStatusColor}}">{{ tender.contractNumber }}-{{tender.title}}</strong>
             <div class="table px-4 my-3">
                 <table class="table">
                     <thead>
@@ -24,12 +24,12 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td>{{ tender.submissionDate ? tender.submissionDate|date('d F Y H:i') : '' }}</td>
-                        <td>{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y H:i') : '' }}</td>
-                        <td>{{ tender.responseDate ? tender.responseDate|date('d F Y H:i') : '' }}</td>
-                        <td>{{ tender.attributionDate ? tender.attributionDate|date('d F Y H:i') : '' }}</td>
-                        <td>{{ tender.startDate ? tender.startDate|date('d F Y H:i') : '' }}</td>
-                        <td>{{ tender.endDate ? tender.endDate|date('d F Y H:i') : '' }}</td>
+                        <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y H:i') : '' }}</p></td>
+                        <td><p class="{{ tender.negotiationDate| highlight }}">{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y H:i') : '' }}</p></td>
+                        <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y H:i') : '' }}</p></td>
+                        <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y H:i') : '' }}</p></td>
+                        <td><p class="{{ tender.startDate| highlight }}">{{ tender.startDate ? tender.startDate|date('d F Y H:i') : '' }}</p></td>
+                        <td><p class="{{ tender.endDate| highlight }}">{{ tender.endDate ? tender.endDate|date('d F Y H:i') : '' }}</p></td>
                       </tr>
                     </tbody>
                 </table>
@@ -38,7 +38,8 @@
             </div>
             
             <div class="row px-4 my-3">
-                <p class="fs-4 fw-medium text-uppercase my-2">Informations sur l'appel d'offre</p> 
+            
+                <p class="fs-4 fw-medium text-uppercase my-2"> Informations sur l'appel d'offre</p> 
                 <div class="col">
                     <dl class="row">
 
@@ -66,7 +67,7 @@
                 <div class="col">
                     <div class="p-3 row">
                         <dt class="col-sm-4 ">Status</dt>
-                        <dd class="col-sm-8"><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></dd>
+                        <dd class="col-sm-8"><span class="text-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></dd>
                         <dt class="col-sm-4">Durrée</dt>
                         <dd class="col-sm-8">{{ tender.duration }} ans</dd>
                         <dt class="col-sm-4">Budget minimum</dt>
@@ -106,25 +107,29 @@
                 </div>
             </div>
 
-            <div class="row px-4 my-3">
+            <div class="px-4 my-3">
                 <p class="fs-4 fw-medium text-uppercase my-2">Prestation</p> 
                 {{ tender.description }}
             </div>
             
-            <div class="">
-                <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn link-primary">
-                     Modifier les informations sur le projet
+            <div class="px-4 my-3">
+                <p class="fs-4 fw-medium text-uppercase my-2">Opération</p> 
+
+                <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn text-primary my-1 text-uppercase">
+                     Modifier le projet
                 </a><br/>
-                <a href="{{ path('app_tender_edit_date', {'id': tender.id}) }}" class="btn link-primary">
-                    Modifier les informations sur les dates
+                <a href="{{ path('app_tender_edit_date', {'id': tender.id}) }}" class="btn text-primary my-1 text-uppercase">
+                    Modifier les dates
+                </a><br/>
+
+                <a href="{{ path('app_tender_archive', {'id': tender.id}) }}" class="btn col-2 btn-warning text-uppercase">
+                    Archiver
                 </a>
 
-              
-             
                 {% if is_granted('ROLE_ADMIN') %}
                 <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
-                    <button class="btn link-danger">Supprimer ce projet</button>
+                    <button class="btn link-danger text-uppercase">Supprimer ce projet</button>
                 </form>
                 {% endif %}
             </div>
@@ -132,4 +137,5 @@
        </div>
    </div>
     
+   
 {% endblock %}

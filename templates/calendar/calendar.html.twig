@@ -35,6 +35,8 @@
             {{ form_start(form) }}
             <div class="modal-body">
                     {{ form_widget(form) }}
+                    {{ form_rest(form) }}
+
             </div>
             <div class="modal-footer">
               <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
@@ -44,6 +46,7 @@
           </div>
         </div>
       </div>
+
 {% endblock %}
 {% block javascripts %}
     {% block importmap %}{{ importmap('calendar') }}{% endblock %}

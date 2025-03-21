@@ -9,9 +9,9 @@
         <div class="row offset-2 col-md-8">
             <div class="clearfix">
                 <strong class="h2 float-start mb-4">{{ document.name }}</strong>
-                <span class="badge text-bg-{{ document.status| getStatusColor}}"> {{ document.status | getDocumentStatus}} par {{document.responsable.email}}</span>
+                <span class="mx-4 badge text-bg-{{ document.status| getStatusColor}}"> {{ document.status | getDocumentStatus}}</span>
                 <div class="float-end d-flex">
-                    <a href="{{ path('app_document_edit', {'id': document.id}) }}"" class="btn btn-primary mx-1">
+                    <a href="{{ path('app_document_edit', {'id': document.id}) }}" class="btn btn-primary mx-1">
                         <i class="bi bi-pencil-fill"></i>
                     </a>
                     {{ include('document/_delete_form.html.twig') }}
@@ -24,6 +24,8 @@
             </a></p>
            
             <p><strong>Projet: </strong><i>{{document.tender.title}}</i></p>
+            <p> <strong>responsable: </strong> {{document.responsable.email}}</p>
+
             <p><strong>Information: </strong> {{ document.information }}</p>
           
         </div>

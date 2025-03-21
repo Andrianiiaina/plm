@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Service\ListService;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TenderType extends AbstractType
@@ -39,7 +40,7 @@ class TenderType extends AbstractType
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
                 'required' => true,
             ])
-            ->add('min_budget', IntegerType::class,[
+            ->add('min_budget', NumberType::class,[
                 'label' => "Budget minimum",
                 'required' => true,
                 'constraints'=>[new Assert\Range([
@@ -48,7 +49,7 @@ class TenderType extends AbstractType
                     'notInRangeMessage' => 'Entrez un budget valide',
                 ])]
             ])
-            ->add('max_budget', IntegerType::class,[
+            ->add('max_budget', NumberType::class,[
                 'label' => "Budget maximum",
                 'required' => false,
                 'constraints'=>[new Assert\Range([
@@ -85,6 +86,8 @@ class TenderType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Tender::class,
+            'csrf_protection' => true, 
+            'csrf_token_id' => 'form_tender',
         ]);
     }
 }

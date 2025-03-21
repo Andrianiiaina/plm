@@ -35,40 +35,17 @@ final class DocumentController extends AbstractController
         return $this->render('document/index.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status]);
     }
 
-    #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
-    public function show(Document $document): Response
-    {
-        return $this->render('document/show.html.twig', [
-            'document' => $document,
-        ]);
-    }
-
-    #[Route('/tender/show/{id}', name: 'app_document_tender', methods: ['GET'])]
-    public function document_tender(Tender $tender,EntityManagerInterface $entityManager): Response
-    {
-        $documents=$entityManager->getRepository(Document::class)->findTenderDocuments($tender);
-        $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
-
-        foreach ($documents as $document) {
-            $grouped_documents_by_status[$document->getStatus()][] = $document;
-        }
-
-        return $this->render('document/documents.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status,'tender'=>$tender]);
-    }
-
-
-    #[Route('/tender/new/{id}', name: 'app_document_tender_new', methods: ['GET','POST'])]
-    public function new_document_tender(
-    Tender $tender,
+    #[Route('/tender/show/{id}', name: 'app_document_tender', methods: ['GET','POST'])]
+    public function document_tender(    Tender $tender,
     Request $request, 
     EntityManagerInterface $entityManager, 
     FileUploaderService $fileUploader,
     EventDispatcherInterface $dispatcher): Response
+    
     {
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document,['user'=>$this->getUser()]);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
 
             $brochureDocument = $form['filepath']->getData();
@@ -90,14 +67,31 @@ final class DocumentController extends AbstractController
             }
             return $this->redirectToRoute('app_document_tender', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
-        return $this->render('document/new.html.twig', [
-            'form'=>$form,
-            'tender_id'=>$tender->getId()
+
+        $documents=$entityManager->getRepository(Document::class)->findTenderDocuments($tender);
+        $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
+
+
+        foreach ($documents as $document) {
+            $grouped_documents_by_status[$document->getStatus()][] = $document;
+        }
+
+        return $this->render('document/documents.html.twig',
+         [ 'groupedDocuments' => $grouped_documents_by_status,'tender'=>$tender,
+         'form'=>$form]);
+    }
+    #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
+    public function show(Document $document): Response
+    {
+        return $this->render('document/show.html.twig', [
+            'document' => $document,
         ]);
     }
 
 
-    #[Route('/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
+
+
+    #[Route('/d/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request, Document $document, 
         EntityManagerInterface $entityManager,
@@ -155,5 +149,8 @@ final class DocumentController extends AbstractController
             'data' => $data
         ]);
     }
-
 }
+
+
+
+

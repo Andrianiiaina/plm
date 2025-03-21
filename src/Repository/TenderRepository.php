@@ -22,7 +22,7 @@ class TenderRepository extends ServiceEntityRepository
        {
            return $this->createQueryBuilder('t')    
                ->andWhere('t.responsable = :user')
-               ->andWhere('t.status != 3 or t.status !=4')
+               ->andWhere('t.isArchived = false')
                ->setParameter('user', $user)
                ->orderBy('t.createdAt', 'DESC')
                ->setMaxResults(10)
@@ -34,7 +34,7 @@ class TenderRepository extends ServiceEntityRepository
        {
            return $this->createQueryBuilder('t')    
                ->andWhere('t.responsable = :user')
-               ->andWhere('t.status = 3 or t.status = 4')
+               ->andWhere('t.isArchived = true')
                ->setParameter('user', $user)
                ->orderBy('t.createdAt', 'DESC')
                ->setMaxResults(10)
@@ -64,7 +64,21 @@ class TenderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
         }
+        public function getTenderByStatus($user,$status): array
 
+        {
+        return $this->createQueryBuilder('t')    
+                ->andWhere('t.responsable = :user')
+                ->andWhere('t.isArchived = false')
+                ->andWhere('t.status = :status')
+                ->setParameter('user', $user)
+                ->setParameter('status', $status)
+                ->orderBy('t.createdAt', 'DESC')
+                ->setMaxResults(10)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
     //    /**
     //     * @return Tender[] Returns an array of Tender objects

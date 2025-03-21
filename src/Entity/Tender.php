@@ -90,6 +90,9 @@ class Tender
     #[ORM\Column]
     private ?float $duration = 0;
 
+    #[ORM\Column]
+    private ?bool $isArchived = false;
+
     #[Assert\Callback]
     public function validateDates(ExecutionContextInterface $context): void
     {
@@ -358,6 +361,22 @@ class Tender
     public function setDuration(float $duration): static
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->contract_number ?? 'N/A'; 
+    }
+
+    public function isArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }

@@ -3,9 +3,6 @@
 {% block title %}Document index{% endblock %}
 
 {% block body %}
-{% block navbar %}
-{{ include('components/tender_navbar.html.twig',{'tender_id':document.tender.id})}}
-{% endblock %}
 
 <div class="container">
     <div class="row">
@@ -19,6 +16,9 @@
                     </div>
                       <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
                         {% for document in documents %}
+                          
+                       
+
                           <a href="{{path('app_document_show', {'id':document.id})}}" data-id="{{document.id}}" class="list-group-item list-group-item-action pb-3" aria-current="true">
                             <span class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</span><br/>
                             <span class="text-body-secondary">{{document.tender.title| u.truncate(40, '...')}}</span> 

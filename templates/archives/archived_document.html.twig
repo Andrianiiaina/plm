@@ -49,7 +49,7 @@
                          <a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn"><i class="bi bi-eye-fill"></i></a>
                          {% if is_granted('ROLE_ADMIN') %}
                              <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn"><i class="bi bi-pencil-fill"></i></a>
-                             <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
+                             <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce tender?');">
                                  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
                                  <button class="btn"><i class="bi bi-trash3-fill"></i></button>
                              </form>

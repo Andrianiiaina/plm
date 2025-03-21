@@ -6,6 +6,7 @@ use App\Factory\CalendarFactory;
 use App\Factory\ContactFactory;
 use App\Factory\ContactGroupFactory;
 use App\Factory\DocumentFactory;
+use App\Factory\FileFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Factory\TenderFactory;
@@ -18,7 +19,7 @@ class AppFixtures extends Fixture
        UserFactory::createMany(5);
 
        ContactFactory::createMany(5);
-       ContactGroupFactory::createMany(5,function() { 
+       ContactGroupFactory::createMany(3,function() { 
            return ['contacts' => ContactFactory::createMany(4)]; 
        });
 
@@ -26,10 +27,14 @@ class AppFixtures extends Fixture
         return ['responsable' => UserFactory::random()]; 
     });
 
-    DocumentFactory::createMany(20,function() { 
+    DocumentFactory::createMany(50,function() { 
         return ['responsable'=>UserFactory::random(), 'tender' => TenderFactory::random()]; 
     });
-    CalendarFactory::createMany(15,function(){
+
+    FileFactory::createMany(100,function() { 
+        return ['tender'=>TenderFactory::random()];
+    });
+    CalendarFactory::createMany(30,function(){
         return ['tender'=>TenderFactory::random()];
     });
 

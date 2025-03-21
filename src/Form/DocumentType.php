@@ -39,19 +39,21 @@ class DocumentType extends AbstractType
                 ])
 
             ->add('filepath',DropzoneType::class,[
-                'label' => 'Fichier (pdf ou txt)',
+                'label' => 'Fichier (pdf, txt, doc, docx, xls, xlsx)',
                 'mapped' => false,
                 'required' => !$options['is_edited'],
                 
                 'constraints' => [
                    
                     new File([
-                        'maxSize' => '5M',
+                        'maxSize' => '20M',
                         'extensions' => [
                             'txt' => 'text/plain',
                             'pdf',
+                            "doc", "docx", "xls", "xlsx"
                         ],
-                        'mimeTypesMessage' => 'Le fichier doit etre au format text ou pdf',
+
+                        'mimeTypesMessage' => 'Le fichier doit etre au format txt, doc, docs, xls,xslx ou pdf',
                     ])
                 ],
                 ])
@@ -69,6 +71,8 @@ class DocumentType extends AbstractType
             'data_class' => Document::class,
             'is_edited' =>false,
             'user'=>User::class,
+            'csrf_protection' => true, 
+            'csrf_token_id' => 'form_document',
         ]);
     }
 }
