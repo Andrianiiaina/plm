@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -29,7 +30,7 @@ class TenderCrudController extends AbstractCrudController
             TextField::new('url'),
             TextField::new('status'),
             TextField::new('tender_type'),
-            TextField::new('duration'),
+            NumberField::new('duration'),
             IntegerField::new('min_budget'),
             IntegerField::new('max_budget'),
             DateTimeField::new('start_date'),

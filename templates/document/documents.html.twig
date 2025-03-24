@@ -20,7 +20,6 @@
                     </div>
                       <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
                         {% for document in documents %}
-                         
                         <div class="card"  data-id="{{document.id}}">
                             <a href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" class="list-group-item list-group-item-action" aria-current="true">
                               {{ document.filename}}  <br/>

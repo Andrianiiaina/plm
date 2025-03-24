@@ -88,10 +88,7 @@ final class DocumentController extends AbstractController
         ]);
     }
 
-
-
-
-    #[Route('/d/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request, Document $document, 
         EntityManagerInterface $entityManager,

@@ -11,11 +11,11 @@
                 </div>
                 <div class="col row">
                     <form method="get" action="{{ path('app_tender_index') }}" class="col-md-10 row">
-                        <div class="col-8">
+                        <div class="col-10 m-0 p-0">
                             <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un appel d'offres..." class="form-control">
                         </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+                        <div class="col-2 m-0 p-0">
+                            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
                         </div>
                     </form>
                     <a href="{{ path('app_tender_new') }}" class="col-md-2 btn btn-primary mb-2"> + Créer</a>
@@ -43,10 +43,10 @@
                     <tr>
                         <td><a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn">{{ tender.contractNumber }}</a></td>
                         <td>{{ tender.title }}</td>
-                        <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.negotiationDate| highlight }}">{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y H:i') : '' }}</p></td>
+                        <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.negotiationDate| highlight }}">{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y') : '' }}</p></td>
                          <td><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></td> 
                       
                     </tr>

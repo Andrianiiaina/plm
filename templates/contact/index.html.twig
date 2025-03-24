@@ -6,15 +6,35 @@
  <div class="container-fluid">
  
 
-    <div class="row pb-5 m-2">
-      <div class="container">
-        <p class="h4 float-start">Tous les contacts</p>
-        <a href="{{ path('app_contact_new') }}" class="btn btn-primary m-0 mb-3 float-end">Ajouter</a>
+    <div class="row pb-5">
+      <div class="container row">
+        <p class="h2 col-md-6">Contacts</p>
+      
+        <div class="col-md-6 row">
+             <form method="get" action="{{ path('app_contact_index') }}" class="col-10 row">
+                        <div class="col-11 p-0 m-0">
+                            <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un contact..." class="form-control">
+                       
+                          </div>
+                        <div class="col-1 p-0 m-0">
+                          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+                        </div>
+            </form>
+            <div class="col-2">
+                <a href="{{ path('app_contact_new') }}" class="btn btn-primary"><i class="bi bi-person-fill-add"></i></a>
+            </div>
+           
+        </div>
+
+       
+      </div>
+      <div class="row mt-3
+      ">
         {{ include('contact/_list_contact.html.twig') }}
       </div>
     </div>
 
-    <div class="row pb-5 m-2">
+    <div class="row pb-5">
       <div class="">
         <p class="h4 float-start">Listes des groupes</p>
         <button type="button" class="btn btn-primary my-3 float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal"></i>+ Groupe </button><br/>

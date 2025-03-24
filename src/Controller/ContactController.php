@@ -33,10 +33,18 @@ final class ContactController extends AbstractController
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        if($request->query->get('q')){
+            $searchTerm = $request->query->get('q');
+            $contacts = $contactRepository->search($searchTerm); 
+        }else{
+            $contacts=$contactRepository->findAll();
+        }
+
         return $this->render('contact/index.html.twig', [
-            'contacts' => $contactRepository->findAll(),
+            'contacts' => $contacts,
             'groups' => $contactGroupRepository->findAll(),
             'form'=>$form_group,
+            'searchTerm' => $searchTerm??""
         ]);
     }
 

@@ -19,19 +19,32 @@
 
 			</div>
 		</div>
-		<div class="mx-auto col mt-3">
+
+		<div class="d-flex justify-content-center my-3 row">
 			{% for status,total in statusTender %}
-				<a href="{{path('app_tender_status',{'status':status})}}" class="btn align-items-between btn-outline-{{status |getTenderStatusColor}}"> {{status | getTenderStatus}} {{total}}</a>		
+			<div class="col-md-2 p-2">
+				<a href="{{path('app_tender_status',{'status':status})}}" class="fw-bold btn btn-outline-{{status |getTenderStatusColor}} d-flex justify-content-between align-items-center"> 
+				 	
+					{{status | getTenderStatus}} <span class="fs-4">{{total}}</span>
+				</a>
+			</div>
+						
 			{% endfor %}
+				<div class="col-md-2 p-2">
+					<a href="{{path('app_archive')}}" class="fw-bold btn btn-outline-secondary d-flex align-items-center justify-content-between align-items-center"> 
+						Archives <span class="fs-4"><i class="bi bi-eye-fill"></i></span>
+				
+					</a>
+				</div>
 		</div>
-		<div class="row mt-3">
-			<div class="col-md-6 card card-body">
+		<div class="row pt-3">
+			<div class="col-md-7 card card-body">
 				<div class="clearfix mb-2">
 					<p class="h4 float-start">Appels d'offres</p>
 					<a href="{{ path('app_tender_index') }}" class="btn float-end">Voir tout</a>
 				</div>
 
-				<table class="table table-sm table-borderless">
+				<table class="table table-borderless">
 					<thead>
 					  <tr>
 						<th scope="col">Référence</th>
@@ -41,26 +54,37 @@
 					</thead>
 					<tbody>
 					  
-					{% for tender_ in tenders %}
-					<tr>
-							<td>
-							<a href="{{path('app_tender_show', {'id': tender_.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-									<span class="badge py-2 bg-{{ tender_.status |getTenderStatusColor }}"> </span> {{tender_.contractNumber}}
-								</a>
-							</td>
-							<td>
-								{{ tender_.title| u.truncate(40, '...')}}
-								
-							</td>
-							<td><small>{{tender_.url}}</small></td>
-						</tr>
-					{% endfor %}
+						{% for tender_ in tenders %}
+						<tr>
+								<td>
+								<a href="{{path('app_tender_show', {'id': tender_.id})}}" class="link-secondary link-underline link-underline-opacity-0">
+										<span class="badge py-2 bg-{{ tender_.status |getTenderStatusColor }}"> </span> {{tender_.contractNumber}}
+									</a>
+								</td>
+								<td>
+									{{ tender_.title| u.truncate(40, '...')}}
+									
+								</td>
+								<td><small><a href="{{tender_.url}}">{{tender_.url}}</a></small></td>
+							</tr>
+						{% endfor %}
 					</tbody>
 				  </table>
 
 
 			</div>
 			<div class="col-md-5">
+				<div class="card card-body mb-3">
+					<p class="h4">Cette semaine</p>
+					{% for tender in week_tenders %}
+					<div class="col clearfix p-2">
+						<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
+							<strong>{{tender.dateType}} </strong>{{tender.contract_number}}<br/>
+						</a>	
+						<span class="float-end"> {{tender.dateValue ? tender.dateValue|date('d F Y') : '' }}</span>
+					</div>
+					{% endfor %}
+				</div>
 				<div class="card card-body">
 					<div class="clearfix">
 						<p class="h4 float-start">Documents</p>

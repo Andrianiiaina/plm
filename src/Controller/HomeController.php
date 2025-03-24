@@ -44,7 +44,8 @@ final class HomeController extends AbstractController
  
         $notifications= $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],10);
    
-
+        $tenderThisWeek=$entityManager->getRepository(Tender::class)->findFilteredTendersForThisWeek($user);
+    
         return $this->render('home/index.html.twig',[
             'user'=>$user,
             'tenders'=>$tenders,
@@ -52,6 +53,7 @@ final class HomeController extends AbstractController
             'documents'=> $documents,
             'calendars'=>$calendars,
             'notifications'=>$notifications,
+            'week_tenders'=>$tenderThisWeek,
             
         ]);
     }
