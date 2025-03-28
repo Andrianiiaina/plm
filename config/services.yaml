@@ -27,9 +27,6 @@ services:
     App\Service\FileUploaderService:
         arguments:
             $targetDirectory: '%targetDirectory%'
-    App\EventSubscriber\CalendarSubscriber:        
-    list_service:
-        class: App\Service\ListService
-
+    App\EventSubscriber\CalendarSubscriber:      
     App\Twig\GetStatusValueTwig:
         tags: ['twig.extension']

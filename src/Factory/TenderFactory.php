@@ -50,7 +50,6 @@ final class TenderFactory extends PersistentProxyObjectFactory
             'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+35 days')),
             'status' => self::faker()->numberBetween(0, 4),
             'tender_type' => self::faker()->numberBetween(0, 4),
-            'responsable'=>UserFactory::new(),
             'isArchived'=>false,
             'url'=>self::faker()->url(),
         ];

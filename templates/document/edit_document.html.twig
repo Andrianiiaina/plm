@@ -5,7 +5,8 @@
 {% block body %}
 
 
-  <iframe src="{{ wopi_url }}" width="100%" height="800px"></iframe>
-
+ {% set urlFichier = path('document', {'nomFichier': 'mon_document.docx'}) %}
+{% set urlEncodee = urlFichier|url_encode %}
+<iframe src="https://docs.google.com/viewer?url={{ urlEncodee }}&embedded=true" width="600" height="780" style="border: none;"></iframe>
 
 {% endblock %}

@@ -32,7 +32,7 @@
               <h1 class="modal-title fs-5" id="addGroupModalLabel">Nouveau</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            {{ form_start(form) }}
+            {{ form_start(form, {'attr': {'id': 'task-form'}}) }}
             <div class="modal-body">
                     {{ form_widget(form) }}
                     {{ form_rest(form) }}
@@ -43,6 +43,8 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
             </div>
             {{ form_end(form) }}
+
+        
           </div>
         </div>
       </div>
@@ -81,6 +83,8 @@
 
             calendar.render();
         });
+           
+        
     </script>
     
 {% endblock %}

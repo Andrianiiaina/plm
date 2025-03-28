@@ -15,7 +15,7 @@ final class ArchiveController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         return $this->render('archives/archived_document.html.twig', [
-            'tenders' => $entityManager->getRepository(Tender::class)->findRespoArchivedTenders($this->getUser()),
+            'tenders' => $tenders = $this->isGranted('ROLE_ADMIN')? $entityManager->getRepository(Tender::class)->findBy(['isArchived'=>true]) :$entityManager->getRepository(Tender::class)->findRespoArchivedTenders($this->getUser()),
             'documents' => $entityManager->getRepository(Document::class)->findBy(['status'=>"4"], ['createdAt' => 'DESC']),
         ]);
     }

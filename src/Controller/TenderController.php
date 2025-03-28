@@ -82,16 +82,21 @@ final class TenderController extends AbstractController
 
     
 
-    #[Route('/archive_tender/{id}', name: 'app_tender_archive', methods: ['GET'])]
-    public function archive_tender(Tender $tender,EntityManagerInterface $entityManager): Response
+    #[Route('/archive_tender/{id}', name: 'app_tender_archive', methods: ['POST'])]
+    public function archive_tender(Request $request,Tender $tender,EntityManagerInterface $entityManager): Response
     {
-        
-        $tender->setIsArchived(true);
-        $entityManager->persist($tender);
-        $entityManager->flush();
+        if ($this->isCsrfTokenValid('archive'.$tender->getId(), $request->getPayload()->getString('_token'))) {
+            $state=$tender->isArchived();
+            $tender->setIsArchived(!$state);
+            $entityManager->persist($tender);
+            $entityManager->flush();
+            $tender->isArchived()?$this->addFlash('success','Tender archivé!'):$this->addFlash('success','Tender restauré!') ;
+            
+        }else{
+            $this->addFlash('error','Opération échoué');
+        }
         return $this->redirectToRoute('app_tender_index', []);
     }
-
 
 
     #[Route('/edit_contact/{id}', name: 'app_tender_edit_contact', methods: ['GET', 'POST'])]

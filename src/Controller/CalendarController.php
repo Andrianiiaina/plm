@@ -21,13 +21,18 @@ final class CalendarController extends AbstractController
         $calendar = new Calendar();
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            if($form->isValid()==false){
+                $this->addFlash('error','Un problème est survenu, réessayé!' );
+            }else{
                 $entityManager->persist($calendar);
-              
-            $entityManager->flush();
-            $this->addFlash('success','Evènement enregistré!' );
-          
+               
+                $entityManager->flush(); 
+               
+                $this->addFlash('success','Evènement enregistré!' );
+            }
+
+      
             return $this->redirectToRoute('app_calendar', [], Response::HTTP_SEE_OTHER);
         }
 

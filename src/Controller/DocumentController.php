@@ -46,25 +46,31 @@ final class DocumentController extends AbstractController
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document,['user'=>$this->getUser()]);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
+        if ($form->isSubmitted()) {
+            if($form->isValid()==false){
+                $this->addFlash('error','Un problème est survenu, réessayé!' );
+            }else{
             $brochureDocument = $form['filepath']->getData();
-            if ($brochureDocument) {
-                $newFilename = $fileUploader->upload($brochureDocument,"tender_documents");
-                try {
-                    $document->setFilename($brochureDocument->getClientOriginalName());
-                    $document->setFilepath($newFilename);
-                    $document->setTender($tender);
-                    $entityManager->persist($document);
-                    $entityManager->flush(); 
-                    $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
+                if ($brochureDocument) {
+                    $newFilename = $fileUploader->upload($brochureDocument,"tender_documents");
+                    try {
+                        $document->setFilename($brochureDocument->getClientOriginalName());
+                        $document->setFilepath($newFilename);
+                        $document->setTender($tender);
+                        $entityManager->persist($document);
+                        $entityManager->flush(); 
+                        $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
+                        
+                        $this->addFlash('success','Document enregistré!' );
+                    } catch (FileException $e) {
+                        $this->addFlash('error', "Erreur! Le document n'a pas pu etre enregistré.");
                     
-                    $this->addFlash('success','Document enregistré!' );
-                } catch (FileException $e) {
-                    $this->addFlash('error', "Erreur! Le document n'a pas pu etre enregistré.");
-                   
+                    }
                 }
+
+                
             }
+            
             return $this->redirectToRoute('app_document_tender', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -92,21 +98,35 @@ final class DocumentController extends AbstractController
     public function edit(
         Request $request, Document $document, 
         EntityManagerInterface $entityManager,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        FileUploaderService $fileUploader,
         ): Response
     {
         $form = $this->createForm(DocumentType::class, $document,['is_edited'=>true,'user'=>$this->getUser()]);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
-            
-            $this->addFlash('success', 'Document bien modifié!' );  
-            return $this->redirectToRoute('app_document_tender', ['id'=>$document->getTender()], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted()) {
+            if($form->isValid()==false){
+                $this->addFlash('error','Un problème est survenu, réessayé!' );
+            }else{
+                $brochureDocument = $form['filepath']->getData();
+                if ($brochureDocument) {
+                    $newFilename = $fileUploader->upload($brochureDocument,"tender_documents");
+                    try {
+                        $document->setFilename($brochureDocument->getClientOriginalName());
+                        $document->setFilepath($newFilename);
+                    } catch (FileException $e) {
+                        $this->addFlash('error', "Erreur lors du mis à jour du fichier.");
+                    }
+                }
+                $entityManager->persist($document);
+                $entityManager->flush(); 
+                $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
+                        
+                $this->addFlash('success','Document modifié!' );
+            }
+            return $this->redirectToRoute('app_document_tender', ['id'=>$document->getTender()->getId()], Response::HTTP_SEE_OTHER);
         }
-
-
+ 
         return $this->render('document/edit.html.twig', [
             'document' => $document,
             'form' => $form,
@@ -114,17 +134,24 @@ final class DocumentController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_document_delete', methods: ['POST'])]
-    public function delete(Request $request, Document $document, EntityManagerInterface $entityManager): Response
+    public function delete(
+    Request $request, 
+    Document $document, 
+    EntityManagerInterface $entityManager,
+    FileUploaderService $fileUploader): Response
     {
-        $tender=$document->getTender();
+        $tender_id=$document->getTender()->getId();
         if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($document);
+            $fileUploader->removeFile('tender_documents',$document->getFilepath());
             $entityManager->flush();
             $this->addFlash('success','Document supprimé!' );
         }
 
-        return $this->redirectToRoute('app_document_tender', ['id'=>$tender], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_document_tender', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
     }
+
+
 
     #[Route('/update_status', name: 'update_status', methods: ['POST'])]
     public function updateOrder(Request $request, EntityManagerInterface $em): JsonResponse

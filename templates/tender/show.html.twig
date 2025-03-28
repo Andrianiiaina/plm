@@ -39,7 +39,7 @@
             
             <div class="row px-4 my-3">
             
-                <p class="fs-4 fw-medium text-uppercase my-2"> Informations sur l'appel d'offre</p> 
+                <p class="fs-4 my-2"> Informations sur l'appel d'offre</p> 
                 <div class="col">
                     <dl class="row">
 
@@ -80,7 +80,7 @@
 
             <div class="px-4 my-3">
                 <div class="row">
-                    <p class="fs-4 fw-medium text-uppercase my-2">Informations sur l'organisation</p> 
+                    <p class="fs-4 my-2">Informations sur l'organisation</p> 
                     {% if tender.contact %}
                     <div class="col row">
                         <dt class="col-sm-4">Organisation</dt>
@@ -108,31 +108,49 @@
             </div>
 
             <div class="px-4 my-3">
-                <p class="fs-4 fw-medium text-uppercase my-2">Prestation</p> 
+                <p class="fs-4 my-2">Prestation</p> 
                 {{ tender.description }}
             </div>
             
             <div class="px-4 my-3">
-                <p class="fs-4 fw-medium text-uppercase my-2">Opération</p> 
+                <p class="fs-4 my-2">Operation</p> 
+                    <div class="col-md-8">
+                        <ol class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto fw-medium">Modifier les informations généraux</div>
+                            
+                            <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn btn-outline-primary">Modifier</a>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-medium"> Modifier les dates</div>
+                                </div>
+                                <a href="{{ path('app_tender_edit_date', {'id': tender.id}) }}" class="btn btn-outline-primary">Modifier</a>
+                            </li>
 
-                <a href="{{ path('app_tender_edit', {'id': tender.id}) }}" class="btn text-primary my-1 text-uppercase">
-                     Modifier le projet
-                </a><br/>
-                <a href="{{ path('app_tender_edit_date', {'id': tender.id}) }}" class="btn text-primary my-1 text-uppercase">
-                    Modifier les dates
-                </a><br/>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto fw-medium">Archiver le projet</div>
+                                 <form method="post" action="{{ path('app_tender_archive', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir restaurer ce projet?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ tender.id) }}">
+                                    <button class="btn btn-outline-warning">Archiver</button>
+                                </form>
+                               
+                            </li>
 
-                <a href="{{ path('app_tender_archive', {'id': tender.id}) }}" class="btn col-2 btn-warning text-uppercase">
-                    Archiver
-                </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto fw-medium"> Supprimer le projet</div>
+                                <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
+                                    <button class="btn btn-outline-danger">Supprimer</button>
+                                </form>
+                                </div>
+                            </li>
+                            {% endif %} 
+                        </ol>
+                    </div>
+        </div>
 
-                {% if is_granted('ROLE_ADMIN') %}
-                <form method="post" action="{{ path('app_tender_delete', {'id': tender.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tender.id) }}">
-                    <button class="btn link-danger text-uppercase">Supprimer ce projet</button>
-                </form>
-                {% endif %}
-            </div>
 
        </div>
    </div>

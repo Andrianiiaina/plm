@@ -10,17 +10,17 @@
                 </a>
             </li>
             <li>
-              <a href="{{path('app_document_tender',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Documents" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+              <a href="{{path('app_document_tender',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Documents" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Documents">
                   <i class="bi bi-credit-card {% if app.request.get('_route') == 'app_document_tender' %}fs-1 {% else %} fs-3{% endif %}"></i>
               </a>
           </li>
           <li>
-              <a href="{{path('app_file_index',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Allotissement" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+              <a href="{{path('app_file_index',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Fichiers" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Files">
                   <i class="bi bi-card-checklist {% if app.request.get('_route') == 'app_file_index' %}fs-1 {% else %} fs-3{% endif %}"></i>
               </a>
           </li>
            <li>
-                <a href="{{path('app_allotissement_tender',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Allotissement" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+                <a href="{{path('app_allotissement_tender',{'id':tender_id})}}" class="nav-link py-3 px-2" title="Allotissement" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Allotissement">
                     <i class="bi bi-grid {% if app.request.get('_route') == 'app_allotissement_tender' %}fs-1 {% else %} fs-3{% endif %}"></i>
                 </a>
             </li>
