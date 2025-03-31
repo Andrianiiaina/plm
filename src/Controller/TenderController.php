@@ -10,6 +10,7 @@ use App\Form\TenderDateType;
 use App\Form\TenderType;
 use App\Repository\TenderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class TenderController extends AbstractController
 {
     #[Route(name: 'app_tender_index', methods: ['GET'])]
-    public function index(TenderRepository $tenderRepository, Request $request): Response
+    public function index(TenderRepository $tenderRepository, Request $request,PaginatorInterface $paginator): Response
     {
         if($request->query->get('q')){
             $searchTerm = $request->query->get('q');
@@ -32,8 +33,14 @@ final class TenderController extends AbstractController
             $tenderRepository->findAll():
             $tenderRepository->findRespoTenders($this->getUser());
         }
+
+        $pagination = $paginator->paginate(
+            $tenders, 
+            $request->query->getInt('page', 1), 
+            10 
+        );
         return $this->render('tender/index.html.twig', [
-            'tenders' =>  $tenders,
+            'tenders'=>$pagination,
             'searchTerm' => $searchTerm??""
         ]);
     }
