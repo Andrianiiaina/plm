@@ -8,6 +8,17 @@
                 <p class="h2 float-start">Agenda</p>
                 <a href="{{ path('app_calendar') }}" class="btn float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Nouveau</a>
             </div>
+
+            <form method="get" action="{{ path('app_calendar') }}" class="row mb-3">
+                <div class="col-11 p-0 m-0">
+                    <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un contact..." class="form-control">
+                
+                    </div>
+                <div class="col-1 p-0 m-0">
+                    <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+
             {% for calendar in calendars %}
                 <div class="col mb-3">
                     <a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
@@ -19,6 +30,9 @@
             {% else %}
                 <p>aucun.</p>
             {% endfor %}
+             <div class="d-flex justify-content-end">
+                {{ knp_pagination_render(calendars) }}
+            </div>
         </div>
         <div class="col-md-8">
             

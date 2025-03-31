@@ -25,7 +25,6 @@ class TenderRepository extends ServiceEntityRepository
                ->andWhere('t.isArchived = false')
                ->setParameter('user', $user)
                ->orderBy('t.createdAt', 'DESC')
-               ->setMaxResults(10)
                ->getQuery()
                ->getResult()
            ;
@@ -37,7 +36,6 @@ class TenderRepository extends ServiceEntityRepository
                ->andWhere('t.isArchived = true')
                ->setParameter('user', $user)
                ->orderBy('t.createdAt', 'DESC')
-               ->setMaxResults(10)
                ->getQuery()
                ->getResult()
            ;
@@ -73,7 +71,6 @@ class TenderRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->setParameter('status', $status)
             ->orderBy('t.createdAt', 'DESC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;

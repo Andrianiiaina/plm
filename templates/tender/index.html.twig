@@ -55,8 +55,12 @@
                         <td colspan="13">Aucun appel d'offre pour le moment.</td>
                     </tr>
                 {% endfor %}
+                
                 </tbody>
             </table> 
+            <div class="d-flex justify-content-end">
+                {{ knp_pagination_render(tenders) }}
+            </div>
             </div>
             
     </div>

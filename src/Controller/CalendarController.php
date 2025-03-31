@@ -7,6 +7,7 @@ use App\Form\CalendarType;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CalendarController extends AbstractController
 {
     #[Route(path: '/calendar', name: 'app_calendar')]
-    public function calendar(CalendarRepository $calendarRepository,Request $request, EntityManagerInterface $entityManager): Response
+    public function calendar(CalendarRepository $calendarRepository,PaginatorInterface $paginator,Request $request, EntityManagerInterface $entityManager): Response
     {               
         $calendar = new Calendar();
         $form = $this->createForm(CalendarType::class, $calendar);
@@ -36,10 +37,26 @@ final class CalendarController extends AbstractController
             return $this->redirectToRoute('app_calendar', [], Response::HTTP_SEE_OTHER);
         }
 
+        $calendars=$calendarRepository->findUserCalendar($this->getUser(),100);
+        if($request->query->get('q')){
+            $searchTerm = $request->query->get('q');
+            $calendars = $calendarRepository->search($searchTerm); 
+        }else{
+            $calendars=$calendarRepository->findAll();
+        }
+
+
+        $pagination = $paginator->paginate(
+            $calendars,
+            $request->query->getInt('page', 1), 
+            10
+        );
+
         return $this->render('calendar/calendar.html.twig',
         [
-            'calendars' => $calendarRepository->findUserCalendar($this->getUser()),
-            'form'=>$form
+            'calendars' => $pagination,
+            'form'=>$form,
+            'searchTerm'=>$searchTerm??'',
         ]
     );
     }

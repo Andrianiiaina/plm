@@ -10,6 +10,7 @@ use App\Repository\ContactGroupRepository;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
     #[Route(name: 'app_contact_index', methods: ['GET','POST'])]
-    public function index(ContactRepository $contactRepository, ContactGroupRepository $contactGroupRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(
+        ContactRepository $contactRepository,
+        ContactGroupRepository $contactGroupRepository,
+        Request $request, 
+        EntityManagerInterface $entityManager,
+        PaginatorInterface $paginator): Response
     {
 
         $contactGroup = new ContactGroup();
@@ -40,8 +46,13 @@ final class ContactController extends AbstractController
             $contacts=$contactRepository->findAll();
         }
 
+        $pagination = $paginator->paginate(
+            $contacts, 
+            $request->query->getInt('page', 1), 
+            15 
+        );
         return $this->render('contact/index.html.twig', [
-            'contacts' => $contacts,
+            'contacts' => $pagination,
             'groups' => $contactGroupRepository->findAll(),
             'form'=>$form_group,
             'searchTerm' => $searchTerm??""

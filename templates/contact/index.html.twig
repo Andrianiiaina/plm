@@ -31,6 +31,9 @@
       <div class="row mt-3
       ">
         {{ include('contact/_list_contact.html.twig') }}
+         <div class="d-flex justify-content-end">
+            {{ knp_pagination_render(contacts) }}
+        </div>
       </div>
     </div>
 

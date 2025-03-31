@@ -28,6 +28,16 @@ class CalendarRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function search(string $term): array
+    {
+        return $this->createQueryBuilder('c')
+        ->where('c.title LIKE :term')
+        ->setParameter('term', '%' . $term . '%')
+        ->orderBy('c.beginAt','ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
     //    /**
     //     * @return Calendar[] Returns an array of Calendar objects
     //     */
