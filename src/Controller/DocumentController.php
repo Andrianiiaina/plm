@@ -51,7 +51,7 @@ final class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if(!$form->isValid()){
-                $this->addFlash('error', 'Un problème est survenu, veuillez réessayer.');
+                $this->addFlash('error', 'Erreur. Veuillez revérifier les informations.');
             }else{
             $brochureDocument = $form['filepath']->getData();
                 if ($brochureDocument) {
@@ -64,9 +64,9 @@ final class DocumentController extends AbstractController
                         $entityManager->flush(); 
                         $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
                         
-                        $this->addFlash('success','Document enregistré!' );
+                        $this->addFlash('success','Document enregistré ! ' );
                     } catch (FileException $e) {
-                        $this->addFlash('error', "Erreur! Le document n'a pas pu etre enregistré.");
+                        $this->addFlash('error', "Erreur! Veuillez revérifier les informations.");
                     
                     }
                 }
@@ -118,14 +118,14 @@ final class DocumentController extends AbstractController
                         $document->setFilename($brochureDocument->getClientOriginalName());
                         $document->setFilepath($newFilename);
                     } catch (FileException $e) {
-                        $this->addFlash('error', "Erreur lors du mis à jour du fichier.");
+                        $this->addFlash('error', "Erreur lors de la modification du document, veuillez réessayer.");
                     }
                 }
                 $entityManager->persist($document);
                 $entityManager->flush(); 
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
                         
-                $this->addFlash('success','Document modifié!' );
+                $this->addFlash('success','Document modifié ! ' );
             }
             return $this->redirectToRoute('app_tender_documents', ['id'=>$document->getTender()->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -148,7 +148,7 @@ final class DocumentController extends AbstractController
             $entityManager->remove($document);
             $fileUploader->removeFileFromStorage('tender_documents',$document->getFilepath());
             $entityManager->flush();
-            $this->addFlash('success','Document supprimé!' );
+            $this->addFlash('success','Document supprimé ! ' );
         }
 
         return $this->redirectToRoute('app_tender_documents', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);

@@ -30,7 +30,7 @@ final class ContactController extends AbstractController
         if ($form_group->isSubmitted() && $form_group->isValid()) {
             $entityManager->persist($contactGroup);
             $entityManager->flush();
-            $this->addFlash('success','Groupe enregistré!' );
+            $this->addFlash('success','Groupe enregistré ! ' );
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -59,7 +59,7 @@ final class ContactController extends AbstractController
            
             $entityManager->persist($contact);
             $entityManager->flush();
-            $this->addFlash('success','Contact enregistré!' );
+            $this->addFlash('success','Contact enregistré ! ' );
             
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -87,7 +87,7 @@ final class ContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success','Contact modifié!' );
+            $this->addFlash('success','Contact modifié ! ' );
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -104,7 +104,7 @@ final class ContactController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($contact);
             $entityManager->flush();
-            $this->addFlash('success','Contact supprimé!' );
+            $this->addFlash('success','Contact supprimé ! ' );
         }
 
         return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);

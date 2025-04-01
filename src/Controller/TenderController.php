@@ -50,7 +50,7 @@ final class TenderController extends AbstractController
             $entityManager->persist($tender);
                 $entityManager->flush();
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($tender->getResponsable(),$tender->getId(),1));
-                $this->addFlash('success','Tender enregistré!' );
+                $this->addFlash('success','Tender enregistré ! ' );
             return $this->redirectToRoute('app_tender_edit_date', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -67,7 +67,7 @@ final class TenderController extends AbstractController
 
         if ($form_date->isSubmitted() && $form_date->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success','Opération réussie' );
+            $this->addFlash('success','Information sur les dates enregistrée' );
             if($tender->getContact()){
                 return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
             }
@@ -112,7 +112,7 @@ final class TenderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success','Informations enregistrée!' );
+            $this->addFlash('success','Tender modifié ! ' );
             return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -136,7 +136,7 @@ final class TenderController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$tender->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($tender);
             $entityManager->flush();
-            $this->addFlash('success','Tender supprimé!' );
+            $this->addFlash('success','Tender supprimé ! ' );
         }
 
         return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
@@ -148,10 +148,10 @@ final class TenderController extends AbstractController
         if ($this->isCsrfTokenValid('archive'.$tender->getId(), $request->getPayload()->getString('_token'))) {
             $tender->setIsArchived(!$tender->isArchived());
             $entityManager->flush();
-            $tender->isArchived()?$this->addFlash('success','Tender archivé!'):$this->addFlash('success','Tender restauré!') ;
+            $tender->isArchived()?$this->addFlash('success','Tender archivé ! '):$this->addFlash('success','Tender restauré ! ') ;
             
         }else{
-            $this->addFlash('error','Opération échouée');
+            $this->addFlash('error','L\'Opération a échoué. Veuillez réessayer.');
         }
         return $this->redirectToRoute('app_tender_index', []);
     }

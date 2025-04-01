@@ -23,11 +23,11 @@ final class CalendarController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if(!$form->isValid()){
-                $this->addFlash('error','Un problème est survenu, réessayé!' );
+                $this->addFlash('error','Erreur, Veuillez revérifier les informations.' );
             }else{
                 $entityManager->persist($calendar);
                 $entityManager->flush(); 
-                $this->addFlash('success','Evènement enregistré!' );
+                $this->addFlash('success','Evènement enregistré ! ' );
             }
 
       
@@ -65,7 +65,7 @@ final class CalendarController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', 'Evènement bien modifié!' );
+            $this->addFlash('success', 'Evènement bien modifié ! ' );
             return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -81,7 +81,7 @@ final class CalendarController extends AbstractController
         if ($this->isCsrfTokenValid('delete_calendar'.$calendar->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($calendar);
             $entityManager->flush();
-            $this->addFlash('success','Evènement supprimé!' );
+            $this->addFlash('success','Evènement supprimé ! ' );
         }
         
         return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);

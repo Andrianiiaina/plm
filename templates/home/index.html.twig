@@ -14,8 +14,8 @@
 					<button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 						<i class="bi bi-bell"></i> Notifications <span class="badge bg-danger">{{ notifications|filter(n => not n.isRead)|length }}</span>
 					</button>
-					{{ include('components/_notification.html.twig',{'notifications':notifications})}}
 				</div>
+					{{ include('components/_notification.html.twig',{'notifications':notifications})}}
 
 			</div>
 		</div>

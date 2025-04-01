@@ -8,8 +8,8 @@
     {
         public function __construct(
             private User $user,
+            private int $id_type,
             private string $type,
-            private int $id_type
         ) {}
 
         public function getUser(): User
