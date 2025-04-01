@@ -25,18 +25,14 @@ class DocumentType extends AbstractType
         $builder
             ->add('status',ChoiceType::class,[
                 'label'=>'Opération',
-                'label_attr' => ['class'=>'col-sm-3 col-form-label'],
                 'choices'  => ListService::$document_status,
             ])
             ->add('responsable', EntityType::class, [
-                'label'=>"Par:",
+                'label'=>"Par",
                 'class' => User::class,
                 'choice_label' => 'email',
             ])
-            ->add('name',TextType::class,[
-                'label' => 'Titre du document',
-                'disabled' => $options['is_edited'],
-                ])
+           
 
             ->add('filepath',DropzoneType::class,[
                 'label' => 'Fichier (pdf, txt, doc, docx, xls, xlsx)',
@@ -62,6 +58,13 @@ class DocumentType extends AbstractType
                 'required' => false,
             ])
         ;
+        if(!$options['is_edited']){
+            $builder ->add('name',TextType::class,[
+                'label' => 'Titre du document',
+                'disabled' => $options['is_edited'],
+
+            ]);
+        }
       
     }
 

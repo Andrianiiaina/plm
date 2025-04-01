@@ -184,28 +184,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->documents;
     }
 
-    public function addDocument(Document $document): static
-    {
-        if (!$this->documents->contains($document)) {
-            $this->documents->add($document);
-            $document->setResponsable($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDocument(Document $document): static
-    {
-        if ($this->documents->removeElement($document)) {
-            // set the owning side to null (unless already changed)
-            if ($document->getResponsable() === $this) {
-                $document->setResponsable(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Notification>
      */
@@ -214,27 +192,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->notifications;
     }
 
-    public function addNotification(Notification $notification): static
-    {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
-            $notification->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotification(Notification $notification): static
-    {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getUser() === $this) {
-                $notification->setUser(null);
-            }
-        }
-
-        return $this;
-    }
     public function __toString(): string
     {
         return $this->email ?? 'N/A'; 

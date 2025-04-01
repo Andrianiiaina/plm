@@ -15,16 +15,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/allotissement')]
 final class AllotissementController extends AbstractController
 {
-    #[Route('/project/{id}',name: 'app_allotissement_tender', methods: ['GET'])]
+    #[Route('/tender/{id}',name: 'app_allotissement_index', methods: ['GET'])]
     public function index($id,AllotissementRepository $allotissementRepository): Response
     {
+        //tender_id is required by the tender_sidebar
         return $this->render('allotissement/index.html.twig', [
             'tender_id'=>$id,
             'allotissements' => $allotissementRepository->findBy(['tender'=>$id]),
         ]);
     }
 
-    #[Route('/new/project/{id}', name: 'app_allotissement_new', methods: ['GET', 'POST'])]
+    #[Route('/new/tender/{id}', name: 'app_allotissement_new', methods: ['GET', 'POST'])]
     public function new(Tender $tender,Request $request, EntityManagerInterface $entityManager): Response
     {
         $allotissement = new Allotissement();
@@ -36,7 +37,7 @@ final class AllotissementController extends AbstractController
             $entityManager->persist($allotissement);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_allotissement_tender', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_allotissement_index', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('allotissement/new.html.twig', [
@@ -80,6 +81,6 @@ final class AllotissementController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_allotissement_tender', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_allotissement_index', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
     }
 }

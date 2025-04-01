@@ -16,9 +16,8 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-
-
-      public function findDocs($responsable,$number_to_fetch=10): array
+    //Results: docs in project user have responsibilit + docs user is assigned for.
+    public function findUserDocuments($responsable,$number_to_fetch=10): array
       {
           return $this->createQueryBuilder('d')
               ->join('d.tender', 'p')
@@ -30,9 +29,9 @@ class DocumentRepository extends ServiceEntityRepository
               ->getQuery()
               ->getResult()
           ;
-      }
+    }
 
-      public function findTenderDocuments($tender): array
+    public function findTenderDocuments($tender): array
       {
           return $this->createQueryBuilder('d')
               ->Where('d.tender = :tender')
@@ -41,30 +40,7 @@ class DocumentRepository extends ServiceEntityRepository
               ->getQuery()
               ->getResult()
           ;
-      }
+    }
 
-    //    /**
-    //     * @return Document[] Returns an array of Document objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Document
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    
 }

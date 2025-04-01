@@ -18,22 +18,12 @@ class TenderRepository extends ServiceEntityRepository
         parent::__construct($registry, Tender::class);
     }
 
-    public function findRespoTenders($user): array
+    public function findRespoTenders($user, $is_archived=false): array
        {
            return $this->createQueryBuilder('t')    
                ->andWhere('t.responsable = :user')
-               ->andWhere('t.isArchived = false')
-               ->setParameter('user', $user)
-               ->orderBy('t.createdAt', 'DESC')
-               ->getQuery()
-               ->getResult()
-           ;
-       }
-    public function findRespoArchivedTenders($user): array
-       {
-           return $this->createQueryBuilder('t')    
-               ->andWhere('t.responsable = :user')
-               ->andWhere('t.isArchived = true')
+               ->andWhere('t.isArchived = :isArchived')
+               ->setParameter('isArchived', $is_archived)
                ->setParameter('user', $user)
                ->orderBy('t.createdAt', 'DESC')
                ->getQuery()
@@ -41,11 +31,11 @@ class TenderRepository extends ServiceEntityRepository
            ;
        }
 
-    public function searchTenderUser(string $term,$user): array
+    public function searchTenderRespo(string $term,$user): array
     {
         return $this->createQueryBuilder('t')
-        ->andWhere('t.responsable = :user')
-        ->where('t.title LIKE :term OR t.contract_number LIKE :term')
+        ->where('t.responsable = :user')
+        ->andWhere('t.title LIKE :term OR t.contract_number LIKE :term')
         ->setParameter('term', '%' . $term . '%')
         ->setParameter('user', $user)
         ->orderBy('t.createdAt', 'DESC')
@@ -87,7 +77,7 @@ class TenderRepository extends ServiceEntityRepository
             ->andWhere('t.submissionDate BETWEEN :start AND :end 
             OR t.responseDate BETWEEN :start AND :end 
             OR t.attributionDate BETWEEN :start AND :end
-            OR t.negotiationDate BETWEEN :start AND :end ')
+            OR t.negociationDate BETWEEN :start AND :end ')
             ->setParameter('start', $startOfWeek)
             ->setParameter('end', $endOfWeek)
             ->setParameter('user', $user)
@@ -97,6 +87,7 @@ class TenderRepository extends ServiceEntityRepository
             
     }
 
+    //Récuperer les dates et le type de date de chaque semaine
     public function findFilteredTendersForThisWeek($user): array
     {
     $tenders = $this->findTendersForThisWeek($user); // Appelle la requête précédente
@@ -127,12 +118,12 @@ class TenderRepository extends ServiceEntityRepository
                 'dateValue' => $tender->getAttributionDate()
             ];
         }
-        if ($tender->getNegotiationDate() >= new \DateTime('monday this week') && $tender->getNegotiationDate() <= new \DateTime('sunday this week 23:59:59')) {
+        if ($tender->getNegociationDate() >= new \DateTime('monday this week') && $tender->getNegociationDate() <= new \DateTime('sunday this week 23:59:59')) {
             $filteredTenders[] = [
                 'id' => $tender->getId(),
                 'contract_number' => $tender->getContractNumber(),
                 'dateType' => 'Date de négociation',
-                'dateValue' => $tender->getNegotiationDate()
+                'dateValue' => $tender->getNegociationDate()
             ];
         }
     }

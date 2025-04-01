@@ -6,10 +6,7 @@ use App\Entity\Contact;
 use App\Entity\ContactGroup;
 use App\Form\ContactGroupType;
 use App\Form\ContactType;
-use App\Repository\ContactGroupRepository;
-use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +18,11 @@ final class ContactController extends AbstractController
 {
     #[Route(name: 'app_contact_index', methods: ['GET','POST'])]
     public function index(
-        ContactRepository $contactRepository,
-        ContactGroupRepository $contactGroupRepository,
         Request $request, 
         EntityManagerInterface $entityManager,
         PaginatorInterface $paginator): Response
     {
-
+        //we can create contact_group in the same page.
         $contactGroup = new ContactGroup();
         $form_group = $this->createForm(ContactGroupType::class, $contactGroup);
         $form_group->handleRequest($request);
@@ -39,21 +34,15 @@ final class ContactController extends AbstractController
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        if($request->query->get('q')){
-            $searchTerm = $request->query->get('q');
-            $contacts = $contactRepository->search($searchTerm); 
-        }else{
-            $contacts=$contactRepository->findAll();
-        }
-
+        $searchTerm = $request->query->get('q','');
         $pagination = $paginator->paginate(
-            $contacts, 
+            $entityManager->getRepository(Contact::class)->search($searchTerm), 
             $request->query->getInt('page', 1), 
             15 
         );
         return $this->render('contact/index.html.twig', [
             'contacts' => $pagination,
-            'groups' => $contactGroupRepository->findAll(),
+            'groups' => $entityManager->getRepository(ContactGroup::class)->findAll(),
             'form'=>$form_group,
             'searchTerm' => $searchTerm??""
         ]);
@@ -81,7 +70,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_contact_show', methods: ['GET'])]
     public function show(Contact $contact): Response
     {
         return $this->render('contact/show.html.twig', [
@@ -89,7 +78,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_contact_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_contact_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

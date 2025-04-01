@@ -44,7 +44,7 @@
                         <td><a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn">{{ tender.contractNumber }}</a></td>
                         <td>{{ tender.title }}</td>
                         <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y') : '' }}</p></td>
-                        <td><p class="{{ tender.negotiationDate| highlight }}">{{ tender.negotiationDate ? tender.negotiationDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.negociationDate| highlight }}">{{ tender.negociationDate ? tender.negociationDate|date('d F Y') : '' }}</p></td>
                         <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y') : '' }}</p></td>
                         <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y') : '' }}</p></td>
                          <td><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></td> 

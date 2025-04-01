@@ -29,7 +29,7 @@ final class TenderVoter extends Voter
 
         if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {return true;}
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
+        // access only if the user is responsible of the tender
         if (!$user instanceof UserInterface) { return false; }
         return $user === $subject->getResponsable();
      

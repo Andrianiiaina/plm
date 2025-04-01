@@ -83,7 +83,7 @@ class Tender
     private ?\DateTimeInterface $attributionDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $negotiationDate = null;
+    private ?\DateTimeInterface $negociationDate = null;
 
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -94,7 +94,16 @@ class Tender
 
     #[ORM\Column]
     private ?bool $isArchived = false;
-
+    public function __construct()
+    {
+        $this->documents = new ArrayCollection();
+        $this->calendars = new ArrayCollection();
+        $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
+    }
+    public function __toString(): string
+    {
+        return $this->contract_number ?? 'N/A'; 
+    }
     #[Assert\Callback]
     public function validateDates(ExecutionContextInterface $context): void
     {
@@ -103,8 +112,6 @@ class Tender
                 ->atPath('end_date')
                 ->addViolation();
         }
-
-        
     }
 
     #[Assert\Callback]
@@ -118,16 +125,6 @@ class Tender
     }
 
 
-
-
-    public function __construct()
-    {
-        $this->documents = new ArrayCollection();
-        $this->calendars = new ArrayCollection();
-        $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
-      
-    
-    }
 
     public function getId(): ?int
     {
@@ -331,14 +328,14 @@ class Tender
         return $this;
     }
 
-    public function getNegotiationDate(): ?\DateTimeInterface
+    public function getNegociationDate(): ?\DateTimeInterface
     {
-        return $this->negotiationDate;
+        return $this->negociationDate;
     }
 
-    public function setNegotiationDate(?\DateTimeInterface $negotiationDate): static
+    public function setNegociationDate(?\DateTimeInterface $negociationDate): static
     {
-        $this->negotiationDate = $negotiationDate;
+        $this->negociationDate = $negociationDate;
 
         return $this;
     }
@@ -366,10 +363,6 @@ class Tender
 
         return $this;
     }
-    public function __toString(): string
-    {
-        return $this->contract_number ?? 'N/A'; 
-    }
 
     public function isArchived(): ?bool
     {
@@ -382,4 +375,9 @@ class Tender
 
         return $this;
     }
+
+
+    
+
+
 }

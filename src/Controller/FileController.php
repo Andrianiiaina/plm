@@ -33,13 +33,25 @@ final class FileController extends AbstractController
         }
         return $this->render('file/index.html.twig', [
             'files' => $fileRepository->findBy(['tender'=>$tender->getId()]),
-            'tender_id'=>$tender->getId(),
+            'tender_id'=>$tender->getId(),//require by tender_sidebar
             'form'=>$form,
         ]);
     }
+    #[Route('/delete/{id}', name: 'app_file_delete', methods: ['POST'])]
+    public function delete(Request $request, File $file, EntityManagerInterface $entityManager): Response
+    {
+        $tender_id=$file->getTender()->getId();
+        if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($file);
+            $entityManager->flush();
+        }
 
-    #[Route('/status/{id}', name: 'file_status_update', methods: ['POST'])]
-    public function updateStatus(File $file, Request $request, EntityManagerInterface $entityManager): JsonResponse
+        return $this->redirectToRoute('app_file_index', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/status/{id}', name: 'update_file_status', methods: ['POST'])]
+    public function updateFileStatus(File $file, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
             $data = json_decode($request->getContent(), true);
 
@@ -54,15 +66,4 @@ final class FileController extends AbstractController
         }
     
 
-    #[Route('/delete/{id}', name: 'app_file_delete', methods: ['POST'])]
-    public function delete(Request $request, File $file, EntityManagerInterface $entityManager): Response
-    {
-        $tender_id=$file->getTender()->getId();
-        if ($this->isCsrfTokenValid('delete'.$file->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($file);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_file_index', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
-    }
 }

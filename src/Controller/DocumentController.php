@@ -4,8 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Entity\Tender;
-use App\Event\UserAssignedToProjectEvent;
+use App\Event\UserAssignedToEntityEvent;
 use App\Form\DocumentType;
+use App\Repository\DocumentRepository;
 use App\Service\FileUploaderService;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,11 +22,13 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DocumentController extends AbstractController
 {
     #[Route(name: 'app_document_index', methods: ['GET'])]
-    public function index(
-    EntityManagerInterface $entityManager, 
-    ): Response
+    public function index(DocumentRepository $documentRepository): Response
     {
-        $documents=$this->isGranted('ROLE_ADMIN')? $entityManager->getRepository(Document::class)->findBy([], ['createdAt' => 'DESC']):$entityManager->getRepository(Document::class)->findDocs($this->getUser());
+
+        $documents = $this->isGranted('ROLE_ADMIN') 
+        ? $documentRepository->findBy([], ['createdAt' => 'DESC']) 
+        : $documentRepository->findUserDocuments($this->getUser());
+
         $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
 
         foreach ($documents as $document) {
@@ -35,8 +38,8 @@ final class DocumentController extends AbstractController
         return $this->render('document/index.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status]);
     }
 
-    #[Route('/tender/show/{id}', name: 'app_document_tender', methods: ['GET','POST'])]
-    public function document_tender(    Tender $tender,
+    #[Route('/tender/show/{id}', name: 'app_tender_documents', methods: ['GET','POST'])]
+    public function tender_documents(    Tender $tender,
     Request $request, 
     EntityManagerInterface $entityManager, 
     FileUploaderService $fileUploader,
@@ -47,8 +50,8 @@ final class DocumentController extends AbstractController
         $form = $this->createForm(DocumentType::class, $document,['user'=>$this->getUser()]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            if($form->isValid()==false){
-                $this->addFlash('error','Un problème est survenu, réessayé!' );
+            if(!$form->isValid()){
+                $this->addFlash('error', 'Un problème est survenu, veuillez réessayer.');
             }else{
             $brochureDocument = $form['filepath']->getData();
                 if ($brochureDocument) {
@@ -59,7 +62,7 @@ final class DocumentController extends AbstractController
                         $document->setTender($tender);
                         $entityManager->persist($document);
                         $entityManager->flush(); 
-                        $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
+                        $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
                         
                         $this->addFlash('success','Document enregistré!' );
                     } catch (FileException $e) {
@@ -71,7 +74,7 @@ final class DocumentController extends AbstractController
                 
             }
             
-            return $this->redirectToRoute('app_document_tender', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tender_documents', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
         $documents=$entityManager->getRepository(Document::class)->findTenderDocuments($tender);
@@ -105,8 +108,8 @@ final class DocumentController extends AbstractController
         $form = $this->createForm(DocumentType::class, $document,['is_edited'=>true,'user'=>$this->getUser()]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            if($form->isValid()==false){
-                $this->addFlash('error','Un problème est survenu, réessayé!' );
+            if(!$form->isValid()){
+                $this->addFlash('error', 'Un problème est survenu, veuillez réessayer.');
             }else{
                 $brochureDocument = $form['filepath']->getData();
                 if ($brochureDocument) {
@@ -120,11 +123,11 @@ final class DocumentController extends AbstractController
                 }
                 $entityManager->persist($document);
                 $entityManager->flush(); 
-                $dispatcher->dispatch(new UserAssignedToProjectEvent($document->getResponsable(),$document->getId(),2));
+                $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
                         
                 $this->addFlash('success','Document modifié!' );
             }
-            return $this->redirectToRoute('app_document_tender', ['id'=>$document->getTender()->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tender_documents', ['id'=>$document->getTender()->getId()], Response::HTTP_SEE_OTHER);
         }
  
         return $this->render('document/edit.html.twig', [
@@ -143,18 +146,18 @@ final class DocumentController extends AbstractController
         $tender_id=$document->getTender()->getId();
         if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($document);
-            $fileUploader->removeFile('tender_documents',$document->getFilepath());
+            $fileUploader->removeFileFromStorage('tender_documents',$document->getFilepath());
             $entityManager->flush();
             $this->addFlash('success','Document supprimé!' );
         }
 
-        return $this->redirectToRoute('app_document_tender', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_tender_documents', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
     }
 
 
 
-    #[Route('/update_status', name: 'update_status', methods: ['POST'])]
-    public function updateOrder(Request $request, EntityManagerInterface $em): JsonResponse
+    #[Route('/api_update_status', name: 'api_update_status', methods: ['POST'])]
+    public function updateStatusInSortableFunc(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -165,7 +168,6 @@ final class DocumentController extends AbstractController
 
         $document=$em->getRepository(Document::class)->findOneBy(['id'=>$data['document_id']]);
         $document->setStatus($data['status_id']);
-        $em->persist($document);
         $em->flush();
         
         return $this->json([

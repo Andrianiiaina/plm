@@ -11,8 +11,8 @@
             </li>
         
             <li>
-                <a href="{{ path('app_calendar') }}" class="nav-link py-3 px-2" title="Calendrier" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
-                  <i class="bi bi-calendar3 {% if app.request.get('_route') == 'app_calendar' %}fs-1 {% else %} fs-3{% endif %}"></i>
+                <a href="{{ path('app_calendar_index') }}" class="nav-link py-3 px-2" title="Calendrier" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
+                  <i class="bi bi-calendar3 {% if app.request.get('_route') == 'app_calendar_index' %}fs-1 {% else %} fs-3{% endif %}"></i>
               </a>
             </li>
             <li>
@@ -27,7 +27,7 @@
             </a>
             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
                 <li><a class="dropdown-item" href="{{ path('app_tender_new') }}">Nouveau tender...</a></li>
-                <li><a class="dropdown-item" href="{{ path('app_archive') }}">Archives</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_archive_index') }}">Archives</a></li>
                 <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
             </ul>
         </div>

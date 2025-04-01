@@ -1,7 +1,6 @@
 <?php
     namespace App\Twig;
     use Twig\Extension\AbstractExtension;
-    use Twig\TwigFunction;    
     use App\Service\ListService;
     class  GetStatusValueTwig extends AbstractExtension
     {
@@ -25,21 +24,11 @@
                 }),
 
                 new \Twig\TwigFilter('getStatusColor', [$this, 'getStatusColor']),
-                new \Twig\TwigFilter('getTenderStatusColor', [$this, 'getTenderStatusColor']),
             ];
         }
-        public function getStatusColor(int $value){
-            $colors=[ 
-                0=>"primary",
-                1=>"success",
-                2=>"warning",
-                3=>"danger",
-                4=>"dark",
-            ];
-            return $colors[$value] ?? 'inconnu';
-        }
+ 
 
-        public function getTenderStatusColor(int $value){
+        public function getStatusColor(int $value){
             $colors=[ 
                 0=>"primary",
                 1=>"success",

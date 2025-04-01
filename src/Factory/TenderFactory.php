@@ -45,7 +45,7 @@ final class TenderFactory extends PersistentProxyObjectFactory
             'submissionDate' => \DateTimeImmutable::createFromMutable($date->modify('+10 days')),
             'responseDate' => \DateTimeImmutable::createFromMutable($date->modify('+15 days')),
             'attributionDate' => \DateTimeImmutable::createFromMutable($date->modify('+20 days')),
-            'negotiationDate' => \DateTimeImmutable::createFromMutable($date->modify('+25 days')),
+            'negociationDate' => \DateTimeImmutable::createFromMutable($date->modify('+25 days')),
             'start_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
             'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+35 days')),
             'status' => self::faker()->numberBetween(0, 4),

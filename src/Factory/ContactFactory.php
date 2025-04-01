@@ -33,7 +33,7 @@ final class ContactFactory extends PersistentProxyObjectFactory
     {
         return [
             'contact_perso' => self::faker()->phoneNumber(),
-            'contact_pro' => self::faker()->phoneNumber(),
+            'contact_pro' => self::faker()->optional(0.5)->phoneNumber(),
             'email' => self::faker()->email(),
             'function' => self::faker()->jobTitle(),
             'name' => self::faker()->name,

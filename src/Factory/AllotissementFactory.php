@@ -2,13 +2,13 @@
 
 namespace App\Factory;
 
-use App\Entity\File;
+use App\Entity\Allotissement;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<File>
+ * @extends PersistentProxyObjectFactory<Allotissement>
  */
-final class FileFactory extends PersistentProxyObjectFactory
+final class AllotissementFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -21,7 +21,7 @@ final class FileFactory extends PersistentProxyObjectFactory
 
     public static function class(): string
     {
-        return File::class;
+        return Allotissement::class;
     }
 
     /**
@@ -31,9 +31,12 @@ final class FileFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $budget=self::faker()->randomFloat();
         return [
-            'is_finished' => self::faker()->boolean(),
-            'title' => self::faker()->text(70),
+            'number' => self::faker()->numberBetween(0,10),
+            'title' => self::faker()->unique()->text(40),
+            'minBudget' => $budget,
+            'maxBudget' => $budget+1000,
         ];
     }
 
@@ -43,7 +46,7 @@ final class FileFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(File $file): void {})
+            // ->afterInstantiate(function(Allotissement $allotissement): void {})
         ;
     }
 }

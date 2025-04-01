@@ -35,7 +35,7 @@ final class DocumentFactory extends PersistentProxyObjectFactory
             'filename' => "WHAT-IS-CLOUD-COMPUTING.pdf",
             'filepath' => "WHAT-IS-CLOUD-COMPUTING-67c83f1ee3599.pdf",
             'information' => self::faker()->text(),
-            'name' => "Cahier de charge du projet Ay",
+            'name' => "Cahier de charge",
             'status' => self::faker()->numberBetween(0,4),
         ];
     }

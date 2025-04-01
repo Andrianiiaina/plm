@@ -37,7 +37,7 @@ class TenderCrudController extends AbstractCrudController
             DateTimeField::new('submissionDate'),
             DateTimeField::new('responseDate'),
             DateTimeField::new('attributionDate'),
-            DateTimeField::new('negotiationDate'),
+            DateTimeField::new('negociationDate'),
             DateTimeField::new('end_date'),
             AssociationField::new('responsable'),
             AssociationField::new('documents'),

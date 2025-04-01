@@ -29,28 +29,7 @@ class ListService
         "A envoyer"=>3,
         "Archiver"=>4
     ];
-    public static array $task_status = [
-        "A faire"=>0,
-        "En cours"=>1,
-        "A valider"=>2,
-        "Terminé"=>3,
-        "Annulé"=>4,
-    ];
 
-    public static array $project_status = [
-        "Non commencé"=>0,
-        "En cours"=>1,
-        "A valider"=>2,
-        "Terminé"=>3,
-        "Suspendu"=>4,
-        "Annulé"=>5,
-    ];
-
-    public static array $devise = [
-        "Euro"=>"EUR",
-        "Dollar"=>'USD',
-        "Ariary"=>'MGA',
-    ];
     public static array $notification_type = [
         "0"=>"Un projet vous a été attribué.",
         "1"=>'Un tender vous a été attribué',

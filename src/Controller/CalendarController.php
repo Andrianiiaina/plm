@@ -6,7 +6,6 @@ use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,38 +15,28 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/calendar')]
 final class CalendarController extends AbstractController
 {
-    #[Route(path: '/calendar', name: 'app_calendar')]
+    #[Route(path: '/calendar', name: 'app_calendar_index')]
     public function calendar(CalendarRepository $calendarRepository,PaginatorInterface $paginator,Request $request, EntityManagerInterface $entityManager): Response
     {               
         $calendar = new Calendar();
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            if($form->isValid()==false){
+            if(!$form->isValid()){
                 $this->addFlash('error','Un problème est survenu, réessayé!' );
             }else{
                 $entityManager->persist($calendar);
-               
                 $entityManager->flush(); 
-               
                 $this->addFlash('success','Evènement enregistré!' );
             }
 
       
-            return $this->redirectToRoute('app_calendar', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        $calendars=$calendarRepository->findUserCalendar($this->getUser(),100);
-        if($request->query->get('q')){
-            $searchTerm = $request->query->get('q');
-            $calendars = $calendarRepository->search($searchTerm); 
-        }else{
-            $calendars=$calendarRepository->findAll();
-        }
-
-
+        $searchTerm=$request->query->get('q','');
+    
         $pagination = $paginator->paginate(
-            $calendars,
+            $calendarRepository->findUserCalendar($this->getUser(),100,$searchTerm),
             $request->query->getInt('page', 1), 
             10
         );
@@ -77,8 +66,7 @@ final class CalendarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
             $this->addFlash('success', 'Evènement bien modifié!' );
-            
-            return $this->redirectToRoute('app_calendar', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('calendar/edit.html.twig', [
@@ -96,7 +84,6 @@ final class CalendarController extends AbstractController
             $this->addFlash('success','Evènement supprimé!' );
         }
         
-
-        return $this->redirectToRoute('app_calendar', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
     }
 }

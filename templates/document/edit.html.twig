@@ -10,49 +10,43 @@
    <div class="container">
     <div class="row">
         
-            <div class="d-flex justify-content-end">
-
-                {{ include('document/_delete_form.html.twig') }}
+        <div class="offset-3 col-md-6 row">
+       <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <p class="h2">Modifier le document</p> {{ include('document/_delete_form.html.twig') }}
+                </div>
+                    (Titre: {{document.name}}, projet <a href="{{path('app_tender_show',{'id':document.tender.id})}}">{{document.tender.contractNumber}}</a>)
+    
+                    {{ form_start(form) }}
+                        <div class="my-4 row">
+                            <div class="col-md-6">
+                                {{ form_label(form.status) }}
+                                {{ form_widget(form.status) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_label(form.responsable) }}{{ form_widget(form.responsable) }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 row">
+                            <p class="m-0 p-0"> Fichier actuel : <a class="" href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}">{{ document.filename }}</a></p>
+            
+                            A remplacer par :
+                            {{ form_widget(form.filepath) }}
+                        </div>
+                        <div class="mb-4 row">
+                            {{ form_label(form.information) }}
+                            {{ form_widget(form.information) }}
+            
+                        </div>
+                        {{ form_rest(form) }}
+                        <button class="btn btn-primary float-end">{{ button_label|default('Appliquer la modification') }}</button>
+                    {{ form_end(form) }}
+    
             </div>
-        <div class="offset-3 col-md-6">
-        <h1>Modifier le document</h1>
-        {{ form_start(form) }}
-                <div class="mb-3 row">
-                    <div class="col-md-6">
-                        {{ form_label(form.status) }}
-                        {{ form_widget(form.status) }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form_label(form.responsable) }}{{ form_widget(form.responsable) }}
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    {{ form_label(form.name) }}
-                    {{ form_widget(form.name) }}
-                </div>
-                <div class="mb-3 row">
-                    Fichier actuel:
-                    <p class="h6">
-                        <a class="icon-link" href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}">{{ document.filename }}</a>
-                    </p>
-                </div>
-                
-                <div class="mb-3 row">
-                    A remplacer par:
-                    {{ form_widget(form.filepath) }}
-                </div>
-                <div class="mb-3 row">
-                    {{ form_label(form.information) }}
-                    {{ form_widget(form.information) }}
-
-                </div>
-                
-                    {{ form_rest(form) }}
-
-                    <button class="btn btn-primary col-3">{{ button_label|default('Enregistrer') }}</button>
-                {{ form_end(form) }}
-
         </div>
+       </div>
     </div>
    </div>
 {% endblock %}

@@ -23,7 +23,7 @@ class FileUploaderService
         try {
             $file->move($this->getTargetDirectory()."/".$folder, $fileName);
         } catch (FileException $e) {
-            // ... handle exception if something happens during file upload
+            
         }
 
         return $fileName;
@@ -34,7 +34,7 @@ class FileUploaderService
         return $this->targetDirectory;
     }
     
-    public function removeFile($folder,$file){
+    public function removeFileFromStorage($folder,$file){
         $path=$this->getTargetDirectory()."/".$folder."/".$file;
         if (file_exists($path)) {
             unlink($path);

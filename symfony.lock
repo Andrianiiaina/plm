@@ -41,6 +41,9 @@
     "easycorp/easyadmin-bundle": {
         "version": "v4.20.4"
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.7.0"
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {

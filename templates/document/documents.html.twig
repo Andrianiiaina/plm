@@ -20,8 +20,7 @@
                     </div>
                       <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
                         {% for document in documents %}
-                     
-
+                        
                         <div class="card"  data-id="{{document.id}}">
                             <a href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" class="list-group-item list-group-item-action" aria-current="true">
                               {{ document.filename}}  <br/>
@@ -57,7 +56,20 @@
             </div>
             {{ form_start(form) }}
             <div class="modal-body">
+            
                     {{ form_errors(form) }}
+                      {{ form_label(form.name) }}
+                      {{ form_widget(form.name) }}
+
+                    <div class="my-3 row">
+                      <div class="col-md-6">
+                          {{ form_label(form.status) }}
+                          {{ form_widget(form.status) }}
+                      </div>
+                      <div class="col-md-6">
+                          {{ form_label(form.responsable) }}{{ form_widget(form.responsable) }}
+                      </div>
+                    </div>
                     {{ form_rest(form) }}
 
             </div>
@@ -70,4 +82,9 @@
         </div>
       </div>
   </div>
+
+ {% block javascript %}
+
+
+{% endblock %} 
 {% endblock %}

@@ -157,36 +157,6 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return Collection<int, self>
-     */
-    public function getContacts(): Collection
-    {
-        return $this->contacts;
-    }
-
-    public function addContact(self $contact): static
-    {
-        if (!$this->contacts->contains($contact)) {
-            $this->contacts->add($contact);
-            $contact->setParent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContact(self $contact): static
-    {
-        if ($this->contacts->removeElement($contact)) {
-            // set the owning side to null (unless already changed)
-            if ($contact->getParent() === $this) {
-                $contact->setParent(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -199,32 +169,6 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return Collection<int, ContactGroup>
-     */
-    public function getContactGroups(): Collection
-    {
-        return $this->contactGroups;
-    }
-
-    public function addContactGroup(ContactGroup $contactGroup): static
-    {
-        if (!$this->contactGroups->contains($contactGroup)) {
-            $this->contactGroups->add($contactGroup);
-            $contactGroup->addContact($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContactGroup(ContactGroup $contactGroup): static
-    {
-        if ($this->contactGroups->removeElement($contactGroup)) {
-            $contactGroup->removeContact($this);
-        }
-
-        return $this;
-    }
     public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;

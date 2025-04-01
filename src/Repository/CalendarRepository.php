@@ -16,26 +16,19 @@ class CalendarRepository extends ServiceEntityRepository
         parent::__construct($registry, Calendar::class);
     }
 
-    public function findUserCalendar($responsable, $number_to_fetch=10): array
+    public function findUserCalendar($responsable, $number_to_fetch=10, $term=''): array
     {
         return $this->createQueryBuilder('c')
             ->join('c.tender', 'p')
             ->where('p.responsable = :responsable')
+            ->andWhere('c.title LIKE :term')
             ->setParameter('responsable', $responsable)
+            ->setParameter('term', '%' . $term . '%')
             ->setMaxResults($number_to_fetch)
             ->orderBy('c.beginAt','ASC')
             ->getQuery()
             ->getResult()
         ;
-    }
-    public function search(string $term): array
-    {
-        return $this->createQueryBuilder('c')
-        ->where('c.title LIKE :term')
-        ->setParameter('term', '%' . $term . '%')
-        ->orderBy('c.beginAt','ASC')
-        ->getQuery()
-        ->getResult();
     }
 
     //    /**

@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Factory\AllotissementFactory;
 use App\Factory\CalendarFactory;
 use App\Factory\ContactFactory;
 use App\Factory\ContactGroupFactory;
@@ -55,8 +56,8 @@ class AppFixtures extends Fixture
            return ['contacts' => ContactFactory::createMany(4)]; 
     });
 
-    TenderFactory::createMany(15,['responsable' => $this->getReference('user_1',User::class)]);
-    TenderFactory::createMany(8,['responsable' => $this->getReference('user_2',User::class)]);
+    TenderFactory::createMany(14,['responsable' => $this->getReference('user_1',User::class)]);
+    TenderFactory::createMany(6,['responsable' => $this->getReference('user_2',User::class)]);
 
 
     DocumentFactory::createMany(50,function() { 
@@ -70,6 +71,9 @@ class AppFixtures extends Fixture
 
 
     FileFactory::createMany(100,function() { 
+        return ['tender'=>TenderFactory::random()];
+    });
+    AllotissementFactory::createMany(50,function() { 
         return ['tender'=>TenderFactory::random()];
     });
     CalendarFactory::createMany(30,function(){

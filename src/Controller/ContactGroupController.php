@@ -8,9 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/contact/group')]
+#[Route('/contact_group')]
 final class ContactGroupController extends AbstractController
 {
 
@@ -24,7 +23,7 @@ final class ContactGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
             $this->addFlash('success','Groupe modifié!' );
-            return $this->redirectToRoute('app_contact_group_show', ['id'=>$contactGroup->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_contact_index');
         }
 
         return $this->render('contact_group/edit.html.twig', [

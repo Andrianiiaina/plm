@@ -30,7 +30,7 @@ class TenderDateType extends AbstractType
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
         ])
-        ->add('negotiationDate', DateType::class, [
+        ->add('negociationDate', DateType::class, [
             'label' => "Date de négociation",
             'widget' => 'single_text',
             'required' => false,
@@ -65,14 +65,6 @@ class TenderDateType extends AbstractType
                 'notInRangeMessage' => 'Entrez une durrée valide',
             ])]
         ]);
-      /**
-       *   ->add('contact', EntityType::class, [
-        *    'label'=>"Contact",
-        *    'class' => Contact::class,
-        *    'choice_label' => 'name',
-        *    'label_attr' => ['class'=>'col-md-3 col-form-label'],
-        *])
-       */
         
     }
 

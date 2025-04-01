@@ -4,27 +4,28 @@
     use App\Entity\User;
     use Symfony\Contracts\EventDispatcher\Event;
 
-    class UserAssignedToProjectEvent extends Event
+    class UserAssignedToEntityEvent extends Event
     {
         public function __construct(
             private User $user,
-            private int $project,
-            private string $type
+            private string $type,
+            private int $id_type
         ) {}
 
         public function getUser(): User
         {
             return $this->user;
         }
-
-        public function getProject(): int
-        {
-            return $this->project;
-        }
         public function getType(): string
         {
             return $this->type;
         }
+        public function getIdType(): int
+        {
+            return $this->id_type;
+        }
+
+       
     }
 
 ?>
