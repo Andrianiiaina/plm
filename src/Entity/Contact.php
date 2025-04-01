@@ -157,6 +157,36 @@ class Contact
         return $this;
     }
 
+    /**
+     * @return Collection<int, self>
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(self $contact): static
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+            $contact->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(self $contact): static
+    {
+        if ($this->contacts->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getParent() === $this) {
+                $contact->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -169,29 +199,30 @@ class Contact
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    /**
+     * @return Collection<int, ContactGroup>
+     */
+    public function getContactGroups(): Collection
     {
-        return $this->createdAt;
+        return $this->contactGroups;
     }
-    public function setCreatedAt(?\DateTime $date): static
+
+    public function addContactGroup(ContactGroup $contactGroup): static
     {
-        $this->createdAt = $date;
+        if (!$this->contactGroups->contains($contactGroup)) {
+            $this->contactGroups->add($contactGroup);
+            $contactGroup->addContact($this);
+        }
 
         return $this;
     }
 
-    public function getModifiedAt(): ?\DateTime
+    public function removeContactGroup(ContactGroup $contactGroup): static
     {
-        return $this->modifiedAt;
-    }
-    public function setModifiedAt(?\DateTime $date): static
-    {
-        $this->modifiedAt = $date;
+        if ($this->contactGroups->removeElement($contactGroup)) {
+            $contactGroup->removeContact($this);
+        }
 
         return $this;
-    }
-    public function __toString(): string
-    {
-        return $this->name ?? 'N/A'; 
     }
 }
