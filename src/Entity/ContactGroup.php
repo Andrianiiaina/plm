@@ -54,9 +54,19 @@ class ContactGroup
         return $this->contacts;
     }
 
-   
-    public function __toString(): string
+    public function addContact(Contact $contact): static
     {
-        return $this->Name ?? 'N/A'; 
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): static
+    {
+        $this->contacts->removeElement($contact);
+
+        return $this;
     }
 }
