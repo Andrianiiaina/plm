@@ -8,15 +8,15 @@
 		<div class="col">
 			<i class="bi bi-person-circle fs-2"></i> {{user.email | capitalize}} 
 			<div class="btn-group float-end">
-				<a href="{{ path('app_tender_new') }}" class="btn"> + Tender</a>
 				
-				<div class="dropdown">
+				<a href="{{ path('app_tender_new') }}" class="btn"> + Tender</a>
+			
 					<button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 						<i class="bi bi-bell"></i> Notifications <span class="badge bg-danger">{{ notifications|filter(n => not n.isRead)|length }}</span>
 					</button>
-				</div>
 					{{ include('components/_notification.html.twig',{'notifications':notifications})}}
 
+				
 			</div>
 		</div>
 
@@ -49,7 +49,7 @@
 					  <tr>
 						<th scope="col">Référence</th>
 						<th scope="col">Titre</th>
-						<th scope="col">Lien</th>
+						<th scope="col"></th>
 					  </tr>
 					</thead>
 					<tbody>
@@ -65,7 +65,7 @@
 									{{ tender_.title| u.truncate(40, '...')}}
 									
 								</td>
-								<td><small><a href="{{tender_.url}}">{{tender_.url}}</a></small></td>
+								<td><small><a href="{{tender_.url}}" class="text-decoration-none">voir le site</a></small></td>
 							</tr>
 						{% endfor %}
 					</tbody>

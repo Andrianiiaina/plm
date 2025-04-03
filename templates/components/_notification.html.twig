@@ -1,16 +1,13 @@
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
     {% for notification in notifications %}
-        <li class="dropdown-item d-flex justify-content-between align-items-center">
-            {% if notification.type == 0 %}
-                <span> <a href="{{ path('app_project_show', {'id': notification.typeId}) }}">{{ notification.message }}</a></span>
-
-            {% elseif notification.type == 1 %}
-                <span> <a href="{{ path('app_tender_show', {'id': notification.typeId}) }}">{{ notification.message }}</a></span>
+        <li class="dropdown-item d-flex justify-content-between">
+            {% if notification.type == 1 %}
+                 <a class="link-offset-2 link-underline link-underline-opacity-0 text-wrap text-break" href="{{ path('app_tender_show', {'id': notification.typeId}) }}">{{ notification.message }}</a>
 
             {% elseif notification.type == 2 %}
-                <span> <a href="{{ path('app_document_show', {'id': notification.typeId}) }}">{{ notification.message }}</a></span>
+                 <a class="link-offset-2 link-underline link-underline-opacity-0 text-wrap text-break" href="{{ path('app_document_show', {'id': notification.typeId}) }}">{{ notification.message }}</a>
 
-            {% endif%}
+            {% endif %}
             {% if not notification.isRead %}
                 <a href="{{ path('notification_mark_read', {'id': notification.id}) }}" class="btn btn-sm">✔lu</a>
             {% endif %}

@@ -12,6 +12,8 @@ use App\Entity\Document;
 use App\Entity\Notification;
 use App\Entity\Tender;
 use App\Repository\TenderRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 final class HomeController extends AbstractController
 {
@@ -60,13 +62,16 @@ final class HomeController extends AbstractController
     }
 
     #[Route('/tender_lists/by/status/{status}', name: 'app_tender_status', methods: ['GET'])]
-    public function tender_lists_by_status($status,TenderRepository $tenderRepository): Response
+    public function tender_lists_by_status(Request $request, $status,TenderRepository $tenderRepository, PaginatorInterface $paginator): Response
     {
-        
+
+        $tenders=$this->isGranted('ROLE_ADMIN')?
+        $tenderRepository->findBy(['status'=>$status]):
+        $tenderRepository->getTenderByStatus($this->getUser(),$status);
+        $pagination = $paginator->paginate($tenders, $request->query->getInt('page', 1), 10);
+
         return $this->render('tender/index.html.twig', [
-            'tenders' =>  $this->isGranted('ROLE_ADMIN')?
-                $tenderRepository->findBy(['status'=>$status]):
-                $tenderRepository->getTenderByStatus($this->getUser(),$status),
+            'tenders' =>  $pagination,
             'searchTerm' => ""
         ]);
     }

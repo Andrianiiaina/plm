@@ -8,76 +8,64 @@
 
 {% block body %}
     <div class="container-fluid">
-       <div class="row p-3">
-            <strong class="h2 float-start mb-4 text-center text-{{tender.status | getStatusColor}}">{{ tender.contractNumber }}-{{tender.title}}</strong>
-            <div class="table px-4 my-3">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Date de soumission</th>
-                        <th scope="col">Date de négociation</th>
-                        <th scope="col">Date de réponse</th>
-                        <th scope="col">Date d'attribution</th>
-                        <th scope="col">Début prévu</th>
-                        <th scope="col">Fin prévue</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.negociationDate| highlight }}">{{ tender.negociationDate ? tender.negociationDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.startDate| highlight }}">{{ tender.startDate ? tender.startDate|date('d F Y H:i') : '' }}</p></td>
-                        <td><p class="{{ tender.endDate| highlight }}">{{ tender.endDate ? tender.endDate|date('d F Y H:i') : '' }}</p></td>
-                      </tr>
-                    </tbody>
-                </table>
-
-
-            </div>
+       <div class="row">
+            <strong class="h2 float-start my-4 text-center text-{{tender.status | getStatusColor}}">{{ tender.contractNumber }}-{{tender.title}}</strong>
             
             <div class="row px-4 my-3">
             
                 <p class="fs-4 my-2"> Informations sur l'appel d'offre</p> 
-                <div class="col">
+                <div class="col-md-8">
                     <dl class="row">
-
-                        <dt class="col-sm-4">Nom du projet</dt>
+                        <dt class="col-sm-4 fw-medium">Réference</dt>
+                        <dd class="col-sm-8">{{ tender.contractNumber }}</dd>
+                        <dt class="col-sm-4 fw-medium">Nom du projet</dt>
                         <dd class="col-sm-8">{{ tender.title }}.</dd>
                     
-                        <dt class="col-sm-4">Réference</dt>
-                        <dd class="col-sm-8">{{ tender.contractNumber }}</dd>
-                       
-                        <dt class="col-sm-4">Type du marché</dt>
+
+                       <dt class="col-sm-4 fw-medium">Type du marché</dt>
                         <dd class="col-sm-8">{{tender.tenderType | getTenderType}}</dd>
-
-                        
-                    
-                        <dt class="col-sm-4">Adresse</dt>
+                        <dt class="col-sm-4 fw-medium">Adresse</dt>
                         <dd class="col-sm-8">{{ tender.location }}</dd>
-
-                        <dt class="col-sm-4">Site web</dt>
-                        <dd class="col-sm-8">
-                            <a href="{{ tender.url }} ">{{ tender.url }} </a>
-                        </dd>
+                        <dt class="col-sm-4 fw-medium">Budget minimum</dt>
+                        <dd class="col-sm-8">{{ tender.minBudget }}.</dd>
+                        <dt class="col-sm-4 fw-medium">Budget maximum</dt>
+                        <dd class="col-sm-8">{{ tender.maxBudget }}.</dd>
+                        <dt class="col-sm-4 fw-medium"><a href="{{ tender.url }}" class="">Visiter le site </a></dt>
+                        <dd></dd>
+                      
 
                     </dl>
                 </div>
-                <div class="col">
-                    <div class="p-3 row">
-                        <dt class="col-sm-5 ">Status</dt>
-                        <dd class="col-sm-7"><span class="text-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></dd>
-                        <dt class="col-sm-5">Durrée</dt>
-                        <dd class="col-sm-7">{{ tender.duration }} ans</dd>
-                        <dt class="col-sm-5">Budget minimum</dt>
-                        <dd class="col-sm-7">{{ tender.minBudget }}.</dd>
-                        <dt class="col-sm-5">Budget maximum</dt>
-                        <dd class="col-sm-7">{{ tender.maxBudget }}.</dd>
+          
+                <div class="col-md-4">
+                    <div class="row">
+                        <dt class="col-sm-4 fw-medium"> Soumission</dt>
+                        <dd class="col-sm-8"><p class="p-0 m-0{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y H:i') : '' }}</p></dd>
+                        <dt class="col-sm-4 fw-medium"> Négociation</dt>
+                        <dd class="col-sm-8"><p class="p-0 m-0{{ tender.negociationDate| highlight }}">{{ tender.negociationDate ? tender.negociationDate|date('d F Y H:i') : '' }}</p></dd>
+                        <dt class="col-sm-4 fw-medium"> Réponse</dt>
+                        <dd class="col-sm-8"><p class="p-0 m-0{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y H:i') : '' }}</p></dd>
+                        <dt class="col-sm-4 fw-medium"> Attribution</dt>
+                        <dd class="col-sm-8"><p class="p-0 m-0{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y H:i') : '' }}</p></dd>
+                        <dt class="col-sm-4 fw-medium"> Début</dt>
+                        <dd class="col-sm-8"><p class="p-0 m-0{{ tender.startDate| highlight }}">{{ tender.startDate ? tender.startDate|date('d F Y H:i') : '' }}</p></dd>
+                        <dt class="col-sm-4 fw-medium"> Fin</dt>
+                        <dd class="col-sm-8"><p class="p-0 m-0{{ tender.endDate| highlight }}">{{ tender.endDate ? tender.endDate|date('d F Y H:i') : '' }}</p></dd>
+                   
+                        <dt class="col-sm-4 fw-medium">Durrée</dt>
+                        <dd class="col-sm-8">{{ tender.duration }} ans</dd>
+                        <dt class="col-sm-4 fw-medium ">Status</dt>
+                        <dd class="col-sm-8"><span class="badge bg-{{tender.status | getStatusColor}} fw-bolder">{{tender.status | getTenderStatus}}</span></dd>
+                       
+                   
                     </div>
+
                 </div>
             </div>
-
+            <div class="px-4 my-3">
+                <p class="fs-4 my-2">Description</p> 
+                {{ tender.description }}
+            </div>
             <div class="px-4 my-3">
                 <div class="row">
                     <p class="fs-4 my-2">Informations sur l'organisation</p> 
@@ -85,9 +73,9 @@
                     <div class="col row">
                         <dt class="col-sm-4">Organisation</dt>
                         <dd class="col-sm-8">{{tender.contact.organisation}}</dd>
-                        <dt class="col-sm-4">Name</dt>
+                        <dt class="col-sm-4">Nom</dt>
                         <dd class="col-sm-8">{{tender.contact.name}}</dd>
-                        <dt class="col-sm-4">Function</dt>
+                        <dt class="col-sm-4">Poste</dt>
                         <dd class="col-sm-8">{{tender.contact.function}}</dd>
 
                     </div>
@@ -107,13 +95,10 @@
                 </div>
             </div>
 
-            <div class="px-4 my-3">
-                <p class="fs-4 my-2">Prestation</p> 
-                {{ tender.description }}
-            </div>
+            
             
             <div class="px-4 my-3">
-                <p class="fs-4 my-2">Operation</p> 
+                <p class="fs-4 my-2">Opérations</p> 
                     <div class="col-md-8">
                         <ol class="list-group">
                             <li class="list-group-item d-flex justify-content-between align-items-start">
