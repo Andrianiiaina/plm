@@ -16,20 +16,42 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    //Results: docs in project user have responsibilit + docs user is assigned for.
-    public function findUserDocuments($responsable,$number_to_fetch=10): array
-      {
-          return $this->createQueryBuilder('d')
-              ->join('d.tender', 'p')
-              ->orWhere('d.responsable = :responsable')
-              ->orWhere('p.responsable = :responsable')
-              ->setParameter('responsable', $responsable)
-              ->setMaxResults($number_to_fetch)
-              ->orderBy('d.createdAt', 'DESC')
-              ->getQuery()
-              ->getResult()
-          ;
+    //Results: docs in project user have responsibility + docs user is assigned for.
+    public function search(string $term,$responsable): array
+    {
+        return $this->createQueryBuilder('d')
+        ->join('d.tender', 'p')
+        ->orWhere('d.responsable = :responsable')
+        ->orWhere('p.responsable = :responsable')
+        ->andWhere('d.name LIKE :term OR d.status LIKE :term OR p.title LIKE :term OR p.contract_number LIKE :term' )
+        ->andWhere('p.isArchived = False')
+        ->setParameter('term', '%' . $term . '%')
+        ->setParameter('responsable', $responsable)
+        ->orderBy('d.createdAt', 'DESC')
+        ->getQuery()
+        ->getResult();
     }
+
+
+    public function findWeeklyUserDocuments($responsable,): array
+    {
+        $startOfWeek = new \DateTime('monday this week');
+        $endOfWeek = new \DateTime('sunday this week 23:59:59');
+        return $this->createQueryBuilder('d')
+            ->join('d.tender', 'p')
+            ->orWhere('d.responsable = :responsable')
+            ->orWhere('p.responsable = :responsable')
+            ->andWhere('p.isArchived = False and p.status != 2 and p.status != 3')
+            ->andWhere('d.limitDate BETWEEN :start AND :end')
+            ->setParameter('start', $startOfWeek)
+            ->setParameter('end', $endOfWeek)
+            ->setParameter('responsable', $responsable)
+            ->orderBy('d.limitDate', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+  }
+
 
     public function findTenderDocuments($tender): array
       {

@@ -1,0 +1,9 @@
+{% for status,total in total_tender_by_status %}
+    <div class="col-md-2 p-2">
+        <a href="{{path('app_tender_status',{'status':status})}}" class="fw-bold btn btn-outline-{{status |getStatusColor}} d-flex justify-content-between align-items-center"> 
+            {{status | getTenderStatus}} <span class="fs-4">{{total}}</span>
+        </a>
+    </div>
+{% endfor %}
+
+				

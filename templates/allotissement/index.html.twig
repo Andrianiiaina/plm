@@ -27,7 +27,7 @@
                     <tr>
                         <td><a href="{{ path('app_allotissement_show', {'id': allotissement.id}) }}">{{ allotissement.number }}</a></td>
                         <td>{{ allotissement.title }}</td>
-                        <td>{{ allotissement.description }}</td>
+                        <td>{{ allotissement.description |u.truncate(50, '...') }}</td>
                         <td>{{ allotissement.minBudget }}</td>
                         <td>{{ allotissement.maxBudget }}</td>
                     </tr>

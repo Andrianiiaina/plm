@@ -42,6 +42,9 @@ class Document
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTime $modifiedAt;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $limitDate = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime(); 
@@ -163,5 +166,17 @@ class Document
     public function __toString(): string
     {
         return $this->filename ?? 'N/A'; 
+    }
+
+    public function getLimitDate(): ?\DateTimeInterface
+    {
+        return $this->limitDate;
+    }
+
+    public function setLimitDate(?\DateTimeInterface $limitDate): static
+    {
+        $this->limitDate = $limitDate;
+
+        return $this;
     }
 }

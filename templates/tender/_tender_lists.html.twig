@@ -1,0 +1,38 @@
+<div class="table-responsive">
+               <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th class="col-md-3">Titre</th>
+                        <th>Soumission</th>
+                        <th>Négociation</th>
+                        <th>Réponse</th>
+                        <th>Attribution</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for tender in tenders %}
+                    <tr>
+                        <td><a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn">{{ tender.contractNumber }}</a></td>
+                        <td>{{ tender.title }}</td>
+                        <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.negociationDate| highlight }}">{{ tender.negociationDate ? tender.negociationDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y') : '' }}</p></td>
+                         <td><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></td> 
+                      
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">Aucun appel d'offre pour le moment.</td>
+                    </tr>
+                {% endfor %}
+                
+                </tbody>
+                </table> 
+
+                <div class="d-flex justify-content-end">
+                    {{ knp_pagination_render(tenders) }}
+                </div>
+            </div>

@@ -32,8 +32,8 @@ final class TenderFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        $date=self::faker()->dateTimeBetween('-1 month','+1 months');
-        $budget=self::faker()->randomFloat();
+        $date=self::faker()->dateTimeBetween('-2 months','+1 months');
+        $budget=self::faker()->randomFloat(nbMaxDecimals:2,min:0, max:100000);
         return [
             'title' => self::faker()->unique()->text(40),
             'contract_number' => self::faker()->text(15),
@@ -41,15 +41,15 @@ final class TenderFactory extends PersistentProxyObjectFactory
             'description' => self::faker()->text(225),
             'min_budget' => $budget,
             'max_budget' => $budget+1000,
-            'duration' => 4,
-            'submissionDate' => \DateTimeImmutable::createFromMutable($date->modify('+10 days')),
-            'responseDate' => \DateTimeImmutable::createFromMutable($date->modify('+15 days')),
-            'attributionDate' => \DateTimeImmutable::createFromMutable($date->modify('+20 days')),
-            'negociationDate' => \DateTimeImmutable::createFromMutable($date->modify('+25 days')),
-            'start_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
-            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+35 days')),
+            'duration' => self::faker()->numberBetween(0, 4),
+            'submissionDate' => \DateTimeImmutable::createFromMutable($date->modify('+5 days')),
+            'negociationDate' => \DateTimeImmutable::createFromMutable($date->modify('+10 days')),
+            'responseDate' => \DateTimeImmutable::createFromMutable($date->modify('+12 days')),
+            'attributionDate' => \DateTimeImmutable::createFromMutable($date->modify('+15 days')),
+            'start_date' => \DateTimeImmutable::createFromMutable($date->modify('+25 days')),
+            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
             'status' => self::faker()->numberBetween(0, 4),
-            'tender_type' => self::faker()->numberBetween(0, 4),
+            'tender_type' => self::faker()->numberBetween(0, 1),
             'isArchived'=>false,
             'url'=>self::faker()->url(),
         ];

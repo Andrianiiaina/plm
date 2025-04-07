@@ -5,14 +5,21 @@
         </a>
         <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center">
             <li>
-                <a href="{{ path('app_tender_index') }}" class="nav-link py-3 px-2 "  title="Appels d'offres" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">
+                <a href="{{ path('app_tender_index') }}" class="nav-link py-3 px-2 "  title="Appels d'offres" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Tenders">
                     <i class="bi bi-card-list {% if app.request.get('_route') == 'app_tender_index' %}fs-1 {% else %} fs-3{% endif %}"></i>
                 </a>
             </li>
+
         
+
             <li>
-                <a href="{{ path('app_calendar_index') }}" class="nav-link py-3 px-2" title="Calendrier" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
+                <a href="{{ path('app_calendar_index') }}" class="nav-link py-3 px-2" title="Calendrier" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Calendars">
                   <i class="bi bi-calendar3 {% if app.request.get('_route') == 'app_calendar_index' %}fs-1 {% else %} fs-3{% endif %}"></i>
+              </a>
+            </li>
+               <li>
+                <a href="{{ path('app_document_index') }}" class="nav-link py-3 px-2" title="Documents" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Documents">
+                  <i class="bi bi-folder {% if app.request.get('_route') == 'app_document_index' %}fs-1 {% else %} fs-3{% endif %}"></i>
               </a>
             </li>
             <li>

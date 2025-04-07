@@ -26,7 +26,9 @@
                               {{ document.filename}}  <br/>
                               <small class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</small>
                               <br/>
-                              <small class="float-start">Par {{document.responsable.email}}</small>
+                              <small class="{{ document.limitDate | highlight}}">Date: {{ document.limitDate ? document.limitDate|date('d F Y') : 'aucun' }}</small>
+                              <br/>
+                              <small class="float-start">Par: {{document.responsable.email}}</small>
 
                             </a>
                             <a href="{{path('app_document_edit', {'id':document.id})}}" data-id="{{document.id}}" class="btn text-{{status | getStatusColor}} clearfix" aria-current="true">

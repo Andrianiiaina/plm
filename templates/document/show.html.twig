@@ -23,11 +23,12 @@
                 Voir le contenu: {{ document.filename}}
             </a></p>
            
-            <p><strong>Projet: </strong><i>{{document.tender.title}}</i></p>
+            <p><strong>Projet: </strong><i><a href="{{path('app_tender_show', {'id': document.tender.id})}}" class="link-secondary link-underline link-underline-opacity-0">{{document.tender.title}}</a></i></p>
+            
             <p> <strong>responsable: </strong> {{document.responsable.email}}</p>
 
             <p><strong>Information: </strong> {{ document.information }}</p>
-          
+          <p class="{{ document.limitDate| highlight }}">{{ document.limitDate ? document.limitDate|date('d F Y') : '' }}</p>
         </div>
    </div>
 {% endblock %}

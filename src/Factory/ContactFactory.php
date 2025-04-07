@@ -32,7 +32,7 @@ final class ContactFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'contact_perso' => self::faker()->phoneNumber(),
+            'contact_perso' => self::faker()->optional(0.5)->phoneNumber(),
             'contact_pro' => self::faker()->optional(0.5)->phoneNumber(),
             'email' => self::faker()->email(),
             'function' => self::faker()->jobTitle(),

@@ -32,11 +32,16 @@ final class TenderController extends AbstractController
             : $tenderRepository->searchTenderRespo($searchTerm, $this->getUser());
 
         $pagination = $paginator->paginate($tenders, $request->query->getInt('page', 1), 10);
-
+      
+       
+        $statistiques=$this->isGranted('ROLE_ADMIN')?$tenderRepository->findStatistic():$tenderRepository->findRespoStatistic($this->getUser());
         return $this->render('tender/index.html.twig', [
             'tenders' => $pagination,
-            'searchTerm' => $searchTerm
+            'total_tenders'=>count($tenders),
+            'searchTerm' => $searchTerm,
+            'total_tender_by_status'=>$statistiques,
         ]);
+
     }
 
     #[Route('/new', name: 'app_tender_new', methods: ['GET', 'POST'])]

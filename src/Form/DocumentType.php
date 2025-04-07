@@ -14,8 +14,10 @@ use Symfony\UX\Dropzone\Form\DropzoneType;
 use Symfony\Component\Validator\Constraints\File;
 use App\Service\ListService;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class DocumentType extends AbstractType
 {
@@ -56,6 +58,12 @@ class DocumentType extends AbstractType
             ->add('information',TextareaType::class, [
                 'label' => "Note",
                 'required' => false,
+            ])
+            ->add('limitDate', DateType::class, [
+                'label' => "Date de fin prévu",
+                'widget' => 'single_text',
+                'required' => false,
+                'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             ])
         ;
         if(!$options['is_edited']){

@@ -18,6 +18,36 @@ class TenderRepository extends ServiceEntityRepository
         parent::__construct($registry, Tender::class);
     }
 
+    public function findStatistic()
+    {
+        $results=$this->createQueryBuilder('t')
+            ->select('t.status, COUNT(t.id) as total' )
+            ->groupBy('t.status')
+            ->getQuery()
+            ->getResult();
+            $data = [];
+            foreach ($results as $result) {
+                $data[$result['status']] = $result['total'];
+            }
+            return $data;
+    }
+
+    public function findRespoStatistic($user): array
+    {
+        $results=$this->createQueryBuilder('t')
+            ->select('t.status, COUNT(t.id) as total' )
+            ->andWhere('t.responsable = :user')
+            ->groupBy('t.status')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+            $data = [];
+            foreach ($results as $result) {
+                $data[$result['status']] = $result['total'];
+            }
+            return $data;
+    }
+
     public function findRespoTenders($user, $is_archived=false): array
        {
            return $this->createQueryBuilder('t')    
@@ -52,6 +82,8 @@ class TenderRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
+
+
     public function getTenderByStatus($user,$status): array
     {
     return $this->createQueryBuilder('t')    
@@ -86,6 +118,22 @@ class TenderRepository extends ServiceEntityRepository
             ->getResult();
             
     }
+    # tender qui devait etre résumer ou soumis.
+
+    public function findExpiredTender($user){
+        return $this->createQueryBuilder('t')    
+        ->select('t.id, t.contract_number,  t.status,  t.submissionDate')
+        ->andWhere('t.responsable = :user and t.isArchived = false')
+        ->andWhere('t.submissionDate < :now and t.status = 1 or t.status=0')
+        ->setParameter('user', $user)
+        ->setParameter('now', new \DateTimeImmutable())
+        ->orderBy('t.createdAt', 'DESC')
+        ->getQuery()
+        ->getResult()
+    ;
+    }
+
+
 
     //Récuperer les dates et le type de date de chaque semaine
     public function findFilteredTendersForThisWeek($user): array
@@ -127,33 +175,12 @@ class TenderRepository extends ServiceEntityRepository
             ];
         }
     }
+    usort($filteredTenders, function ($a, $b) {
+        return $a['dateValue'] <=> $b['dateValue'];
+    });
 
     return $filteredTenders;
 }
 
-            
-    //    /**
-    //     * @return Tender[] Returns an array of Tender objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Tender
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    
 }

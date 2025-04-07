@@ -10,6 +10,7 @@ use App\Repository\DocumentRepository;
 use App\Service\FileUploaderService;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -22,22 +23,22 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DocumentController extends AbstractController
 {
     #[Route(name: 'app_document_index', methods: ['GET'])]
-    public function index(DocumentRepository $documentRepository): Response
+    public function index(DocumentRepository $documentRepository,Request $request,PaginatorInterface $paginator): Response
     {
-
-        $documents = $this->isGranted('ROLE_ADMIN') 
-        ? $documentRepository->findBy([], ['createdAt' => 'DESC']) 
-        : $documentRepository->findUserDocuments($this->getUser());
-
-        $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
-
-        foreach ($documents as $document) {
-            $grouped_documents_by_status[$document->getStatus()][] = $document;
-        }
-
-        return $this->render('document/index.html.twig', [ 'groupedDocuments' => $grouped_documents_by_status]);
+        $searchTerm = $request->query->get('q','');
+       
+        $pagination = $paginator->paginate(
+            $documentRepository->search($searchTerm,$this->getUser()),
+             $request->query->getInt('page', 1),
+              15);
+            $searchTerm="";
+        return $this->render('document/index.html.twig', [ 
+            'documents'=> $pagination,
+            'searchTerm'=>$searchTerm??'',
+        ]);
     }
 
+    
     #[Route('/tender/show/{id}', name: 'app_tender_documents', methods: ['GET','POST'])]
     public function tender_documents(    Tender $tender,
     Request $request, 

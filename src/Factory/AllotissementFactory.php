@@ -31,7 +31,7 @@ final class AllotissementFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        $budget=self::faker()->randomFloat();
+        $budget=self::faker()->randomFloat(nbMaxDecimals:2);
         return [
             'number' => self::faker()->numberBetween(0,10),
             'title' => self::faker()->unique()->text(40),

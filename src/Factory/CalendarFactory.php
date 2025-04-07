@@ -33,6 +33,7 @@ final class CalendarFactory extends PersistentProxyObjectFactory
     {
         return [
             'beginAt' => self::faker()->dateTimeBetween('now','+1 months'),
+            'EndAt' => self::faker()->optional(0.5)->dateTimeBetween('now','+1 months'),
             'title' => self::faker()->sentence(),
         ];
     }

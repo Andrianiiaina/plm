@@ -5,36 +5,53 @@
 {% block body %}
 
 <div class="container">
-    <div class="row">
-	<p class="h2">Suivis des documents</p>
-    <div class="row mt-2">
-		{% for status, documents in groupedDocuments %}
-              <div class="col p-1">
-                  <div class="card border-{{status | getStatusColor}}">
-                    <div class="card-header text-{{status | getStatusColor}}">
-                      <p class="h4"> {{status | getDocumentStatus}}</p>
-                    </div>
-                      <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
-                        {% for document in documents %}
-                          
-
-                          <a href="{{path('app_document_show', {'id':document.id})}}" data-id="{{document.id}}" class="list-group-item list-group-item-action pb-3" aria-current="true">
-                            <span class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</span><br/>
-                            <span class="text-body-secondary">{{document.tender.title| u.truncate(40, '...')}}</span> 
-                            <br/>
-                            <small class="text-{{status | getStatusColor}}"> {{document.responsable.email}}</small>
-                          </a>
-                       
-                        {% else %}
-                        {% endfor %}
-                      </div>
-                  </div>
-                 
+     <div class="clearfix">
+        <div class="float-start">
+          <p class="h2">Ensemble des documents</p>
+        </div>
+        <div class="float-end">
+          <form method="get" action="{{ path('app_document_index') }}" class="row">
+            <div class="col-10 m-0 p-0">
+                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher un document..." class="form-control">
             </div>
-						{% else %}
-							<small>Aucun document pour le moment.</small>
-						{% endfor %}
-					</div>
+            <div class="col-2 m-0 p-0">
+                <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+            </div>
+          </form>
+
+        </div>
+     </div>
+        <div class="row m-3">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th class="col-5">Titre du document</th>
+                      <th>Responsable</th>
+                      <th>Date prévu</th>
+                      <th>Projet</th>
+                      <th>Status</th>
+                  </tr>
+              </thead>
+              <tbody>
+                      {% for document in documents  %}
+                      <tr> 
+                                <td class="col-5"><a href="{{path('app_document_show', {'id':document.id})}}" class="link-dark link-underline link-underline-opacity-0">{{ document.name }}</a></td>
+                                <td>{{document.responsable.email}}</td>
+                                <td>{{ document.limitDate ? document.limitDate|date('d F Y') : 'aucun' }}</td>
+                                <td><a href="{{path('app_tender_show', {'id':document.tender.id})}}" class="link-dark link-underline link-underline-opacity-0">{{ document.tender | u.truncate(40, '...')}}</a></td>
+                                <td><span class="badge bg-{{document.status | getStatusColor}}">{{document.status | getDocumentStatus}}</Span></td>
+                              </tr>  
+                          
+                    {% endfor %}
+              </tbody>
+            
+            
+          </table>
+          <div class="d-flex justify-content-end">
+                {{ knp_pagination_render(documents) }}
+          </div>
+        </div>
+          
     </div>
-  </div>
+</div>
 {% endblock %}
