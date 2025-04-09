@@ -18,7 +18,7 @@ final class ArchiveController extends AbstractController
             'tenders' => $this->isGranted('ROLE_ADMIN')? 
             $entityManager->getRepository(Tender::class)->findBy(['isArchived'=>true]) :
             $entityManager->getRepository(Tender::class)->findRespoTenders($this->getUser(),true),
-            'documents' => $entityManager->getRepository(Document::class)->findBy(['status'=>"4"], ['createdAt' => 'DESC']),
+            'documents' => $entityManager->getRepository(Document::class)->findBy(['isArchived'=>true], ['createdAt' => 'DESC']),
         ]);
     }
     

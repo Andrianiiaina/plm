@@ -40,7 +40,8 @@ final class DocumentFactory extends PersistentProxyObjectFactory
             'information' => self::faker()->text(),
             'name' => "Cahier de charge",
             'limitDate'=>self::faker()->optional(0.8)->dateTimeBetween(startDate:'-1 weeks',endDate:'+1 weeks'),
-            'status' => self::faker()->numberBetween(0,3),
+            'status' => self::faker()->numberBetween(0,2),
+            'isArchived'=>false,
         ];
     }
 

@@ -176,6 +176,20 @@ final class DocumentController extends AbstractController
             'data' => $data
         ]);
     }
+    #[Route('/archive/{id}', name: 'app_document_archive', methods: ['POST'])]
+    public function archive_or_reset_tender(Request $request,Document $document,EntityManagerInterface $entityManager): Response
+    {
+        $tender_id=$document->getTender()->getId();
+        if ($this->isCsrfTokenValid('archive'.$document->getId(), $request->getPayload()->getString('_token'))) {
+            $document->setIsArchived(!$document->isArchived());
+            $entityManager->flush();
+            $document->isArchived()?$this->addFlash('success','Document archivé ! '):$this->addFlash('success','Document restauré ! ') ;
+            
+        }else{
+            $this->addFlash('error','L\'Opération a échoué. Veuillez réessayer.');
+        }
+        return $this->redirectToRoute('app_tender_documents', ['id'=>$tender_id]);
+    }
 }
 
 

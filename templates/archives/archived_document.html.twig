@@ -57,7 +57,13 @@
                         <br/>
                         <small class="text-{{document.status | getStatusColor}}"> {{document.responsable.email}}</small>
                     </a>
-                    {{ include('document/_delete_form.html.twig') }}
+                    <div class="btn-group">
+                         {{ include('document/_delete_form.html.twig') }}
+                    <form method="post" action="{{ path('app_document_archive', {'id': document.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir restaurer ce document?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ document.id) }}">
+                        <button class="btn btn-primary"><i class="bi bi-archive"></i>Restaurer</button>
+                    </form>
+                    </div>
                 </div>
             {% else %}
             {% endfor %}

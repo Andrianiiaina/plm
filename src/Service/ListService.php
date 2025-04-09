@@ -27,7 +27,6 @@ class ListService
         "A vérifier"=>1,
         "A signer"=>2,
         "A envoyer"=>3,
-        "Archiver"=>4
     ];
 
     public static array $notification_type = [

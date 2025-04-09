@@ -45,6 +45,9 @@ class Document
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $limitDate = null;
 
+    #[ORM\Column]
+    private ?bool $isArchived = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime(); 
@@ -176,6 +179,18 @@ class Document
     public function setLimitDate(?\DateTimeInterface $limitDate): static
     {
         $this->limitDate = $limitDate;
+
+        return $this;
+    }
+
+    public function isArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }
