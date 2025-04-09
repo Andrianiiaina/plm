@@ -21,29 +21,19 @@ final class HomeController extends AbstractController
     {   
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user=$this->getUser();
-        $tenderRepository=$entityManager->getRepository(Tender::class);
-        switch (true) {
-            case $this->isGranted('ROLE_ADMIN'):
-                $documents = $entityManager->getRepository(Document::class)->findBy([],['limitDate'=>'ASC'],5);
-                $tenders = $tenderRepository->findBy([],['createdAt'=>'DESC'],10);
-                $statistiques=$tenderRepository->findStatistic();
-                break;
-            case $this->isGranted('ROLE_RESPO'):
-                $documents = $entityManager->getRepository(Document::class)->findWeeklyUserDocuments($user);
-                $tenders = $tenderRepository->findBy(['responsable' => $user], ['createdAt' => 'DESC'],10);
-                $statistiques=$tenderRepository->findRespoStatistic($user);
-
-                break;
-            case $this->isGranted('ROLE_USER'):
-                return $this->render('home/reader.html.twig');
+        if(!$this->isGranted('ROLE_RESPO')){
+            return $this->render('home/reader.html.twig');
         }
+        $tenderRepository=$entityManager->getRepository(Tender::class);
+        $statistiques=$tenderRepository->findRespoStatistic($user);
+
 
         return $this->render('home/index.html.twig',[
             'user'=>$user,
-            'tenders'=>$tenders,
+            'tenders'=>$tenderRepository->findBy(['responsable' => $user], ['createdAt' => 'DESC'],10),
             'total_tenders'=>array_sum($statistiques),
             'total_tender_by_status'=>$statistiques,
-            'documents'=> $documents,
+            'documents'=> $entityManager->getRepository(Document::class)->findWeeklyUserDocuments($user),
             'calendars'=>$entityManager->getRepository(Calendar::class)->findBy([],['beginAt'=>'ASC'],5),
             'notifications'=> $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],10),
             'week_tenders'=>$tenderRepository->findFilteredTendersForThisWeek($user),

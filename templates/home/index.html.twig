@@ -41,8 +41,8 @@
 					{% for tender in expired_soumission_date %}
 					<div class="col clearfix p-2">
 						<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-							{{tender.contract_number}} devait etre soumis le {{tender.submissionDate ? tender.submissionDate|date('d F Y') : '' }} mais son status est encore
-							{{tender.status | getTenderStatus}}
+							<b>{{tender.contract_number}}</b> devait etre soumis le <b>{{tender.submissionDate ? tender.submissionDate|date('d F') : '' }}</b> mais son status est encore
+							<b>{{tender.status | getTenderStatus}}</b>
 						</a>
 						
 					</div>
@@ -103,7 +103,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="card card-body mb-3">
-					<p class="h4">Appels d'offres</p>
+					<p class="h4">Cette semaine:</p>
 					{% for tender in week_tenders %}
 					<div class="col clearfix p-2">
 						<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
@@ -127,8 +127,8 @@
 								<small><i>{{document.tender| u.truncate(45, '...')}}</i></small>
 							</a>	
 							<span class="float-end badge text-bg-{{ document.status| getStatusColor}}">
-								{{ document.limitDate ? document.limitDate|date('d F Y') : 'aucun' }}
-								<br/>{{ document.status| getDocumentStatus}}
+								{{ document.limitDate ? document.limitDate|date('d F Y') : 'aucune' }}<br/>
+								<i>{{ document.status| getDocumentStatus}}</i>
 							</span>
 						</div>
 					{% endfor %}
