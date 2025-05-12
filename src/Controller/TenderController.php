@@ -6,6 +6,7 @@ use App\Entity\Contact;
 use App\Entity\Tender;
 use App\Event\UserAssignedToEntityEvent;
 use App\Form\ContactType;
+use App\Form\StatusType;
 use App\Form\TenderDateType;
 use App\Form\TenderType;
 use App\Repository\TenderRepository;
@@ -34,7 +35,7 @@ final class TenderController extends AbstractController
         $pagination = $paginator->paginate($tenders, $request->query->getInt('page', 1), 10);
       
        
-        $statistiques=$this->isGranted('ROLE_ADMIN')?$tenderRepository->findStatistic():$tenderRepository->findRespoStatistic($this->getUser());
+        $statistiques=$this->isGranted('ROLE_ADMIN')?$tenderRepository->findAllStatistic():$tenderRepository->findRespoStatistic($this->getUser());
         return $this->render('tender/index.html.twig', [
             'tenders' => $pagination,
             'total_tenders'=>count($tenders),
@@ -129,10 +130,23 @@ final class TenderController extends AbstractController
 
     #[Route('/show/{id}', name: 'app_tender_show', methods: ['GET','POST'])]
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
-    public function show_tender(Tender $tender): Response
+    public function show_tender(Tender $tender, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('tender/show.html.twig', ['tender' => $tender]);
+
+        $form_status = $this->createForm(StatusType::class, $tender);
+        $form_status->handleRequest($request);
+
+        if ($form_status->isSubmitted() && $form_status->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success','status modifié ! ' );
+            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('tender/show.html.twig', ['tender' => $tender,'form_status'=>$form_status]);
     }
+
+
+
 
     #[Route('/{id}', name: 'app_tender_delete', methods: ['POST'])]   
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
@@ -160,4 +174,5 @@ final class TenderController extends AbstractController
         }
         return $this->redirectToRoute('app_tender_index', []);
     }
+
 }

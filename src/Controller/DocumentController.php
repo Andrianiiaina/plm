@@ -32,6 +32,7 @@ final class DocumentController extends AbstractController
              $request->query->getInt('page', 1),
               15);
             $searchTerm="";
+            
         return $this->render('document/index.html.twig', [ 
             'documents'=> $pagination,
             'searchTerm'=>$searchTerm??'',

@@ -33,7 +33,7 @@ class DocumentRepository extends ServiceEntityRepository
     }
 
 
-    public function findWeeklyUserDocuments($responsable,): array
+    public function findWeeklyRespoDocuments($responsable): array
     {
         $startOfWeek = new \DateTime('monday this week');
         $endOfWeek = new \DateTime('sunday this week 23:59:59');
@@ -51,7 +51,6 @@ class DocumentRepository extends ServiceEntityRepository
             ->getResult()
         ;
   }
-
 
     public function findTenderDocuments($tender): array
       {

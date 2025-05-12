@@ -22,7 +22,7 @@
                         {% for document in documents %}
                         
                         <div class="card"  data-id="{{document.id}}">
-                            <a href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" class="list-group-item list-group-item-action" aria-current="true">
+                            <a href="{{path('app_document_show', {'id':document.id})}}" class="list-group-item list-group-item-action" aria-current="true">
                               {{ document.filename}}  <br/>
                               <small class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</small>
                               <br/>

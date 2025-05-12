@@ -21,23 +21,39 @@ final class HomeController extends AbstractController
     {   
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user=$this->getUser();
-        if(!$this->isGranted('ROLE_RESPO')){
-            return $this->render('home/reader.html.twig');
-        }
         $tenderRepository=$entityManager->getRepository(Tender::class);
-        $statistiques=$tenderRepository->findRespoStatistic($user);
+      
+        switch (true) {
+            case $this->isGranted('ROLE_ADMIN'):
+                $statistiques=$tenderRepository->findAllStatistic();
+                $tenders=$tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               ;
+                $weekly_tenders=$tenderRepository->findAllTenderForThisWeek();
+                $expiration=$tenderRepository->findAllExpiredTender();
+                break;
+            case $this->isGranted('ROLE_RESPO'):
+                $statistiques=$tenderRepository->findRespoStatistic($user);
+                $tenders=$tenderRepository->findBy(['responsable' => $user], ['createdAt' => 'DESC'],10);
+                $weekly_tenders=$tenderRepository->findFilteredTendersForThisWeek($user);
+                $expiration=$tenderRepository->findExpiredTender($user);
+                break;
+            
+            default:
+                return $this->render('home/reader.html.twig');
+                break;
+        }
+        
 
 
         return $this->render('home/index.html.twig',[
             'user'=>$user,
-            'tenders'=>$tenderRepository->findBy(['responsable' => $user], ['createdAt' => 'DESC'],10),
+            'tenders'=>$tenders,
             'total_tenders'=>array_sum($statistiques),
             'total_tender_by_status'=>$statistiques,
-            'documents'=> $entityManager->getRepository(Document::class)->findWeeklyUserDocuments($user),
+            'documents'=> $entityManager->getRepository(Document::class)->findWeeklyRespoDocuments($user),
             'calendars'=>$entityManager->getRepository(Calendar::class)->findBy([],['beginAt'=>'ASC'],5),
             'notifications'=> $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],10),
-            'week_tenders'=>$tenderRepository->findFilteredTendersForThisWeek($user),
-            'expired_soumission_date'=>$tenderRepository->findExpiredTender($user),
+            'week_tenders'=>$weekly_tenders,
+            'expired_soumission_date'=>$expiration,
         ]);
     }
 

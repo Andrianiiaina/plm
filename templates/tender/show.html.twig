@@ -9,8 +9,15 @@
 {% block body %}
     <div class="container-fluid">
        <div class="row">
-            <strong class="h2 float-start my-4 text-center text-{{tender.status | getStatusColor}}">{{ tender.contractNumber }}-{{tender.title}}</strong>
+            <div class="d-flex justify-content-between">
+                <strong class="h2 float-start my-4 text-center text-{{tender.status | getStatusColor}}">{{ tender.contractNumber }}-{{tender.title}}</strong>
+                {% set statusColorClass = 'text-' ~ (tender.status | getStatusColor) ~ ' border-'~ (tender.status | getStatusColor) %}
+                {{ form_start(form_status) }}
+                        {{ form_widget(form_status.status,{'attr': {'class':'form-select status-select ' ~statusColorClass}}) }}
+                {{ form_end(form_status) }}
             
+            
+            </div>
             <div class="row px-4 my-3">
             
                 <p class="fs-4 my-2"> Informations sur l'appel d'offre</p> 
@@ -139,6 +146,15 @@
 
        </div>
    </div>
-    
+   {% block javascript%}
+   <script>
+       document.querySelectorAll('.status-select').forEach(select => {
+           select.addEventListener('change', function () {
+               this.form.submit();
+           });
+       });
+       </script>
+   {% endblock %}
    
 {% endblock %}
+
