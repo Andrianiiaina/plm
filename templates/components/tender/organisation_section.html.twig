@@ -1,0 +1,28 @@
+<div class="px-4 my-3">
+        <div class="row">
+            <p class="fs-4 my-2">Informations sur l'organisation</p> 
+            {% if tender.contact %}
+            <div class="col row">
+                <dt class="col-sm-4">Organisation</dt>
+                <dd class="col-sm-8">{{tender.contact.organisation}}</dd>
+                <dt class="col-sm-4">Nom</dt>
+                <dd class="col-sm-8">{{tender.contact.name}}</dd>
+                <dt class="col-sm-4">Poste</dt>
+                <dd class="col-sm-8">{{tender.contact.function}}</dd>
+            </div>
+            <div class="col row">
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8">{{ tender.contact.email }}</dd>
+                <dt class="col-sm-4">Contact perso</dt>
+                <dd class="col-sm-8">{{ tender.contact.contactPerso }}.</dd>
+                <dt class="col-sm-4">Contact pro</dt>
+                <dd class="col-sm-8">{{ tender.contact.contactPro }}.</dd>
+            </div>
+            {% else %}
+                <p>Aucune. <a href="{{path('app_tender_edit_organisation_contact',{'id':tender.id})}}" class="btn">Completer les informations</a>
+                </p> 
+        {% endif %}
+        </div>
+    </div>
+
+                   

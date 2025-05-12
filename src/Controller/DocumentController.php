@@ -40,8 +40,9 @@ final class DocumentController extends AbstractController
     }
 
     
+
     #[Route('/tender/show/{id}', name: 'app_tender_documents', methods: ['GET','POST'])]
-    public function tender_documents(    Tender $tender,
+    public function tender_documents(Tender $tender,
     Request $request, 
     EntityManagerInterface $entityManager, 
     FileUploaderService $fileUploader,
@@ -75,22 +76,14 @@ final class DocumentController extends AbstractController
 
                 
             }
-            
-            return $this->redirectToRoute('app_tender_documents', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
+            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+        
 
-        $documents=$entityManager->getRepository(Document::class)->findTenderDocuments($tender);
-        $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
-
-
-        foreach ($documents as $document) {
-            $grouped_documents_by_status[$document->getStatus()][] = $document;
-        }
-
-        return $this->render('document/documents.html.twig',
-         [ 'groupedDocuments' => $grouped_documents_by_status,'tender'=>$tender,
-         'form'=>$form]);
+       
     }
+
+
     #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
     public function show(Document $document): Response
     {
@@ -129,7 +122,7 @@ final class DocumentController extends AbstractController
                         
                 $this->addFlash('success','Document modifié ! ' );
             }
-            return $this->redirectToRoute('app_tender_documents', ['id'=>$document->getTender()->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_tender_show', ['id'=>$document->getTender()->getId()], Response::HTTP_SEE_OTHER);
         }
  
         return $this->render('document/edit.html.twig', [
@@ -153,7 +146,7 @@ final class DocumentController extends AbstractController
             $this->addFlash('success','Document supprimé ! ' );
         }
 
-        return $this->redirectToRoute('app_tender_documents', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -189,7 +182,7 @@ final class DocumentController extends AbstractController
         }else{
             $this->addFlash('error','L\'Opération a échoué. Veuillez réessayer.');
         }
-        return $this->redirectToRoute('app_tender_documents', ['id'=>$tender_id]);
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender_id]);
     }
 }
 

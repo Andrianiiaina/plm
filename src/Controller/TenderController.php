@@ -2,15 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Allotissement;
 use App\Entity\Contact;
+use App\Entity\Document;
+use App\Entity\File;
 use App\Entity\Tender;
 use App\Entity\TenderDate;
 use App\Event\UserAssignedToEntityEvent;
+use App\Form\AllotissementType;
 use App\Form\ContactType;
+use App\Form\DocumentType;
+use App\Form\FileType;
 use App\Form\StatusType;
 use App\Form\TenderDateType;
 use App\Form\TenderType;
 use App\Repository\TenderRepository;
+use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -142,13 +149,34 @@ final class TenderController extends AbstractController
         $form_status = $this->createForm(StatusType::class, $tender);
         $form_status->handleRequest($request);
         $tenderDate=$entityManager->getRepository(TenderDate::class)->findOneBy(['tender'=>$tender]);
+
+
+
         if ($form_status->isSubmitted() && $form_status->isValid()) {
             $entityManager->flush();
             $this->addFlash('success','status modifié ! ' );
             return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('tender/show.html.twig', ['tender' => $tender,'tender_date'=>$tenderDate,'form_status'=>$form_status]);
+        $documents=$entityManager->getRepository(Document::class)->findTenderDocuments($tender);
+        $grouped_documents_by_status = array_fill_keys(ListService::$document_status, []);
+
+
+        foreach ($documents as $document) {
+            $grouped_documents_by_status[$document->getStatus()][] = $document;
+        }
+
+        return $this->render('tender/show.html.twig', 
+        [   'tender' => $tender,
+            'tender_date'=>$tenderDate,
+            'form_status'=>$form_status, 
+            'form_document'=>$this->createForm(DocumentType::class),
+            'groupedDocuments' => $grouped_documents_by_status,
+            'form_file'=>$this->createForm(FileType::class),
+            'form_allotissement'=>$this->createForm(AllotissementType::class),
+            'files'=>$entityManager->getRepository(File::class)->findBy(['tender'=>$tender->getId()]),
+            'allotissements'=>$entityManager->getRepository(Allotissement::class)->findBy(['tender'=>$tender->getId()]),
+        ]);
     }
 
 

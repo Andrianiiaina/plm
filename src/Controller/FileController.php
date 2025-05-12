@@ -13,10 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+
 #[Route('/file')]
 final class FileController extends AbstractController
 {
-    #[Route('project/{id}',name: 'app_file_index', methods: ['GET','POST'])]
+    #[Route('project/{id}',name: 'app_file_index', methods: ['POST'])]
     public function index(Tender $tender,FileRepository $fileRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $file = new File();
@@ -28,15 +29,10 @@ final class FileController extends AbstractController
             $file->setIsFinished(false);
             $entityManager->persist($file);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_file_index', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
-        return $this->render('file/index.html.twig', [
-            'files' => $fileRepository->findBy(['tender'=>$tender->getId()]),
-            'tender_id'=>$tender->getId(),//require by tender_sidebar
-            'form'=>$form,
-        ]);
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
+
     #[Route('/delete/{id}', name: 'app_file_delete', methods: ['POST'])]
     public function delete(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
@@ -46,7 +42,7 @@ final class FileController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_file_index', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
     }
 
 

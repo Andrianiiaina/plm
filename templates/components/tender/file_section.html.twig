@@ -1,0 +1,115 @@
+<div class="px-4 my-3">
+    <div class="row">
+        <div class="clearfix ">
+            <p class="float-start fs-4">Listes des fichiers</p>
+            <a href="#" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addFileModal"> + Ajouter</a>     
+        </div>
+
+        {% set total = files|length %}
+        {% set half = (total / 2)|round(0, 'ceil') %}
+
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Document</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for i,file in files[:half] %}
+                        <tr> 
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ file.title }}</td>
+                                    <td class="btn-group">
+                                    <input type="checkbox" class="file-checkbox btn mx-3" data-id="{{ file.id }}" {{ file.isFinished ? 'checked' : '' }}>
+                                    {{ include('file/_delete_form.html.twig') }}
+                                </td>
+                                </tr>  
+                                
+                        {% endfor %}
+                </tbody>
+                
+                
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Document</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% set index = half-1 %}
+                        {% for file in files[half:] %}
+                        <tr> 
+                            {% set index = index + 1 %}
+                                    <td>{{ index+1 }}</td>
+                                    <td>{{ file.title }}</td>
+                                    <td>
+                                    <td class="btn-group">
+                                        <input type="checkbox" class="file-checkbox btn mx-3" data-id="{{ file.id }}" {{ file.isFinished ? 'checked' : '' }}>
+                                        {{ include('file/_delete_form.html.twig') }}
+                                    </td>
+                                </tr>  
+                                
+                        {% endfor %}
+                </tbody>
+                
+                
+            </table>
+        </div>
+    </div>
+</div>
+  <div class="modal fade" id="addFileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addFileModalLabel">Nouveau</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(form_file,{'action':path('app_file_index',{'id':tender.id})}) }}
+                <div class="modal-body">
+                    {{ form_rest(form_file) }}
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            {{ form_end(form_file) }}
+          </div>
+        </div>
+</div>
+{% block javascript %}
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".file-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", function () {
+                const fileId = this.dataset.id;
+                const status = this.checked;
+
+                fetch(`/file/status/${fileId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({ status: status })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert("Erreur lors de la mise à jour du statut !");
+                        this.checked = !status; // Réinitialiser en cas d'erreur
+                    }
+                });
+            });
+        });
+    });
+    </script>
+{% endblock %}

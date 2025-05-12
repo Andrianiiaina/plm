@@ -15,17 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/allotissement')]
 final class AllotissementController extends AbstractController
 {
-    #[Route('/tender/{id}',name: 'app_allotissement_index', methods: ['GET'])]
-    public function index($id,AllotissementRepository $allotissementRepository): Response
-    {
-        //tender_id is required by the tender_sidebar
-        return $this->render('allotissement/index.html.twig', [
-            'tender_id'=>$id,
-            'allotissements' => $allotissementRepository->findBy(['tender'=>$id]),
-        ]);
-    }
-
-    #[Route('/new/tender/{id}', name: 'app_allotissement_new', methods: ['GET', 'POST'])]
+    #[Route('/new/tender/{id}', name: 'app_allotissement_new', methods: ['POST'])]
     public function new(Tender $tender,Request $request, EntityManagerInterface $entityManager): Response
     {
         $allotissement = new Allotissement();
@@ -36,14 +26,11 @@ final class AllotissementController extends AbstractController
             $allotissement->setTender($tender);
             $entityManager->persist($allotissement);
             $entityManager->flush();
+            $this->addFlash('success','Allotissement enregistré! ' );
 
-            return $this->redirectToRoute('app_allotissement_index', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('allotissement/new.html.twig', [
-            'allotissement_id' => $tender->getId(),
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/show/{id}', name: 'app_allotissement_show', methods: ['GET'])]
@@ -63,6 +50,7 @@ final class AllotissementController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success','Allotissement modifié ! ' );
             return $this->redirectToRoute('app_allotissement_show', ['id'=>$allotissement->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -79,8 +67,10 @@ final class AllotissementController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$allotissement->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($allotissement);
             $entityManager->flush();
+            
+            $this->addFlash('success','Allotissement supprimé ! ' );
         }
 
-        return $this->redirectToRoute('app_allotissement_index', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender_id], Response::HTTP_SEE_OTHER);
     }
 }

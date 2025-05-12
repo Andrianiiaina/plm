@@ -1,0 +1,79 @@
+<div class="px-4 my-3">
+    <div class="row">
+        <div class="clearfix ">
+            <p class="float-start fs-4">Listes des documents</p>
+            <a href="#" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addDocumentModal"> + Ajouter</a>     
+        </div>
+
+        {% for status, documents in groupedDocuments %}
+              <div class="col p-1">
+                  <div class="card border-{{status | getStatusColor}}">
+                        <div class="card-header text-{{status | getStatusColor}}">
+                        <p class="h4"> {{status | getDocumentStatus}}</p>
+                        </div>
+                        <div class="list-group" data-controller="sortable" data-sortable-group-value="{{status}}" data-group="{{status}}">
+                            {% for document in documents %}
+                            
+                            <div class="card"  data-id="{{document.id}}">
+                                <a href="{{path('app_document_show', {'id':document.id})}}" class="list-group-item list-group-item-action" aria-current="true">
+                                {{ document.filename}}  <br/>
+                                <small class="fw-medium text-reset">{{ document.name | u.truncate(40, '...')}}</small>
+                                <br/>
+                                <small class="{{ document.limitDate | highlight}}">Date: {{ document.limitDate ? document.limitDate|date('d F Y') : 'aucun' }}</small>
+                                <br/>
+                                <small class="float-start">Par: {{document.responsable.email}}</small>
+
+                                </a>
+                                <a href="{{path('app_document_edit', {'id':document.id})}}" data-id="{{document.id}}" class="btn text-{{status | getStatusColor}} clearfix" aria-current="true">
+                                <span class="float-end">Modifier</span>
+                                </a>
+                            </div>
+                            
+                        
+                            {% else %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                 
+        {% else %}
+            <small>Aucun document.</small>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="addDocumentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addDocumentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addDocumentModalLabel">Nouveau</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(form_document,{'action':path('app_tender_documents',{'id':tender.id})}) }}
+
+            <div class="modal-body">
+            
+                    {{ form_errors(form_document) }}
+                      {{ form_label(form_document.name) }}
+                      {{ form_widget(form_document.name) }}
+
+                    <div class="my-3 row">
+                      <div class="col-md-6">
+                          {{ form_label(form_document.status) }}
+                          {{ form_widget(form_document.status) }}
+                      </div>
+                      <div class="col-md-6">
+                          {{ form_label(form_document.responsable) }}{{ form_widget(form_document.responsable) }}
+                      </div>
+                    </div>
+                    {{ form_rest(form_document) }}
+
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+            {{ form_end(form_document) }}
+          </div>
+        </div>
+      </div>

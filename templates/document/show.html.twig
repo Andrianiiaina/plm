@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Document{% endblock %}
-{% block navbar %}
-    {{ include('components/tender_navbar.html.twig',{'tender_id':document.tender.id})}}
-{% endblock %}
+
 {% block body %}
         <div class="container">
             <div class="clearfix">
@@ -30,7 +28,7 @@
                     <p> <strong>responsable: </strong> {{document.responsable.email}}</p>
 
                     <p><strong>Information: </strong> {{ document.information }}</p>
-                <p><strong>Date linite:</strong> <span class="{{ document.limitDate| highlight }}">{{ document.limitDate ? document.limitDate|date('d F Y') : 'non définit' }}</span></p>
+                <p><strong>Date limite:</strong> <span class="{{ document.limitDate| highlight }}">{{ document.limitDate ? document.limitDate|date('d F Y') : 'non définit' }}</span></p>
                 </div>
                 <div class="col-md-8">
                     {% if document.filepath %}

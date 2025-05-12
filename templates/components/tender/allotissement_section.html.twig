@@ -1,0 +1,54 @@
+ <div class="px-4 my-3">
+    <div class="row">
+        <div class="clearfix ">
+            <p class="float-start h2">Listes des allotissements</p> 
+            <a href="#" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addAllotissementModal"> Ajouter un allotissement</a>     
+        </div>  
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Budget minimum</th>
+                    <th>Budget maximum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for allotissement in allotissements %}
+                    <tr>
+                        <td><a href="{{ path('app_allotissement_show', {'id': allotissement.id}) }}">{{ allotissement.number }}</a></td>
+                        <td>{{ allotissement.title }}</td>
+                        <td>{{ allotissement.description |u.truncate(50, '...') }}</td>
+                        <td>{{ allotissement.minBudget }}</td>
+                        <td>{{ allotissement.maxBudget }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">aucun</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+  <div class="modal fade" id="addAllotissementModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addAllotissementModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addAllotissementModalLabel">Nouveau</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(form_allotissement,{'action':path('app_allotissement_new',{'id':tender.id})}) }}
+                <div class="modal-body">
+                    {{ form_rest(form_allotissement) }}
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">{{ button_label|default('Créer') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            {{ form_end(form_allotissement) }}
+          </div>
+        </div>
+</div>
