@@ -12,6 +12,8 @@ use App\Factory\FileFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Factory\TenderFactory;
+use App\Factory\TenderDateFactory;
+
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -56,9 +58,17 @@ class AppFixtures extends Fixture
            return ['contacts' => ContactFactory::createMany(4)]; 
     });
 
-    TenderFactory::createMany(14,['responsable' => $this->getReference('user_1',User::class)]);
-    TenderFactory::createMany(6,['responsable' => $this->getReference('user_2',User::class)]);
 
+    TenderFactory::createMany(14,function(){
+        return ['responsable' => $this->getReference('user_1',User::class),'tenderDate'=>TenderDateFactory::createOne()];
+    });
+
+    TenderFactory::createMany(6,function(){
+        return ['responsable' => $this->getReference('user_2',User::class),'tenderDate'=>TenderDateFactory::createOne()];
+    });
+
+
+  
 
     DocumentFactory::createMany(50,function() { 
         $user1 = $this->getReference('user_1',User::class);

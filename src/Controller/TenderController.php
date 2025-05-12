@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Entity\Tender;
+use App\Entity\TenderDate;
 use App\Event\UserAssignedToEntityEvent;
 use App\Form\ContactType;
 use App\Form\StatusType;
@@ -65,13 +66,17 @@ final class TenderController extends AbstractController
         ]);
     }
 
+
     #[Route('/edit_date/{id}', name: 'app_tender_edit_date', methods: ['GET', 'POST'])]
     public function edit_date(Request $request, Tender $tender, EntityManagerInterface $entityManager): Response
     {
-        $form_date = $this->createForm(TenderDateType::class, $tender);
+        $tenderDate=$tender->getTenderDate()? $tender->getTenderDate() : new TenderDate();
+        $form_date = $this->createForm(TenderDateType::class, $tenderDate);
         $form_date->handleRequest($request);
 
         if ($form_date->isSubmitted() && $form_date->isValid()) {
+            $tenderDate->setTender($tender);
+            $entityManager->persist($tenderDate);
             $entityManager->flush();
             $this->addFlash('success','Information sur les dates enregistrée' );
             if($tender->getContact()){
@@ -85,6 +90,7 @@ final class TenderController extends AbstractController
             'form' => $form_date,
         ]);
     }
+
 
 
     #[Route('/edit_organisation_contact/{id}', name: 'app_tender_edit_organisation_contact', methods: ['GET', 'POST'])]
@@ -135,14 +141,14 @@ final class TenderController extends AbstractController
 
         $form_status = $this->createForm(StatusType::class, $tender);
         $form_status->handleRequest($request);
-
+        $tenderDate=$entityManager->getRepository(TenderDate::class)->findOneBy(['tender'=>$tender]);
         if ($form_status->isSubmitted() && $form_status->isValid()) {
             $entityManager->flush();
             $this->addFlash('success','status modifié ! ' );
             return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('tender/show.html.twig', ['tender' => $tender,'form_status'=>$form_status]);
+        return $this->render('tender/show.html.twig', ['tender' => $tender,'tender_date'=>$tenderDate,'form_status'=>$form_status]);
     }
 
 

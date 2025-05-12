@@ -30,6 +30,7 @@ final class HomeController extends AbstractController
                 $weekly_tenders=$tenderRepository->findAllTenderForThisWeek();
                 $expiration=$tenderRepository->findAllExpiredTender();
                 break;
+                
             case $this->isGranted('ROLE_RESPO'):
                 $statistiques=$tenderRepository->findRespoStatistic($user);
                 $tenders=$tenderRepository->findBy(['responsable' => $user], ['createdAt' => 'DESC'],10);

@@ -2,12 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Contact;
-use App\Entity\Tender;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\TenderDate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -71,7 +68,7 @@ class TenderDateType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Tender::class,
+            'data_class' => TenderDate::class,
             'csrf_protection' => true, 
             'csrf_token_id' => 'form_tender_date',
         ]);

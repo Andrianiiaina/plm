@@ -21,6 +21,7 @@
                 new \Twig\TwigFilter('highlight', function ($date) {
                     
                     return $date<new \DateTime()?' fw-light text-decoration-line-through m-0 p-0':'';
+                    
                 }),
 
                 new \Twig\TwigFilter('getStatusColor', [$this, 'getStatusColor']),

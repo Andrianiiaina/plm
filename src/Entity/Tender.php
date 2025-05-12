@@ -33,11 +33,6 @@ class Tender
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $location = "";
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $start_date = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $end_date = null;
 
     #[ORM\Column]
     private ?float $min_budget = 0;
@@ -73,27 +68,16 @@ class Tender
     #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'tender')]
     private Collection $calendars;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $submissionDate = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $responseDate = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $attributionDate = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $negociationDate = null;
-
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Contact $contact = null;
 
-    #[ORM\Column]
-    private ?float $duration = 0;
 
     #[ORM\Column]
     private ?bool $isArchived = false;
+
+    #[ORM\OneToOne(mappedBy: 'tender', cascade: ['persist', 'remove'])]
+    private ?TenderDate $tenderDate = null;
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -104,15 +88,7 @@ class Tender
     {
         return $this->contract_number ?? 'N/A'; 
     }
-    #[Assert\Callback]
-    public function validateDates(ExecutionContextInterface $context): void
-    {
-        if ($this->start_date && $this->end_date && $this->start_date >= $this->end_date) {
-            $context->buildViolation('La date de début doit être antérieure à la date de fin.')
-                ->atPath('end_date')
-                ->addViolation();
-        }
-    }
+
 
     #[Assert\Callback]
     public function validateBudget(ExecutionContextInterface $context): void
@@ -175,30 +151,6 @@ class Tender
     public function setLocation(?string $location): static
     {
         $this->location = $location;
-
-        return $this;
-    }
-
-    public function getStartDate(): ?\DateTimeImmutable
-    {
-        return $this->start_date;
-    }
-
-    public function setStartDate(?\DateTimeImmutable $start_date): static
-    {
-        $this->start_date = $start_date;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeImmutable
-    {
-        return $this->end_date;
-    }
-
-    public function setEndDate(?\DateTimeImmutable $end_date): static
-    {
-        $this->end_date = $end_date;
 
         return $this;
     }
@@ -292,54 +244,7 @@ class Tender
         return $this->documents;
     }
 
-    public function getSubmissionDate(): ?\DateTimeInterface
-    {
-        return $this->submissionDate;
-    }
-
-    public function setSubmissionDate(?\DateTimeInterface $submissionDate): static
-    {
-        $this->submissionDate = $submissionDate;
-
-        return $this;
-    }
-
-    public function getResponseDate(): ?\DateTimeInterface
-    {
-        return $this->responseDate;
-    }
-
-    public function setResponseDate(?\DateTimeInterface $responseDate): static
-    {
-        $this->responseDate = $responseDate;
-
-        return $this;
-    }
-
-    public function getAttributionDate(): ?\DateTimeInterface
-    {
-        return $this->attributionDate;
-    }
-
-    public function setAttributionDate(?\DateTimeInterface $attributionDate): static
-    {
-        $this->attributionDate = $attributionDate;
-
-        return $this;
-    }
-
-    public function getNegociationDate(): ?\DateTimeInterface
-    {
-        return $this->negociationDate;
-    }
-
-    public function setNegociationDate(?\DateTimeInterface $negociationDate): static
-    {
-        $this->negociationDate = $negociationDate;
-
-        return $this;
-    }
-
+   
     public function getContact(): ?Contact
     {
         return $this->contact;
@@ -351,19 +256,6 @@ class Tender
 
         return $this;
     }
-
-    public function getDuration(): ?float
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(float $duration): static
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
     public function isArchived(): ?bool
     {
         return $this->isArchived;
@@ -376,8 +268,24 @@ class Tender
         return $this;
     }
 
+    public function getTenderDate(): ?TenderDate
+    {
+        return $this->tenderDate;
+    }
 
-    
+    public function setTenderDate(?TenderDate $tenderDate): static
+    {
+        if ($tenderDate === null && $this->tenderDate !== null) {
+            $this->tenderDate->setTender(null);
+        }
 
+        if ($tenderDate !== null && $tenderDate->getTender() !== $this) {
+            $tenderDate->setTender($this);
+        }
+
+        $this->tenderDate = $tenderDate;
+
+        return $this;
+    }
 
 }

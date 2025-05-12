@@ -12,18 +12,21 @@
                     </tr>
                 </thead>
                 <tbody>
+
                 {% for tender in tenders %}
+                    
                     <tr>
                         <td><a href="{{ path('app_tender_show', {'id': tender.id}) }}" class="btn">{{ tender.contractNumber }}</a></td>
                         <td>{{ tender.title }}</td>
-                        <td><p class="{{ tender.submissionDate| highlight }}">{{ tender.submissionDate ? tender.submissionDate|date('d F Y') : '' }}</p></td>
-                        <td><p class="{{ tender.negociationDate| highlight }}">{{ tender.negociationDate ? tender.negociationDate|date('d F Y') : '' }}</p></td>
-                        <td><p class="{{ tender.responseDate| highlight }}">{{ tender.responseDate ? tender.responseDate|date('d F Y') : '' }}</p></td>
-                        <td><p class="{{ tender.attributionDate| highlight }}">{{ tender.attributionDate ? tender.attributionDate|date('d F Y') : '' }}</p></td>
-                         <td><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></td> 
+                        <td><p class="{{ tender.getTenderDate.submissionDate| highlight }}">{{ tender.getTenderDate.submissionDate ? tender.getTenderDate.submissionDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.getTenderDate.negociationDate| highlight }}">{{ tender.getTenderDate.negociationDate ? tender.getTenderDate.negociationDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.getTenderDate.responseDate| highlight }}">{{ tender.getTenderDate.responseDate ? tender.getTenderDate.responseDate|date('d F Y') : '' }}</p></td>
+                        <td><p class="{{ tender.getTenderDate.attributionDate| highlight }}">{{ tender.getTenderDate.attributionDate ? tender.getTenderDate.attributionDate|date('d F Y') : '' }}</p></td>
+                        <td><span class="badge bg-{{tender.status | getStatusColor}}">{{tender.status | getTenderStatus}}</span></td> 
                       
                     </tr>
                 {% else %}
+                
                     <tr>
                         <td colspan="13">Aucun appel d'offre pour le moment.</td>
                     </tr>

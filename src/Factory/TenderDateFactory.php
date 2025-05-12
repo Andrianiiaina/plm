@@ -2,14 +2,13 @@
 
 namespace App\Factory;
 
-use App\Entity\Tender;
-use DateTime;
+use App\Entity\TenderDate;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<Tender>
+ * @extends PersistentProxyObjectFactory<TenderDate>
  */
-final class TenderFactory extends PersistentProxyObjectFactory
+final class TenderDateFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -22,7 +21,7 @@ final class TenderFactory extends PersistentProxyObjectFactory
 
     public static function class(): string
     {
-        return Tender::class;
+        return TenderDate::class;
     }
 
     /**
@@ -33,19 +32,14 @@ final class TenderFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         $date=self::faker()->dateTimeBetween('-2 months','+1 months');
-        $budget=self::faker()->randomFloat(nbMaxDecimals:2,min:0, max:100000);
         return [
-            'title' => self::faker()->unique()->text(40),
-            'contract_number' => self::faker()->text(15),
-            'location' => self::faker()->address(),
-            'description' => self::faker()->text(225),
-            'min_budget' => $budget,
-            'max_budget' => $budget+1000,
-        
-            'status' => self::faker()->numberBetween(0, 4),
-            'tender_type' => self::faker()->numberBetween(0, 1),
-            'isArchived'=>false,
-            'url'=>self::faker()->url(),
+            'duration' => self::faker()->numberBetween(0, 4),
+            'submissionDate' => \DateTimeImmutable::createFromMutable($date->modify('+5 days')),
+            'negociationDate' => \DateTimeImmutable::createFromMutable($date->modify('+10 days')),
+            'responseDate' => \DateTimeImmutable::createFromMutable($date->modify('+12 days')),
+            'attributionDate' => \DateTimeImmutable::createFromMutable($date->modify('+15 days')),
+            'start_date' => \DateTimeImmutable::createFromMutable($date->modify('+25 days')),
+            'end_date' => \DateTimeImmutable::createFromMutable($date->modify('+30 days')),
         ];
     }
 
@@ -55,7 +49,7 @@ final class TenderFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Tender $tender): void {})
+            // ->afterInstantiate(function(TenderDate $tenderDate): void {})
         ;
     }
 }

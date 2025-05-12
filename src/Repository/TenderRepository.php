@@ -87,9 +87,10 @@ class TenderRepository extends ServiceEntityRepository
     # tender qui devait etre résumer ou soumis.
     public function findExpiredTender($user){
         return $this->createQueryBuilder('t')    
-        ->select('t.id, t.contract_number,  t.status,  t.submissionDate')
+        ->join('t.tenderDate','td')
+        ->select('t.id, t.contract_number,  t.status,  td.submissionDate')
         ->andWhere('t.responsable = :user and t.isArchived = false')
-        ->andWhere('t.submissionDate < :now and t.status = 1 or t.status=0')
+        ->andWhere('td.submissionDate < :now and t.status = 1 or t.status=0')
         ->setParameter('user', $user)
         ->setParameter('now', new \DateTimeImmutable())
         ->orderBy('t.createdAt', 'DESC')
@@ -105,36 +106,36 @@ class TenderRepository extends ServiceEntityRepository
         $filteredTenders = [];
 
         foreach ($tenders as $tender) {
-            if ($tender->getSubmissionDate() >= new \DateTime('monday this week') && $tender->getSubmissionDate() <= new \DateTime('sunday this week 23:59:59')) {
+            if ($tender->getTenderDate()->getSubmissionDate() >= new \DateTime('monday this week') && $tender->getTenderDate()->getSubmissionDate() <= new \DateTime('sunday this week 23:59:59')) {
                 $filteredTenders[] = [
                     'id' => $tender->getId(),
                     'contract_number' => $tender->getContractNumber(),
                     'dateType' => 'Date de soumission',
-                    'dateValue' => $tender->getSubmissionDate()
+                    'dateValue' => $tender->getTenderDate()->getSubmissionDate()
                 ];
             }
-            if ($tender->getResponseDate() >= new \DateTime('monday this week') && $tender->getResponseDate() <= new \DateTime('sunday this week 23:59:59')) {
+            if ($tender->getTenderDate()->getResponseDate() >= new \DateTime('monday this week') && $tender->getTenderDate()->getResponseDate() <= new \DateTime('sunday this week 23:59:59')) {
                 $filteredTenders[] = [
                     'id' => $tender->getId(),
                     'contract_number' => $tender->getContractNumber(),
                     'dateType' => 'Date de réponse',
-                    'dateValue' => $tender->getResponseDate()
+                    'dateValue' => $tender->getTenderDate()->getResponseDate()
                 ];
             }
-            if ($tender->getAttributionDate() >= new \DateTime('monday this week') && $tender->getAttributionDate() <= new \DateTime('sunday this week 23:59:59')) {
+            if ($tender->getTenderDate()->getAttributionDate() >= new \DateTime('monday this week') && $tender->getTenderDate()->getAttributionDate() <= new \DateTime('sunday this week 23:59:59')) {
                 $filteredTenders[] = [
                     'id' => $tender->getId(),
                     'contract_number' => $tender->getContractNumber(),
                     'dateType' => "Date d'attribution",
-                    'dateValue' => $tender->getAttributionDate()
+                    'dateValue' => $tender->getTenderDate()->getAttributionDate()
                 ];
             }
-            if ($tender->getNegociationDate() >= new \DateTime('monday this week') && $tender->getNegociationDate() <= new \DateTime('sunday this week 23:59:59')) {
+            if ($tender->getTenderDate()->getNegociationDate() >= new \DateTime('monday this week') && $tender->getTenderDate()->getNegociationDate() <= new \DateTime('sunday this week 23:59:59')) {
                 $filteredTenders[] = [
                     'id' => $tender->getId(),
                     'contract_number' => $tender->getContractNumber(),
                     'dateType' => 'Date de négociation',
-                    'dateValue' => $tender->getNegociationDate()
+                    'dateValue' => $tender->getTenderDate()->getNegociationDate()
                 ];
             }
         }
@@ -149,7 +150,7 @@ class TenderRepository extends ServiceEntityRepository
         $endOfWeek = new \DateTime('sunday this week 23:59:59');
     
         $tenders= $this->createQueryBuilder('t')
-        
+            ->join('t.tenderDate','td')
             ->where('t.responsable = :user')
             ->andWhere('t.submissionDate BETWEEN :start AND :end 
             OR t.responseDate BETWEEN :start AND :end 
@@ -183,9 +184,10 @@ class TenderRepository extends ServiceEntityRepository
         # tender qui devait etre résumer ou soumis.
         public function findAllExpiredTender(){
             return $this->createQueryBuilder('t')    
-            ->select('t.id, t.contract_number,  t.status,  t.submissionDate')
+            ->join('t.tenderDate','td')
+            ->select('t.id, t.contract_number,  t.status,  td.submissionDate')
             ->where('t.isArchived = false')
-            ->andWhere('t.submissionDate < :now and t.status = 1 or t.status=0')
+            ->andWhere('td.submissionDate < :now and t.status = 1 or t.status=0')
             ->setParameter('now', new \DateTimeImmutable())
             ->orderBy('t.createdAt', 'DESC')
             ->getQuery()
@@ -198,10 +200,11 @@ class TenderRepository extends ServiceEntityRepository
             $endOfWeek = new \DateTime('sunday this week 23:59:59');
         
             $tenders= $this->createQueryBuilder('t')
-                ->where('t.submissionDate BETWEEN :start AND :end 
-                OR t.responseDate BETWEEN :start AND :end 
-                OR t.attributionDate BETWEEN :start AND :end
-                OR t.negociationDate BETWEEN :start AND :end ')
+                ->join('t.tenderDate','td')
+                ->where('td.submissionDate BETWEEN :start AND :end 
+                OR td.responseDate BETWEEN :start AND :end 
+                OR td.attributionDate BETWEEN :start AND :end
+                OR td.negociationDate BETWEEN :start AND :end ')
                 ->setParameter('start', $startOfWeek)
                 ->setParameter('end', $endOfWeek)
                 ->orderBy('t.contract_number', 'ASC')
