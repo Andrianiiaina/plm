@@ -152,10 +152,10 @@ class TenderRepository extends ServiceEntityRepository
         $tenders= $this->createQueryBuilder('t')
             ->join('t.tenderDate','td')
             ->where('t.responsable = :user')
-            ->andWhere('t.submissionDate BETWEEN :start AND :end 
-            OR t.responseDate BETWEEN :start AND :end 
-            OR t.attributionDate BETWEEN :start AND :end
-            OR t.negociationDate BETWEEN :start AND :end ')
+            ->andWhere('td.submissionDate BETWEEN :start AND :end 
+            OR td.responseDate BETWEEN :start AND :end 
+            OR td.attributionDate BETWEEN :start AND :end
+            OR td.negociationDate BETWEEN :start AND :end ')
             ->setParameter('start', $startOfWeek)
             ->setParameter('end', $endOfWeek)
             ->setParameter('user', $user)

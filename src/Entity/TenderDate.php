@@ -141,15 +141,4 @@ class TenderDate
 
         return $this;
     }
-
-
-    #[Assert\Callback]
-    public function validateDates(ExecutionContextInterface $context): void
-    {
-        if ($this->start_date && $this->end_date && $this->start_date >= $this->end_date) {
-            $context->buildViolation('La date de début doit être antérieure à la date de fin.')
-                ->atPath('end_date')
-                ->addViolation();
-        }
-    }
 }
