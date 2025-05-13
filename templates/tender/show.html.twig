@@ -18,19 +18,19 @@
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Informations</button>
+                    <button class="nav-link text-secondary active " id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Informations</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="organisation-tab" data-bs-toggle="tab" data-bs-target="#organisation-tab-pane" type="button" role="tab" aria-controls="organisation-tab-pane" aria-selected="false">organisations</button>
+                    <button class="nav-link text-secondary " id="organisation-tab" data-bs-toggle="tab" data-bs-target="#organisation-tab-pane" type="button" role="tab" aria-controls="organisation-tab-pane" aria-selected="false">organisations</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="document-tab" data-bs-toggle="tab" data-bs-target="#document-tab-pane" type="button" role="tab" aria-controls="document-tab-pane" aria-selected="false">Documents</button>
+                    <button class="nav-link text-secondary" id="document-tab" data-bs-toggle="tab" data-bs-target="#document-tab-pane" type="button" role="tab" aria-controls="document-tab-pane" aria-selected="false">Documents</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="tache-tab" data-bs-toggle="tab" data-bs-target="#tache-tab-pane" type="button" role="tab" aria-controls="tache-tab-pane" aria-selected="false">Taches</button>
+                    <button class="nav-link text-secondary" id="file-tab" data-bs-toggle="tab" data-bs-target="#file-tab-pane" type="button" role="tab" aria-controls="file-tab-pane" aria-selected="false">Fichiers</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="allotissement-tab" data-bs-toggle="tab" data-bs-target="#allotissement-tab-pane" type="button" role="tab" aria-controls="allotissement-tab-pane" aria-selected="false">Allotissements</button>
+                    <button class="nav-link text-secondary" id="allotissement-tab" data-bs-toggle="tab" data-bs-target="#allotissement-tab-pane" type="button" role="tab" aria-controls="allotissement-tab-pane" aria-selected="false">Allotissements</button>
                 </li>
                 </ul>
 
@@ -46,7 +46,7 @@
                         {{include('components/tender/document_section.html.twig',{'tender':tender})}}
                     </div>
 
-                    <div class="tab-pane fade" id="tache-tab-pane" role="tabpanel" aria-labelledby="tache-tab" tabindex="0">
+                    <div class="tab-pane fade" id="file-tab-pane" role="tabpanel" aria-labelledby="file-tab" tabindex="0">
                          {{include('components/tender/file_section.html.twig',{'tender':tender})}}
                     </div>
                     <div class="tab-pane fade" id="allotissement-tab-pane" role="tabpanel" aria-labelledby="allotissement-tab" tabindex="0">

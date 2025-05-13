@@ -4,41 +4,47 @@
 
 {% block body %}
         <div class="container">
-            <div class="clearfix">
-                <strong class="h2 float-start mb-4">{{ document.name }}</strong>
-                <span class="mx-4 badge text-bg-{{ document.status| getStatusColor}}"> {{ document.status | getDocumentStatus}}</span>
-                <div class="float-end d-flex">
-                    <a href="{{ path('app_document_edit', {'id': document.id}) }}" class="btn text-primary mx-1">
-                        Modifier
-                    </a>
-                    {{ include('document/_delete_form.html.twig') }}
-                 
-
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-4">
-                    <p> <a class="icon-link" href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}">
-                        <i class="bi bi-eye-fill"></i>
-                        Voir le contenu: {{ document.filename}}
-                    </a></p>
-                
+                    <p><strong class="h2 mb-4">{{ document.name }}</strong></p>
+
+                    <p><strong>Nom du fichier: </strong> {{ document.filename }}</p>
+
+                    <p><strong>Status: </strong> {{ document.status | getDocumentStatus}}</p>
+
+                    <p> <strong>responsable: </strong> {{document.responsable.email}}</p>
+                    
                     <p><strong>Projet: </strong><i><a href="{{path('app_tender_show', {'id': document.tender.id})}}" class="link-secondary link-underline link-underline-opacity-0">{{document.tender.title}}</a></i></p>
                     
-                    <p> <strong>responsable: </strong> {{document.responsable.email}}</p>
 
                     <p><strong>Information: </strong> {{ document.information }}</p>
-                <p><strong>Date limite:</strong> <span class="{{ document.limitDate| highlight }}">{{ document.limitDate ? document.limitDate|date('d F Y') : 'non définit' }}</span></p>
+                    <p><strong>Date limite:</strong> <span class="{{ document.limitDate| highlight }}">{{ document.limitDate ? document.limitDate|date('d F Y') : 'non définit' }}</span></p>
+                    
+                    
+                    <div class="btn-group">
+                        <a href="{{ path('app_document_edit', {'id': document.id}) }}" class="btn text-primary">
+                            Modifier
+                        </a>
+                        {{ include('document/_delete_form.html.twig') }}
+                         <form method="post" action="{{ path('app_document_archive', {'id': document.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver ce document?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ document.id) }}">
+                            <button class="btn text-warning">Archiver</button>
+                        </form>
+                    </div>
+            
                 </div>
+
                 <div class="col-md-8">
-                    {% if document.filepath %}
-                        <a href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" width="100%" height="200%" title="{{ document.filename}}" frameborder='0'>lien si word</a>
+                    {% if is_pdf == false  %}
+                       <div class="d-flex justify-content-center align-items-center"> 
+                            <p class="h3">Format non disponile pour l'affichage.</p>
+                            <a href="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" class="text-center">Télecharger directement le fichier</a>
+                        </div>
                     {% else %}
                         <iframe src="{{ asset('uploads/tender_documents/' ~ document.filepath| e('html')) }}" width="100%" height="200%" title="{{ document.filename}}" frameborder='0'></iframe>
                     {% endif%}
                     
                 </div>
             </div>
-        
    </div>
 {% endblock %}
