@@ -86,9 +86,11 @@ final class DocumentController extends AbstractController
 
     #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
     public function show(Document $document): Response
-    {
+    {   $ext=mime_content_type("uploads/tender_documents/".$document->getFilepath());
+
         return $this->render('document/show.html.twig', [
             'document' => $document,
+            'is_pdf'=>($ext=="application/pdf")?true:false,
         ]);
     }
 
@@ -171,7 +173,7 @@ final class DocumentController extends AbstractController
         ]);
     }
     #[Route('/archive/{id}', name: 'app_document_archive', methods: ['POST'])]
-    public function archive_or_reset_tender(Request $request,Document $document,EntityManagerInterface $entityManager): Response
+    public function archive_or_reset_document(Request $request,Document $document,EntityManagerInterface $entityManager): Response
     {
         $tender_id=$document->getTender()->getId();
         if ($this->isCsrfTokenValid('archive'.$document->getId(), $request->getPayload()->getString('_token'))) {
