@@ -38,7 +38,7 @@
                             {% for group in contact.getContactGroups() %}
                             <a href="{{ path('app_contact_group_show', {'id': group.id}) }}" class="btn btn-outline-primary">{{ group.Name }}</a>
                             {% else %}
-                                <td colspan="3">no group found</td>
+                                <td colspan="3">aucun</td>
                             
                         {% endfor %}
                         </td>

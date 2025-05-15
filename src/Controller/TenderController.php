@@ -64,6 +64,7 @@ final class TenderController extends AbstractController
             $entityManager->persist($tender);
                 $entityManager->flush();
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($tender->getResponsable(),$tender->getId(),1));
+                
                 $this->addFlash('success','Tender enregistré ! ' );
             return $this->redirectToRoute('app_tender_edit_date', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -92,7 +93,7 @@ final class TenderController extends AbstractController
             return $this->redirectToRoute('app_tender_edit_organisation_contact', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('tender/_date_form.html.twig', [
+        return $this->render('tender/components/_date_form.html.twig', [
             'tender' => $tender,
             'form' => $form_date,
         ]);
@@ -116,7 +117,7 @@ final class TenderController extends AbstractController
             return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('tender/_contact_form.html.twig', [
+        return $this->render('tender/components/_contact_form.html.twig', [
             'tender' => $tender,
             'form' => $form_contact,
         ]);

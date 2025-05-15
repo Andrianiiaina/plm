@@ -94,6 +94,7 @@ final class DocumentController extends AbstractController
         ]);
     }
 
+    
     #[Route('/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request, Document $document, 

@@ -23,7 +23,7 @@
 		<div class="d-flex justify-content-center my-3 row">
 
 
-			{{ include('components/tender_statistic.html.twig',{'total_tender_by_status':total_tender_by_status})}}
+			{{ include('tender/components/tender_statistic.html.twig',{'total_tender_by_status':total_tender_by_status})}}
 
 
 
@@ -104,7 +104,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="card card-body mb-3">
-					<p class="h4">Cette semaine:</p>
+					<p class="h4">Tenders cette semaine:</p>
 					{% for tender in week_tenders %}
 					<div class="col clearfix p-2">
 						<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
@@ -117,10 +117,8 @@
 					
 				</div>
 				<div class="card card-body mt-3">
-					<div class="clearfix">
-						<p class="h4 float-start">Documents</p>
-						<a href="{{ path('app_document_index') }}" class="btn float-end">Voir tout</a>
-					</div>
+					<p href="{{ path('app_document_index') }}" class="h4 float-end">Documents cette semaine</p>
+					
 					{% for document in documents %}
 						<div class="col clearfix p-2">
 							<a href="{{path('app_document_show', {'id': document.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">

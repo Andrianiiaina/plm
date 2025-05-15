@@ -30,17 +30,13 @@ class TenderCrudController extends AbstractCrudController
             TextField::new('url'),
             TextField::new('status'),
             TextField::new('tender_type'),
-            NumberField::new('duration'),
+            
             IntegerField::new('min_budget'),
             IntegerField::new('max_budget'),
-            DateTimeField::new('start_date'),
-            DateTimeField::new('submissionDate'),
-            DateTimeField::new('responseDate'),
-            DateTimeField::new('attributionDate'),
-            DateTimeField::new('negociationDate'),
-            DateTimeField::new('end_date'),
+
             AssociationField::new('responsable'),
             AssociationField::new('documents'),
+         
             
         ];
     }

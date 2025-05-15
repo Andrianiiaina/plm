@@ -4,7 +4,6 @@ namespace App\EventSubscriber;
 
 use App\Entity\Notification;
 use App\Event\UserAssignedToEntityEvent;
-use App\Event\UserAssignedToTenderEvent;
 use App\Service\ListService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

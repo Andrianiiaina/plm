@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Calendar{% endblock %}
+{% block title %}Calendrier{% endblock %}
 
 {% block body %}
-    <h1>Calendar</h1>
+    <h1>Calendrier</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Title</th>
+                <th>Titre</th>
                 <td>{{ calendar.title }}</td>
             </tr>
             <tr>
-                <th>BeginAt</th>
-                <td>{{ calendar.beginAt ? calendar.beginAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Debut</th>
+                <td>{{ calendar.beginAt ? calendar.beginAt|date('d-m-Y H:i') : '' }}</td>
             </tr>
             <tr>
-                <th>EndAt</th>
-                <td>{{ calendar.endAt ? calendar.endAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Fin</th>
+                <td>{{ calendar.endAt ? calendar.endAt|date('d-m-Y H:i') : '' }}</td>
             </tr>
            
         </tbody>

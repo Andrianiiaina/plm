@@ -1,8 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Calendar{% endblock %}
+{% block title %}Modifier|Calendrier{% endblock %}
 
 {% block body %}
     <h1>Modification</h1>
-    {{ include('calendar/_form.html.twig', {'button_label': 'Appliquer la modification'}) }}
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <div class="mb-3 row">
+                <div class="col-md-4">
+                    {{ form_label(form.title) }}
+                        {{ form_widget(form.title) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_label(form.beginAt) }}
+                    {{ form_widget(form.beginAt) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_label(form.endAt) }}{{ form_widget(form.endAt) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_label(form.tender) }}{{ form_widget(form.tender) }}
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary mt-4">{{ button_label|default('Modifier') }}</button>
+                </div>
+
+            </div>
+            {{ form_rest(form) }}
+
+        {{ form_end(form) }}
+
+
+
 {% endblock %}

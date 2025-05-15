@@ -10,7 +10,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminCrud;
 
+#[AdminCrud(routePath: '/user/current', routeName: 'user')]
 class UserCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -34,4 +36,5 @@ class UserCrudController extends AbstractCrudController
             
         ];
     }
+
 }

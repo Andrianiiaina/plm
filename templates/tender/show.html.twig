@@ -37,20 +37,20 @@
 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="information-tab-pane" role="tabpanel" aria-labelledby="information-tab" tabindex="0">
-                        {{include('components/tender/information_section.html.twig',{'tender':tender})}}
+                        {{include('tender/sections/information_section.html.twig',{'tender':tender})}}
                     </div>
                     <div class="tab-pane fade" id="organisation-tab-pane" role="tabpanel" aria-labelledby="organisation-tab" tabindex="0">
-                          {{include('components/tender/organisation_section.html.twig',{'tender':tender})}}
+                          {{include('tender/sections/organisation_section.html.twig',{'tender':tender})}}
                     </div>
                     <div class="tab-pane fade" id="document-tab-pane" role="tabpanel" aria-labelledby="document-tab" tabindex="0">
-                        {{include('components/tender/document_section.html.twig',{'tender':tender})}}
+                        {{include('tender/sections/document_section.html.twig',{'tender':tender})}}
                     </div>
 
                     <div class="tab-pane fade" id="file-tab-pane" role="tabpanel" aria-labelledby="file-tab" tabindex="0">
-                         {{include('components/tender/file_section.html.twig',{'tender':tender})}}
+                         {{include('tender/sections/file_section.html.twig',{'tender':tender})}}
                     </div>
                     <div class="tab-pane fade" id="allotissement-tab-pane" role="tabpanel" aria-labelledby="allotissement-tab" tabindex="0">
-                        {{include('components/tender/allotissement_section.html.twig',{'tender':tender})}}
+                        {{include('tender/sections/allotissement_section.html.twig',{'tender':tender})}}
                     </div>
                 </div>
                 

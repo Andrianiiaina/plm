@@ -26,7 +26,7 @@ final class HomeController extends AbstractController
         switch (true) {
             case $this->isGranted('ROLE_ADMIN'):
                 $statistiques=$tenderRepository->findAllStatistic();
-                $tenders=$tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               ;
+                $tenders=$tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               
                 $weekly_tenders=$tenderRepository->findAllTenderForThisWeek();
                 $expiration=$tenderRepository->findAllExpiredTender();
                 break;
@@ -66,7 +66,7 @@ final class HomeController extends AbstractController
         $tenderRepository->getTenderByStatus($this->getUser(),$status);
         $pagination = $paginator->paginate($tenders, $request->query->getInt('page', 1), 10);
 
-        return $this->render('components/tender_search_result.html.twig', [
+        return $this->render('tender/components/tender_search_result.html.twig', [
             'tenders' =>  $pagination,
             'status' => $status
         ]);
