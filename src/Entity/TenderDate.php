@@ -34,10 +34,10 @@ class TenderDate
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $end_date = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'tenderDate',cascade: ['persist', 'remove'])]
     private ?Tender $tender = null;
 
-    
+
     #[ORM\Column]
     private ?float $duration = 0;
 
@@ -129,6 +129,7 @@ class TenderDate
 
         return $this;
     }
+
 
     public function getDuration(): ?float
     {

@@ -19,7 +19,7 @@
                 <dd class="col-sm-8">{{ tender.contact.contactPro }}.</dd>
             </div>
             {% else %}
-                <p>Aucune. <a href="{{path('app_tender_edit_organisation_contact',{'id':tender.id})}}" class="btn">Completer les informations</a>
+                <p>Aucune. <a href="{{path('app_tender_edit_organisation',{'id':tender.id})}}" class="btn">Completer les informations</a>
                 </p> 
         {% endif %}
         </div>

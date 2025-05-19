@@ -49,7 +49,7 @@
               <h1 class="modal-title fs-5" id="addDocumentModalLabel">Nouveau</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            {{ form_start(form_document,{'action':path('app_tender_documents',{'id':tender.id})}) }}
+            {{ form_start(form_document,{'action':path('app_tender_new',{'id':tender.id})}) }}
 
             <div class="modal-body">
             

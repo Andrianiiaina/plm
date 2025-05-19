@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/document')]
 final class DocumentController extends AbstractController
@@ -40,9 +41,9 @@ final class DocumentController extends AbstractController
     }
 
     
-
-    #[Route('/tender/show/{id}', name: 'app_tender_documents', methods: ['GET','POST'])]
-    public function tender_documents(Tender $tender,
+    #[Route('/for/tender/{id}', name: 'app_tender_new', methods: ['POST','GET'])]
+ 
+    public function new(Tender $tender,
     Request $request, 
     EntityManagerInterface $entityManager, 
     FileUploaderService $fileUploader,
@@ -77,14 +78,12 @@ final class DocumentController extends AbstractController
                 
             }
         }
-            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
-        
-
-       
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
 
 
     #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
+    #[IsGranted('operation', 'document', 'Page not found', 404)]
     public function show(Document $document): Response
     {   $ext=mime_content_type("uploads/tender_documents/".$document->getFilepath());
 
@@ -96,6 +95,7 @@ final class DocumentController extends AbstractController
 
     
     #[Route('/edit/{id}', name: 'app_document_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('operation', 'document', 'Page not found', 404)]
     public function edit(
         Request $request, Document $document, 
         EntityManagerInterface $entityManager,
@@ -135,6 +135,7 @@ final class DocumentController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_document_delete', methods: ['POST'])]
+    #[IsGranted('operation', 'document', 'Page not found', 404)]
     public function delete(
     Request $request, 
     Document $document, 
@@ -174,6 +175,7 @@ final class DocumentController extends AbstractController
         ]);
     }
     #[Route('/archive/{id}', name: 'app_document_archive', methods: ['POST'])]
+    #[IsGranted('operation', 'document', 'Page not found', 404)]
     public function archive_or_reset_document(Request $request,Document $document,EntityManagerInterface $entityManager): Response
     {
         $tender_id=$document->getTender()->getId();
