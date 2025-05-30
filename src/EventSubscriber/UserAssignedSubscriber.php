@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\History;
 use App\Entity\Notification;
 use App\Event\UserAssignedToEntityEvent;
 use App\Service\ListService;
@@ -15,16 +16,19 @@ class UserAssignedSubscriber implements EventSubscriberInterface
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+        
     }
 
     public function onUserAssignedEvent($event): void
     {
-        $user = $event->getUser();
+        
+
+        $assigned_user = $event->getUser();
         $id = $event->getIdType();
         $type = $event->getType();
 
         $notification = new Notification();
-        $notification->setUser($user);
+        $notification->setUser($assigned_user);
         $notification->setType($type);
         $notification->setTypeId($id);
         $notification->setMessage(ListService::$notification_type[$type]);

@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\TenderDate;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,47 +15,54 @@ class TenderDateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('submissionDate', DateType::class, [
+        ->add('submissionDate', DateTimeType::class, [
             'label' => "Date de soumission",
             'widget' => 'single_text',
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
-        ->add('responseDate', DateType::class, [
+        ->add('responseDate', DateTimeType::class, [
             'label' => "Date de réponse",
             'widget' => 'single_text',
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
-        ->add('negociationDate', DateType::class, [
+        ->add('negociationDate', DateTimeType::class, [
             'label' => "Date de négociation",
             'widget' => 'single_text',
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
-        ->add('attributionDate', DateType::class, [
+        ->add('attributionDate', DateTimeType::class, [
             'label' => "Date d'attribution",
             'widget' => 'single_text',
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            'attr' => ['class'=>'form-control-sm mb-3'],
         ])
         
-        ->add('start_date', DateType::class, [
+        ->add('start_date', DateTimeType::class, [
             'label' => "Date de début prévu",
             'widget' => 'single_text',
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
-        ->add('end_date', DateType::class, [
+        ->add('end_date', DateTimeType::class, [
             'label' => "Date de fin prévu",
             'widget' => 'single_text',
             'required' => false,
             'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
         ->add('duration', NumberType::class,[
-            'label' => "Durrée (en année)",
+            'label' => "Durrée du projet (en année)",
             'required' => true,
             'label_attr' => ['class'=>'col-form-label'],
+            'attr' => ['class'=>'form-control-sm  mb-3'],
             'constraints'=>[new Assert\Range([
                 'min' => 0,
                 'max' => 10,

@@ -48,7 +48,9 @@ security:
          - { path: ^/contact, roles: ROLE_RESPO }
          - { path: ^/document, roles: ROLE_RESPO }
          - { path: ^/calendar, roles: ROLE_RESPO }
-         - { path: ^/project, roles: ROLE_RESPO }
+         - { path: ^/archives, roles: ROLE_RESPO }
+         - { path: ^/allotissement, roles: ROLE_RESPO }
+         - { path: ^/notifications, roles: ROLE_RESPO }
 
 when@test:
     security:

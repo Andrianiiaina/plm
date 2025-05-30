@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Tender;
+use App\Service\ListService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -27,10 +28,12 @@ class TenderRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
-            $data = [];
+
+            $data["0"]=0; $data["1"]=0;$data["2"]=0; $data["3"]=0;$data["4"]=0;
             foreach ($results as $result) {
                 $data[$result['status']] = $result['total'];
             }
+         
             return $data;
     }
 
@@ -175,7 +178,7 @@ class TenderRepository extends ServiceEntityRepository
             ->groupBy('t.status')
             ->getQuery()
             ->getResult();
-            $data = [];
+            $data["0"]=0;$data["1"]=0; $data["2"]=0;$data["3"]=0;$data["4"]=0;
             foreach ($results as $result) {
                 $data[$result['status']] = $result['total'];
             }

@@ -7,6 +7,7 @@ use App\Entity\Calendar;
 use App\Entity\Contact;
 use App\Entity\ContactGroup;
 use App\Entity\Document;
+use App\Entity\History;
 use App\Entity\Notification;
 use App\Entity\Tender;
 use App\Entity\TenderDate;
@@ -106,6 +107,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Utilisateurs');
         yield MenuItem::linkToCrud('User', 'fa fa-user', User::class);
         yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
+        yield MenuItem::linkToCrud('History', 'fa fa-folder',History::class);
 
 
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Entity\Tender;
+use App\Event\HistoryEvent;
 use App\Event\UserAssignedToEntityEvent;
 use App\Form\DocumentType;
 use App\Repository\DocumentRepository;
@@ -27,13 +28,11 @@ final class DocumentController extends AbstractController
     public function index(DocumentRepository $documentRepository,Request $request,PaginatorInterface $paginator): Response
     {
         $searchTerm = $request->query->get('q','');
-       
         $pagination = $paginator->paginate(
             $documentRepository->search($searchTerm,$this->getUser()),
              $request->query->getInt('page', 1),
               15);
             $searchTerm="";
-            
         return $this->render('document/index.html.twig', [ 
             'documents'=> $pagination,
             'searchTerm'=>$searchTerm??'',
@@ -48,7 +47,6 @@ final class DocumentController extends AbstractController
     EntityManagerInterface $entityManager, 
     FileUploaderService $fileUploader,
     EventDispatcherInterface $dispatcher): Response
-    
     {
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document,['user'=>$this->getUser()]);
@@ -66,8 +64,8 @@ final class DocumentController extends AbstractController
                         $document->setTender($tender);
                         $entityManager->persist($document);
                         $entityManager->flush(); 
-                        $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
-                        
+                        $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));          
+                        $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"add_document"));
                         $this->addFlash('success','Document enregistré ! ' );
                     } catch (FileException $e) {
                         $this->addFlash('error', "Erreur! Veuillez revérifier les informations.");
@@ -80,6 +78,10 @@ final class DocumentController extends AbstractController
         }
         return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
+
+
+
+
 
 
     #[Route('/show/{id}', name: 'app_document_show', methods: ['GET'])]
@@ -122,6 +124,7 @@ final class DocumentController extends AbstractController
                 $entityManager->persist($document);
                 $entityManager->flush(); 
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"edit_document"));
                         
                 $this->addFlash('success','Document modifié ! ' );
             }
@@ -140,6 +143,7 @@ final class DocumentController extends AbstractController
     Request $request, 
     Document $document, 
     EntityManagerInterface $entityManager,
+    EventDispatcherInterface $dispatcher,
     FileUploaderService $fileUploader): Response
     {
         $tender_id=$document->getTender()->getId();
@@ -147,6 +151,7 @@ final class DocumentController extends AbstractController
             $entityManager->remove($document);
             $fileUploader->removeFileFromStorage('tender_documents',$document->getFilepath());
             $entityManager->flush();
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"delete_document"));
             $this->addFlash('success','Document supprimé ! ' );
         }
 
@@ -156,7 +161,11 @@ final class DocumentController extends AbstractController
 
 
     #[Route('/api_update_status', name: 'api_update_status', methods: ['POST'])]
-    public function updateStatusInSortableFunc(Request $request, EntityManagerInterface $em): JsonResponse
+    public function updateStatusInSortableFunc(
+        Request $request, 
+        EntityManagerInterface $em,
+        EventDispatcherInterface $dispatcher,
+    ): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -168,6 +177,7 @@ final class DocumentController extends AbstractController
         $document=$em->getRepository(Document::class)->findOneBy(['id'=>$data['document_id']]);
         $document->setStatus($data['status_id']);
         $em->flush();
+        $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"change_status_document"));
         
         return $this->json([
             'message' => 'JSON bien reçu',
@@ -176,13 +186,20 @@ final class DocumentController extends AbstractController
     }
     #[Route('/archive/{id}', name: 'app_document_archive', methods: ['POST'])]
     #[IsGranted('operation', 'document', 'Page not found', 404)]
-    public function archive_or_reset_document(Request $request,Document $document,EntityManagerInterface $entityManager): Response
+    public function archive_or_reset_document(Request $request,Document $document,EntityManagerInterface $entityManager,
+    EventDispatcherInterface $dispatcher,): Response
     {
         $tender_id=$document->getTender()->getId();
         if ($this->isCsrfTokenValid('archive'.$document->getId(), $request->getPayload()->getString('_token'))) {
             $document->setIsArchived(!$document->isArchived());
             $entityManager->flush();
-            $document->isArchived()?$this->addFlash('success','Document archivé ! '):$this->addFlash('success','Document restauré ! ') ;
+            if($document->isArchived()){
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"archive_document"));
+                $this->addFlash('success','Document archivé ! ');
+            }else{
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"reset_document"));
+                $this->addFlash('success','Document restauré ! ') ;
+            }
             
         }else{
             $this->addFlash('error','L\'Opération a échoué. Veuillez réessayer.');

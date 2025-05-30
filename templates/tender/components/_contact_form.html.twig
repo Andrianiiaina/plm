@@ -1,14 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Organisation info{% endblock %}
+{% block title %}Edit|Organisation{% endblock %}
 
 {% block body %}
- <div class="container">
-    <div class="row">
-        <div class="offset-2 col-md-8">
-            <p class="h4 mt-5 mb-3">Information sur l'organisation du projet {{tender.title}}</p>
-            {{ include('contact/_form.html.twig') }}
+    <div class="container">
+        <div class="offset-md-2 col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <p class="fs-3 mb-4">Contact de l'organisateur du {{tender.title}}</p>
+                    {{ include('contact/_form.html.twig') }}
+                </div>
+           </div>
         </div>
     </div>
- </div>
 {% endblock %}

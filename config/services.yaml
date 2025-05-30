@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     targetDirectory: '%kernel.project_dir%/public/uploads'
-    onlyoffice_jwt_secret: 'my_token'
+    #onlyoffice_jwt_secret: 'my_token'
     # à utiliser au lieu de public '%kernel.project_dir%/var/uploads'
 services:
     # default configuration for services in *this* file

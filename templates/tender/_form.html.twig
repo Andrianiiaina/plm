@@ -1,4 +1,5 @@
 {{ form_start(form) }}
+  {{ form_errors(form) }}
     <div class="mb-3 row">
         <div class="col-md-6">
             {{ form_label(form.title) }}
@@ -40,19 +41,16 @@
             {{ form_widget(form.url) }}
         </div>
     </div>
-    <div class="mb-3 row">
-        {{ form_label(form.responsable) }}
-        <div class="col-sm-9">
-            {{ form_widget(form.responsable) }}
-        </div>
-    </div>
       
     <div class="mb-3 row">
         {{ form_label(form.description) }}
-        {{ form_widget(form.description) }}
+        <div class="col-sm-9">
+            {{ form_widget(form.description) }}
+        </div>
+
     </div>
     {{ form_rest(form) }}
     <div class="container d-flex justify-content-end">
-        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        <button class="btn tn-sm btn-primary">{{ button_label|default("Enregistrer l'appel d'offre")}}</button>
     </div>
 {{ form_end(form) }}

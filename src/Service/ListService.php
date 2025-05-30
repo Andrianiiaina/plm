@@ -34,5 +34,8 @@ class ListService
         "1"=>'Un tender vous a été attribué',
         "2"=>'Un document vous a été attribué',
     ];
-
+    public static array $history_type = [
+        "0"=>"Tender",
+        "1"=>"Document",
+    ];
 }

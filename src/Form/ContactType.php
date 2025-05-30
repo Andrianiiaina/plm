@@ -19,25 +19,31 @@ class ContactType extends AbstractType
             ->add('name',TextType::class, [
                 'label' => "Nom",
                 'required' => true,
+                'attr' => ['class'=>'form-control-sm'],
             ])
             ->add('email',EmailType::class, [
                 'label' => "Addresse Email",
                 'required' => true,
+                'attr' => ['class'=>'form-control-sm'],
             ]) 
             ->add('contact_perso',TextType::class, [
                 'label' => "Contact personnel",
+                'attr' => ['class'=>'form-control-sm'],
             ])
             ->add('contact_pro',TextType::class, [
                 'label' => "Contact professionnel",
                 'required' => false,
+                'attr' => ['class'=>'form-control-sm'],
             ])
             ->add('organisation',TextType::class, [
                 'required' => true,
                 'label' => "Nom de la compagnie",
+                'attr' => ['class'=>'form-control-sm'],
             ])
             ->add('function',TextType::class, [
                 'label' => "Poste",
                 'required' => true,
+                'attr' => ['class'=>'form-control-sm'],
             ])
            // ->add('parent', EntityType::class, [
             //    'label' => "Supérieur",
