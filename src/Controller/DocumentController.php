@@ -40,7 +40,7 @@ final class DocumentController extends AbstractController
     }
 
     
-    #[Route('/for/tender/{id}', name: 'app_tender_new', methods: ['POST','GET'])]
+    #[Route('/for/tender/{id}', name: 'app_document_new', methods: ['POST','GET'])]
  
     public function new(Tender $tender,
     Request $request, 
@@ -78,7 +78,6 @@ final class DocumentController extends AbstractController
         }
         return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
-
 
 
 

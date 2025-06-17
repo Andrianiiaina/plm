@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Entity\Tender;
+use App\Entity\TenderDate;
 use App\Event\HistoryEvent;
 use App\Event\UserAssignedToEntityEvent;
 use App\Repository\TenderRepository;
@@ -53,6 +54,9 @@ final class TenderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $tender->setResponsable($this->getUser());
             $entityManager->persist($tender);
+            $tender_date=new TenderDate();
+            $tender_date->setTender($tender);
+            $entityManager->persist($tender_date);
                 $entityManager->flush();
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($tender->getResponsable(),$tender->getId(),1));
                 $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"create_tender"));

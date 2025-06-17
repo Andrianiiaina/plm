@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250404111947 extends AbstractMigration
+final class Version20250617071945 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,10 +25,12 @@ final class Version20250404111947 extends AbstractMigration
         $this->addSql('CREATE TABLE contact (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, user_id INT DEFAULT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, contact_perso VARCHAR(100) DEFAULT NULL, contact_pro VARCHAR(100) DEFAULT NULL, organisation VARCHAR(100) NOT NULL, function VARCHAR(100) NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, modified_at DATETIME DEFAULT NULL, INDEX IDX_4C62E638727ACA70 (parent_id), UNIQUE INDEX UNIQ_4C62E638A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE contact_group (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE contact_group_contact (contact_group_id INT NOT NULL, contact_id INT NOT NULL, INDEX IDX_EBFAF1B3647145D0 (contact_group_id), INDEX IDX_EBFAF1B3E7A1254A (contact_id), PRIMARY KEY(contact_group_id, contact_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE document (id INT AUTO_INCREMENT NOT NULL, responsable_id INT DEFAULT NULL, tender_id INT NOT NULL, filename VARCHAR(255) NOT NULL, filepath VARCHAR(255) NOT NULL, information LONGTEXT DEFAULT NULL, status VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, modified_at DATETIME DEFAULT NULL, limit_date DATETIME DEFAULT NULL, INDEX IDX_D8698A7653C59D72 (responsable_id), INDEX IDX_D8698A769245DE54 (tender_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE document (id INT AUTO_INCREMENT NOT NULL, responsable_id INT DEFAULT NULL, tender_id INT NOT NULL, filename VARCHAR(255) NOT NULL, filepath VARCHAR(255) NOT NULL, information LONGTEXT DEFAULT NULL, status VARCHAR(10) NOT NULL, name VARCHAR(255) NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, modified_at DATETIME DEFAULT NULL, limit_date DATETIME DEFAULT NULL, is_archived TINYINT(1) NOT NULL, INDEX IDX_D8698A7653C59D72 (responsable_id), INDEX IDX_D8698A769245DE54 (tender_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE file (id INT AUTO_INCREMENT NOT NULL, tender_id INT NOT NULL, title VARCHAR(255) NOT NULL, is_finished TINYINT(1) NOT NULL, INDEX IDX_8C9F36109245DE54 (tender_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE history (id INT AUTO_INCREMENT NOT NULL, actor_id INT DEFAULT NULL, actions VARCHAR(255) NOT NULL, date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, type INT NOT NULL, type_id INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE notification (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, message VARCHAR(255) NOT NULL, is_read TINYINT(1) NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, type VARCHAR(10) NOT NULL, type_id INT DEFAULT NULL, INDEX IDX_BF5476CAA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE tender (id INT AUTO_INCREMENT NOT NULL, responsable_id INT DEFAULT NULL, contact_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, contract_number VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, location VARCHAR(255) DEFAULT NULL, start_date DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', end_date DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', min_budget DOUBLE PRECISION NOT NULL, max_budget DOUBLE PRECISION DEFAULT NULL, status VARCHAR(255) NOT NULL, tender_type VARCHAR(255) NOT NULL, url VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, submission_date DATETIME DEFAULT NULL, response_date DATETIME DEFAULT NULL, attribution_date DATETIME DEFAULT NULL, negociation_date DATETIME DEFAULT NULL, duration DOUBLE PRECISION NOT NULL, is_archived TINYINT(1) NOT NULL, UNIQUE INDEX UNIQ_42057A77AAD0FA19 (contract_number), INDEX IDX_42057A7753C59D72 (responsable_id), UNIQUE INDEX UNIQ_42057A77E7A1254A (contact_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tender (id INT AUTO_INCREMENT NOT NULL, responsable_id INT DEFAULT NULL, contact_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, contract_number VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, location VARCHAR(255) DEFAULT NULL, min_budget DOUBLE PRECISION NOT NULL, max_budget DOUBLE PRECISION DEFAULT NULL, status VARCHAR(255) NOT NULL, tender_type VARCHAR(255) NOT NULL, url VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, is_archived TINYINT(1) NOT NULL, UNIQUE INDEX UNIQ_42057A77AAD0FA19 (contract_number), INDEX IDX_42057A7753C59D72 (responsable_id), UNIQUE INDEX UNIQ_42057A77E7A1254A (contact_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tender_date (id INT AUTO_INCREMENT NOT NULL, tender_id INT DEFAULT NULL, submission_date DATETIME DEFAULT NULL, response_date DATETIME DEFAULT NULL, attribution_date DATETIME DEFAULT NULL, negociation_date DATETIME DEFAULT NULL, start_date DATETIME DEFAULT NULL, end_date DATETIME DEFAULT NULL, duration DOUBLE PRECISION NOT NULL, UNIQUE INDEX UNIQ_7C4FD42A9245DE54 (tender_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL COMMENT \'(DC2Type:json)\', password VARCHAR(255) NOT NULL, is_verified TINYINT(1) NOT NULL, UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', available_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', delivered_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE allotissement ADD CONSTRAINT FK_C3228E669245DE54 FOREIGN KEY (tender_id) REFERENCES tender (id)');
@@ -43,6 +45,7 @@ final class Version20250404111947 extends AbstractMigration
         $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_BF5476CAA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE tender ADD CONSTRAINT FK_42057A7753C59D72 FOREIGN KEY (responsable_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE tender ADD CONSTRAINT FK_42057A77E7A1254A FOREIGN KEY (contact_id) REFERENCES contact (id)');
+        $this->addSql('ALTER TABLE tender_date ADD CONSTRAINT FK_7C4FD42A9245DE54 FOREIGN KEY (tender_id) REFERENCES tender (id)');
     }
 
     public function down(Schema $schema): void
@@ -60,6 +63,7 @@ final class Version20250404111947 extends AbstractMigration
         $this->addSql('ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CAA76ED395');
         $this->addSql('ALTER TABLE tender DROP FOREIGN KEY FK_42057A7753C59D72');
         $this->addSql('ALTER TABLE tender DROP FOREIGN KEY FK_42057A77E7A1254A');
+        $this->addSql('ALTER TABLE tender_date DROP FOREIGN KEY FK_7C4FD42A9245DE54');
         $this->addSql('DROP TABLE allotissement');
         $this->addSql('DROP TABLE calendar');
         $this->addSql('DROP TABLE contact');
@@ -67,8 +71,10 @@ final class Version20250404111947 extends AbstractMigration
         $this->addSql('DROP TABLE contact_group_contact');
         $this->addSql('DROP TABLE document');
         $this->addSql('DROP TABLE file');
+        $this->addSql('DROP TABLE history');
         $this->addSql('DROP TABLE notification');
         $this->addSql('DROP TABLE tender');
+        $this->addSql('DROP TABLE tender_date');
         $this->addSql('DROP TABLE user');
         $this->addSql('DROP TABLE messenger_messages');
     }

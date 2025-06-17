@@ -73,7 +73,7 @@ class TenderType extends AbstractType
             ])
             ->add('url', UrlType::class,[
                 'label_attr' => ['class'=>'col-sm-3 col-form-label'],
-
+                'required' => false,
                 'attr' => ['class'=>'form-control-sm'],
             ])
             
