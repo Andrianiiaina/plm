@@ -26,7 +26,7 @@ export default class extends Controller {
             status_id: event.to.dataset.group,
         };
 
-        fetch('/plm/document/api_update_status', {
+        fetch('/document/api_update_status', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

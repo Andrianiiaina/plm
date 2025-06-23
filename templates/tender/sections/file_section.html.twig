@@ -93,7 +93,7 @@
                 const fileId = this.dataset.id;
                 const status = this.checked;
 
-                fetch(`/plm/file/status/${fileId}`, {
+                fetch(`/file/status/${fileId}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
