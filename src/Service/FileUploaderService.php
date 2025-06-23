@@ -20,10 +20,17 @@ class FileUploaderService
         $safeFilename = $this->slugger->slug($originalFilename);
         $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
+       
         try {
+             $targetDir = $this->getTargetDirectory() . '/' . $folder;
+            // Ensure directory exists
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0775, true);
+            }
+
             $file->move($this->getTargetDirectory()."/".$folder, $fileName);
         } catch (FileException $e) {
-            
+            error_log('File upload failed: ' . $e->getMessage());
         }
 
         return $fileName;
