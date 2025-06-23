@@ -1,5 +1,4 @@
 {{ form_start(form) }}
-  {{ form_errors(form) }}
     <div class="mb-3 row">
         <div class="col-md-6">
             {{ form_label(form.title) }}
@@ -11,10 +10,13 @@
     </div>
   
     <div class="mb-3 row">
+    
         <div class="col-md-6">
+        {{ form_errors(form.min_budget) }}
             {{ form_label(form.min_budget) }} {{ form_widget(form.min_budget) }}
         </div>
         <div class="col-md-6">
+        {{ form_errors(form.max_budget) }}
             {{ form_label(form.max_budget) }}{{ form_widget(form.max_budget) }}
         </div>
     </div>

@@ -19,28 +19,28 @@ class TenderDateType extends AbstractType
             'label' => "Date de soumission",
             'widget' => 'single_text',
             'required' => false,
-            'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
+
         ->add('responseDate', DateTimeType::class, [
             'label' => "Date de réponse",
             'widget' => 'single_text',
             'required' => false,
-            'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            #'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
         ->add('negociationDate', DateTimeType::class, [
             'label' => "Date de négociation",
             'widget' => 'single_text',
             'required' => false,
-            'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            #'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
         ->add('attributionDate', DateTimeType::class, [
             'label' => "Date d'attribution",
             'widget' => 'single_text',
             'required' => false,
-            'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            #'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             'attr' => ['class'=>'form-control-sm mb-3'],
         ])
         
@@ -48,14 +48,14 @@ class TenderDateType extends AbstractType
             'label' => "Date de début prévu",
             'widget' => 'single_text',
             'required' => false,
-            'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            #'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
         ->add('end_date', DateTimeType::class, [
             'label' => "Date de fin prévu",
             'widget' => 'single_text',
             'required' => false,
-            'constraints' => [new Assert\GreaterThanOrEqual('today') ],
+            #'constraints' => [new Assert\GreaterThanOrEqual('today') ],
             'attr' => ['class'=>'form-control-sm  mb-3'],
         ])
         ->add('duration', NumberType::class,[

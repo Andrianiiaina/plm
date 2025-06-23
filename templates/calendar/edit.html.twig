@@ -5,7 +5,6 @@
 {% block body %}
     <h1>Modification</h1>
         {{ form_start(form) }}
-            {{ form_errors(form) }}
             <div class="mb-3 row">
                 <div class="col-md-4">
                     {{ form_label(form.title) }}
@@ -14,12 +13,17 @@
                 <div class="col-md-2">
                     {{ form_label(form.beginAt) }}
                     {{ form_widget(form.beginAt) }}
+                    {{ form_errors(form.beginAt) }}
                 </div>
                 <div class="col-md-2">
-                    {{ form_label(form.endAt) }}{{ form_widget(form.endAt) }}
+                    {{ form_label(form.endAt) }}
+                    {{ form_widget(form.endAt) }}
+                    {{ form_errors(form.endAt) }}
                 </div>
                 <div class="col-md-2">
-                    {{ form_label(form.tender) }}{{ form_widget(form.tender) }}
+                    {{ form_label(form.tender) }}
+                    {{ form_widget(form.tender) }}
+                    {{ form_errors(form.tender) }}
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-primary mt-4">{{ button_label|default('Modifier') }}</button>

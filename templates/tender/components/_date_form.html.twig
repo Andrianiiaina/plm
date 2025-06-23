@@ -8,8 +8,9 @@
             <div class="offset-2 col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <p class="fs-3 mb-4">Dates associées à l'appel d'offre {{tender.title}}</p>
+                    <p class="fs-3 mb-4">Dates associées à l'appel d'offre {{tender.title}}</p>
                     {{ form_start(form) }}
+                        {{ form_errors(form) }}
                         <div class="mb-3 row">
                             <div class="col-md-6">
                                 {{ form_label(form.submissionDate) }}{{ form_widget(form.submissionDate) }}
@@ -29,6 +30,7 @@
                             <div class="col-md-6">
                                 {{ form_widget(form.duration) }}
                             </div>
+                            {{form_errors(form.duration)}}
                         </div>
                         {{ form_rest(form) }}
                         <div class="container d-flex justify-content-end">
