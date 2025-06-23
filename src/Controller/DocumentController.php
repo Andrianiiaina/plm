@@ -146,11 +146,12 @@ final class DocumentController extends AbstractController
     FileUploaderService $fileUploader): Response
     {
         $tender_id=$document->getTender()->getId();
+        $document_id=$document->getId();
         if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($document);
             $fileUploader->removeFileFromStorage('tender_documents',$document->getFilepath());
             $entityManager->flush();
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"delete_document"));
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document_id,"delete_document"));
             $this->addFlash('success','Document supprimé ! ' );
         }
 

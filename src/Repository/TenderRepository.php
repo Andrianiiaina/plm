@@ -33,7 +33,6 @@ class TenderRepository extends ServiceEntityRepository
             foreach ($results as $result) {
                 $data[$result['status']] = $result['total'];
             }
-         
             return $data;
     }
 
@@ -55,6 +54,7 @@ class TenderRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
         ->where('t.responsable = :user')
         ->andWhere('t.title LIKE :term OR t.contract_number LIKE :term')
+        ->andWhere('t.isArchived = false')
         ->setParameter('term', '%' . $term . '%')
         ->setParameter('user', $user)
         ->orderBy('t.createdAt', 'DESC')
@@ -66,6 +66,7 @@ class TenderRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
         ->where('t.title LIKE :term OR t.contract_number LIKE :term')
+        ->andWhere('t.isArchived = false')
         ->setParameter('term', '%' . $term . '%')
         ->orderBy('t.createdAt', 'DESC')
         ->getQuery()
@@ -178,7 +179,8 @@ class TenderRepository extends ServiceEntityRepository
             ->groupBy('t.status')
             ->getQuery()
             ->getResult();
-            $data["0"]=0;$data["1"]=0; $data["2"]=0;$data["3"]=0;$data["4"]=0;
+            
+            $data["0"]=0; $data["1"]=0;$data["2"]=0; $data["3"]=0;$data["4"]=0;
             foreach ($results as $result) {
                 $data[$result['status']] = $result['total'];
             }

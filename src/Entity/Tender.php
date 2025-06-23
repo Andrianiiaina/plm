@@ -59,14 +59,31 @@ class Tender
     /**
      * @var Collection<int, Document>
      */
-    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'tender')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'tender', cascade:['persist','remove'])]
     private Collection $documents;
+
+
+    /**
+     * @var Collection<int, File>
+     */
+    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'tender', cascade:['persist','remove'])]
+    private Collection $files;
+
+
 
     /**
      * @var Collection<int, Calendar>
      */
-    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'tender')]
+    #[ORM\OneToMany(targetEntity: Calendar::class, mappedBy: 'tender', cascade:['persist','remove'])]
     private Collection $calendars;
+
+
+   /**
+     * @var Collection<int, Allotissement>
+     */
+    #[ORM\OneToMany(targetEntity: Allotissement::class, mappedBy: 'tender', cascade:['persist','remove'])]
+    private Collection $allotissements;
+
 
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -82,6 +99,7 @@ class Tender
     {
         $this->documents = new ArrayCollection();
         $this->calendars = new ArrayCollection();
+        $this->files = new ArrayCollection();
         $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
     }
     public function __toString(): string
@@ -236,8 +254,10 @@ class Tender
 
         return $this;
     }
+    
+
      /**
-     * @return Collection<int, File>
+     * @return Collection<int, Document>
      */
     public function getDocuments(): Collection
     {

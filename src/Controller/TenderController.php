@@ -25,7 +25,6 @@ final class TenderController extends AbstractController
     #[Route(name: 'app_tender_index', methods: ['GET'])]
     public function index(TenderRepository $tenderRepository, Request $request,PaginatorInterface $paginator): Response
     {
-
         $searchTerm = $request->query->get('q','');
         $tenders = $this->isGranted('ROLE_ADMIN') 
             ? $tenderRepository->search($searchTerm) 
@@ -37,7 +36,7 @@ final class TenderController extends AbstractController
         $statistiques=$this->isGranted('ROLE_ADMIN')?$tenderRepository->findAllStatistic():$tenderRepository->findRespoStatistic($this->getUser());
         return $this->render('tender/index.html.twig', [
             'tenders' => $pagination,
-            'total_tenders'=>count($tenders),
+            'total_tenders'=>array_sum($statistiques),
             'searchTerm' => $searchTerm,
             'total_tender_by_status'=>$statistiques,
         ]);
@@ -136,15 +135,16 @@ final class TenderController extends AbstractController
 
 
 
-
     #[Route('/{id}', name: 'app_tender_delete', methods: ['POST'])]   
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
     public function delete(Request $request, Tender $tender, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$tender->getId(), $request->getPayload()->getString('_token'))) {
+    {   
+        $id=$tender->getId();
+        if ($this->isCsrfTokenValid('delete'.$id, $request->getPayload()->getString('_token'))) {
             $entityManager->remove($tender);
             $entityManager->flush();
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"delete_tender"));
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$id,"delete_tender"));
+
             $this->addFlash('success','Tender supprimé ! ' );
         }
 
