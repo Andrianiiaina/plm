@@ -20,12 +20,7 @@
 			</div>
 		</div>
 		<div class="d-flex justify-content-center my-3 row">
-
-
 			{{ include('tender/components/tender_statistic.html.twig',{'total_tender_by_status':total_tender_by_status})}}
-
-
-
 				<div class="col-md-2 p-2">
 					<a href="{{path('app_tender_index')}}" class="fw-bold btn btn-outline-secondary d-flex align-items-center justify-content-between align-items-center"> 
 						Total <span class="fs-4">{{total_tenders}}</span>
@@ -52,7 +47,7 @@
 				<div class="row">
 					<div class="col-md-4 p-0 m-0">
 						<div class="pt-2 card card-body">
-							<p class="h4 mb-2">Dérnier AO</p>
+							<p class="h4 mb-2">Tenders récent</p>
 							<ul class="m-0 p-0">
 								{% for tender_ in tenders %}
 								<li class="list-group-item mt-2">
@@ -64,14 +59,15 @@
 							</ul>
 						</div>
 					</div>
+
 					<div class="col-md-8 p-0 m-0 ps-2">
-						<div class="p-2 card card-body">
+						<div class="card card-body">
 							<div class="clearfix">
 								<p class="h4 float-start">Agenda</p>
 								<a href="{{ path('app_calendar_index') }}" class="btn float-end">Voir tout</a>
 							</div>
 							{% for calendar in calendars %}
-							<div class="col mb-3">
+							<div class="col p-2">
 								<a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
 									<strong>{{ calendar.getBeginAt ? calendar.getBeginAt|date('d/m/Y H:i') : '' }}</strong>	
 									{{ calendar.title | u.truncate(30, '...')}}<br/>
