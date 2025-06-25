@@ -30,12 +30,14 @@ final class CalendarController extends AbstractController
                 $this->addFlash('success','Evènement enregistré ! ' );
             }
 
-      
+    
             return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
         }
         $searchTerm=$request->query->get('q','');
     
         $pagination = $paginator->paginate(
+            $this->isGranted('ROLE_ADMIN')?
+            $calendarRepository->findAdminCalendar(100,$searchTerm):
             $calendarRepository->findUserCalendar($this->getUser(),100,$searchTerm),
             $request->query->getInt('page', 1), 
             10

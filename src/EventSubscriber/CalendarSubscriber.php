@@ -28,21 +28,11 @@ class CalendarSubscriber implements EventSubscriberInterface
     public function onCalendarSetData(SetDataEvent $setDataEvent)
     {
         $user = $this->security->getUser();
-        $start = $setDataEvent->getStart();
-        $end = $setDataEvent->getEnd();
-        $calendars = $this->calendarRepository
-        ->createQueryBuilder('c')
-        ->join('c.tender', 'p')
-        ->where('p.responsable = :responsable')
-        ->andWhere('c.beginAt BETWEEN :start and :end OR c.endAt BETWEEN :start and :end')
-        ->setParameter('start', $start->format('Y-m-d H:i:s'))
-        ->setParameter('end', $end->format('Y-m-d H:i:s'))
-        ->setParameter('responsable', $user)
-        ->orderBy('c.beginAt','ASC')
-        ->getQuery()
-        ->getResult()
-    ;
-    foreach ($calendars as $calendar) {
+        $calendars =$this->security->isGranted('ROLE_ADMIN')?
+        $this->calendarRepository->findAdminCalendar():
+        $this->calendarRepository->findUserCalendar($user,100,'');
+      
+        foreach ($calendars as $calendar) {
         $calendarEvent = new Event(
             $calendar->getTitle(),
             $calendar->getBeginAt(),
