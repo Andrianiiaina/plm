@@ -53,28 +53,20 @@ class AppFixtures extends Fixture
 
     $manager->flush();
 
-    ContactFactory::createMany(5);
-    ContactGroupFactory::createMany(3,function() { 
-           return ['contacts' => ContactFactory::createMany(4)]; 
+
+    TenderFactory::createMany(7,function(){
+        return ['responsable' => $this->getReference('user_1',User::class),'contact'=>ContactFactory::createOne(),'tenderDate'=>TenderDateFactory::createOne()];
     });
 
-
-    TenderFactory::createMany(14,function(){
-        return ['responsable' => $this->getReference('user_1',User::class),'tenderDate'=>TenderDateFactory::createOne()];
+    TenderFactory::createMany(3,function(){
+        return ['responsable' => $this->getReference('user_2',User::class),'contact'=>ContactFactory::createOne(),'tenderDate'=>TenderDateFactory::createOne()];
     });
-
-    TenderFactory::createMany(6,function(){
-        return ['responsable' => $this->getReference('user_2',User::class),'tenderDate'=>TenderDateFactory::createOne()];
-    });
-
-
-  
-
-    DocumentFactory::createMany(50,function() { 
+    
+    DocumentFactory::createMany(20,function() { 
         $user1 = $this->getReference('user_1',User::class);
         return ['responsable'=>$user1,'tender' => TenderFactory::random()]; 
     });
-    DocumentFactory::createMany(50,function() { 
+    DocumentFactory::createMany(10,function() { 
         $user2 = $this->getReference('user_2',User::class);
         return ['responsable'=>$user2,'tender' => TenderFactory::random()]; 
     });
@@ -86,7 +78,7 @@ class AppFixtures extends Fixture
     AllotissementFactory::createMany(50,function() { 
         return ['tender'=>TenderFactory::random()];
     });
-    CalendarFactory::createMany(30,function(){
+    CalendarFactory::createMany(20,function(){
         return ['tender'=>TenderFactory::random()];
     });
 
