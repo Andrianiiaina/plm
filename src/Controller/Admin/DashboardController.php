@@ -37,51 +37,6 @@ class DashboardController extends AbstractDashboardController
     {
 
         return $this->redirectToRoute('admin_tender_index');
-        /**
-         * 
-         *      $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
-       * $chart->setData([
-        *    'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        *    'datasets' => [
-        *        [
-        *            'label' => 'My First dataset',
-        *            'backgroundColor' => 'rgb(255, 99, 132)',
-        *            'borderColor' => 'rgb(255, 99, 132)',
-        *            'data' => [0, 10, 5, 2, 20, 30, 45],
-        *        ],
-        *    ],
-        *]);
-
-        *$chart->setOptions([
-        *    'scales' => [
-        *        'y' => [
-        *            'suggestedMin' => 0,
-        *            'suggestedMax' => 100,
-        *        ],
-        *    ],
-        *]);
-         */
-   
-
-
-
-
-        $users= $this->entityManager->getRepository(User::class)->findAll();
-        $new_users=[];
-        
-        $statistics=$this->entityManager->getRepository(Tender::class)->findAllStatistic();
-        foreach($users as $user){
-            if(!$user->getRoles()){
-                $new_users[]=$user;
-            }
-        }
-
-
-
-        return $this->render('admin/index.html.twig', [
-            'chart' => $chart,
-            'new_users'=>$new_users,
-        ]);
 
     }
 
@@ -95,6 +50,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
 
+        yield MenuItem::linkToUrl('Home', 'fa fa-home', '/');
         yield MenuItem::section('Tenders');
         yield MenuItem::linkToCrud('Tenders', 'fa fa-tags', Tender::class);
         yield MenuItem::linkToCrud('Tender_dates', 'fa fa-calendar-check-o', TenderDate::class);
@@ -107,10 +63,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Utilisateurs');
         yield MenuItem::linkToCrud('User', 'fa fa-user', User::class);
         yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
+        yield MenuItem::section('');
         yield MenuItem::linkToCrud('History', 'fa fa-folder',History::class);
-
-
-
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }
