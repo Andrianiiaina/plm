@@ -109,7 +109,7 @@ final class ContactController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success','Contact suppr ! ' );
             }catch(\Exception){
-                $this->addFlash('error','Impossible de supprimer. Ce contact est lié à des projets' );
+                $this->addFlash('error','Impossible de supprimer. Ce contact est lié à un AO' );
             }
            
            
