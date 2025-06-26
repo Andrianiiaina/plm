@@ -9,19 +9,24 @@
                 <dd class="col-sm-8">{{tender.contact.name}}</dd>
                 <dt class="col-sm-4">Poste</dt>
                 <dd class="col-sm-8">{{tender.contact.function}}</dd>
+                <dt>
+                    <a href="{{path('app_tender_edit_organisation',{'id':tender.id})}}" class="btn btn-secondary">Modifier</a>
+                </dt>
             </div>
             <div class="col row">
                 <dt class="col-sm-4">Email</dt>
                 <dd class="col-sm-8">{{ tender.contact.email }}</dd>
                 <dt class="col-sm-4">Contact perso</dt>
-                <dd class="col-sm-8">{{ tender.contact.contactPerso }}.</dd>
+                <dd class="col-sm-8">{{ tender.contact.contactPerso }}</dd>
                 <dt class="col-sm-4">Contact pro</dt>
-                <dd class="col-sm-8">{{ tender.contact.contactPro }}.</dd>
+                <dd class="col-sm-8">{{ tender.contact.contactPro }}</dd>
             </div>
+            
             {% else %}
-                <p>Aucune. <a href="{{path('app_tender_edit_organisation',{'id':tender.id})}}" class="btn">Completer les informations</a>
-                </p> 
-        {% endif %}
+                <div class="col-md-4">
+                    <a href="{{path('app_tender_edit_organisation',{'id':tender.id})}}" class="btn btn-primary">Ajouter un nouveau</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 

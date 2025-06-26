@@ -5,9 +5,10 @@
 {% block body %}
    <div class="container">
         <div class="row">
-            <h1>Modifier le contact</h1>
-            {{ include('components/_form.html.twig', {'button_label': 'Appliquer la modification'}) }}
-        
+            <div class="offset-2 col-md-8">
+                <p class="h1 mb-3">Modifier le contact</p>
+                {{ include('contact/_form.html.twig', {'button_label': 'Appliquer la modification'}) }}
+            </div>
         </div>
    </div>
 {% endblock %}

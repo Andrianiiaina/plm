@@ -6,6 +6,7 @@ use App\Entity\Contact;
 use App\Entity\Tender;
 use App\Entity\TenderDate;
 use App\Event\HistoryEvent;
+use App\Form\TenderContactType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,28 +43,38 @@ final class TenderInfoController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/edit_organisation/{id}', name: 'app_tender_edit_organisation', methods: ['GET', 'POST'])]
     public function edit_organisation(Request $request, Tender $tender, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
     {
+
         $contact =$tender->getContact()? $tender->getContact():new Contact();
         $form_contact = $this->createForm(\App\Form\ContactType::class, $contact);
+        $select_contact_form = $this->createForm(TenderContactType::class);
+
         $form_contact->handleRequest($request);
-        if ($form_contact->isSubmitted() && $form_contact->isValid()) {
+        $select_contact_form->handleRequest($request);
+
+        if($form_contact->isSubmitted() && $form_contact->isValid()) {
             $entityManager->persist($contact);
             $entityManager->flush();
             $tender->setContact($contact);
-            $entityManager->flush();
-            $this->addFlash('success',"Information sur l'organisation enregistrée!" );
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_organisation_tender"));
-            return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+        }elseif($select_contact_form->isSubmitted() && $select_contact_form->isValid()) {
+            $contact=$select_contact_form->get('contact')->getData();
+            $tender->setContact($contact);
+        }else{
+            return $this->render('tender/components/_contact_form.html.twig', [
+                'tender' => $tender,
+                'form' => $form_contact,
+                'select_contact_form'=>$select_contact_form,
+            ]);
         }
-        return $this->render('tender/components/_contact_form.html.twig', [
-            'tender' => $tender,
-            'form' => $form_contact,
-        ]);
+        
+        $entityManager->flush();
+        $this->addFlash('success',"Information sur l'organisation enregistrée!" );
+        $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_organisation_tender"));
+        return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
+      
     #[Route('/archive/{id}', name: 'app_tender_archive', methods: ['POST'])]
     public function archive_or_reset_tender(Request $request,Tender $tender,EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
     {

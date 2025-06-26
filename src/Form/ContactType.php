@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Contact;
-
+use App\Entity\Tender;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -45,11 +45,16 @@ class ContactType extends AbstractType
                 'required' => true,
                 'attr' => ['class'=>'form-control-sm'],
             ])
-           // ->add('parent', EntityType::class, [
-            //    'label' => "Supérieur",
-           //     'class' => Contact::class,
-           //     'choice_label' => 'name',
-           // ])
+            
+          /**
+           *  ->add('tender', EntityType::class, [
+                *'label' => "Tenders",
+               * 'class' => Tender::class,
+              *  'choice_label' => 'title',
+             *   'multiple'=>true,
+            *    'disabled'=>true
+           *])
+           */
         ;
     }
 

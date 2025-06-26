@@ -35,22 +35,13 @@ class Contact
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'contacts')]
     private ?self $parent = null;
-
-   
-    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTime $createdAt;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTime $modifiedAt;
-
-
     /**
      * @var Collection<int, self>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $contacts;
 
-    #[ORM\OneToOne(inversedBy: 'contact', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'contact')]
     private ?User $user = null;
 
     /**
@@ -59,12 +50,17 @@ class Contact
     #[ORM\ManyToMany(targetEntity: ContactGroup::class, mappedBy: 'contacts')]
     private Collection $contactGroups;
 
+    /**
+     * @var Collection<int, Tender>
+     */
+    #[ORM\OneToMany(targetEntity: Tender::class, mappedBy: 'contact')]
+    private Collection $tender;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
         $this->contactGroups = new ArrayCollection();
-        $this->createdAt = new \DateTime(); // Mettre la date actuelle par défaut
-        $this->modifiedAt = null;
+        $this->tender = new ArrayCollection();
     }
 
  
@@ -178,7 +174,6 @@ class Contact
     public function removeContact(self $contact): static
     {
         if ($this->contacts->removeElement($contact)) {
-            // set the owning side to null (unless already changed)
             if ($contact->getParent() === $this) {
                 $contact->setParent(null);
             }
@@ -228,5 +223,35 @@ class Contact
     public function __toString(): string
     {
         return $this->email ?? 'N/A'; 
+    }
+
+    /**
+     * @return Collection<int, Tender>
+     */
+    public function getTender(): Collection
+    {
+        return $this->tender;
+    }
+
+    public function addTender(Tender $tender): static
+    {
+        if (!$this->tender->contains($tender)) {
+            $this->tender->add($tender);
+            $tender->setContact($this);
+        }
+
+        return $this;
+    }
+
+    
+    public function removeTender(Tender $tender): static
+    {
+        if ($this->tender->removeElement($tender)) {
+            if ($tender->getContact() === $this) {
+                $tender->setContact(null);
+            }
+        }
+
+        return $this;
     }
 }

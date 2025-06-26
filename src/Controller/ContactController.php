@@ -55,9 +55,10 @@ final class ContactController extends AbstractController
         $form_contact = $this->createForm(ContactType::class, $contact);
         $form_contact->handleRequest($request);
 
+
         if ($form_contact->isSubmitted() && $form_contact->isValid()) {
-           
-            $entityManager->persist($contact);
+          
+            $entityManager->persist($contact);  
             $entityManager->flush();
             $this->addFlash('success','Contact enregistré ! ' );
             
@@ -86,6 +87,7 @@ final class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+           
             $entityManager->flush();
             $this->addFlash('success','Contact modifié ! ' );
             return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
@@ -102,9 +104,15 @@ final class ContactController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($contact);
-            $entityManager->flush();
-            $this->addFlash('success','Contact supprimé ! ' );
+            try{
+                $entityManager->remove($contact);
+                $entityManager->flush();
+                $this->addFlash('success','Contact suppr ! ' );
+            }catch(\Exception){
+                $this->addFlash('error','Impossible de supprimer. Ce contact est lié à des projets' );
+            }
+           
+           
         }
 
         return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);

@@ -85,16 +85,14 @@ class Tender
     private Collection $allotissements;
 
 
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Contact $contact = null;
-
-
     #[ORM\Column]
     private ?bool $isArchived = false;
 
     #[ORM\OneToOne(mappedBy: 'tender', cascade: ['persist', 'remove'])]
     private ?TenderDate $tenderDate = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tender')]
+    private ?Contact $contact = null;
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -265,17 +263,7 @@ class Tender
     }
 
    
-    public function getContact(): ?Contact
-    {
-        return $this->contact;
-    }
 
-    public function setContact(?Contact $contact): static
-    {
-        $this->contact = $contact;
-
-        return $this;
-    }
     public function isArchived(): ?bool
     {
         return $this->isArchived;
@@ -304,6 +292,18 @@ class Tender
         }
 
         $this->tenderDate = $tenderDate;
+
+        return $this;
+    }
+
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): static
+    {
+        $this->contact = $contact;
 
         return $this;
     }

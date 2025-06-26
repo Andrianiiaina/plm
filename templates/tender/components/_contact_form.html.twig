@@ -2,15 +2,30 @@
 
 {% block title %}Edit|Organisation{% endblock %}
 
+
 {% block body %}
     <div class="container">
         <div class="offset-md-2 col-md-8">
+            <p class="fs-3 mb-4">Contact de l'organisateur du {{tender.getContractNumber()}}</p>
             <div class="card">
+                <div class="card-header">Modifier le contact</div>
                 <div class="card-body">
-                    <p class="fs-3 mb-4">Contact de l'organisateur du {{tender.title}}</p>
                     {{ include('contact/_form.html.twig') }}
                 </div>
-           </div>
+            </div>
+            <center>Ou</center>
+            <div class="card">
+                <div class="card-header">Selectioner un contact existant</div>
+                    <div class="card-body">
+                        {{ form_start(select_contact_form,{'action':path('app_tender_edit_organisation',{'id':tender.id})}) }}
+                            {{ form_label(select_contact_form.contact) }}
+                            {{ form_widget(select_contact_form.contact) }}
+                            <div class="container d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        {{ form_end(select_contact_form) }}
+                    </div>
+            </div>
         </div>
     </div>
 {% endblock %}

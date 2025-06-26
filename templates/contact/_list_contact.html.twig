@@ -3,8 +3,8 @@
         <tr>
             <th>Nom</th>
             <th>Email</th>
-            <th>Contact personnel</th>
-            <th>Contact professionnel</th>
+            <th>Contacts (pro*)</th>
+            <th>Tender</th>
             <th>Organisation</th>
             <th>Poste</th>
             <th></th>
@@ -15,8 +15,12 @@
         <tr>
             <td>{{ contact.name }}</td>
             <td>{{ contact.email }}</td>
-            <td>{{ contact.contactPerso }}</td>
-            <td>{{ contact.contactPro }}</td>
+            <td>{{ contact.contactPro}}*</br>{{ contact.contactPerso }}</td>
+            <td>
+                {% for tender in contact.getTender() %}
+                    <a href="{{ path('app_tender_show',{'id':tender.id})}}">{{ tender.getContractNumber()}}</a>
+                {% endfor %}
+            </td>
             <td>{{ contact.organisation }}</td>
             <td>{{ contact.function }}</td>
             <td class="btn-group">
