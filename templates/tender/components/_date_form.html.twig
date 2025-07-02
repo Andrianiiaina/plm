@@ -5,44 +5,68 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="offset-2 col-md-8">
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                    <p class="fs-3 mb-4">Dates associées à l'appel d'offre {{tender.title}}</p>
-                    {{ form_start(form) }}
-                        {{ form_errors(form) }}
-                        <div class="mb-3 row">
-                            <div class="col-md-6">
-                                {{ form_label(form.submissionDate) }}{{ form_widget(form.submissionDate) }}
-                                {{ form_label(form.responseDate) }}{{ form_widget(form.responseDate) }}
-                                {{ form_label(form.start_date) }}{{ form_widget(form.start_date) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_label(form.negociationDate) }} {{ form_widget(form.negociationDate) }}
-                                {{ form_label(form.attributionDate) }} {{ form_widget(form.attributionDate) }}
-                                {{ form_label(form.end_date) }} {{ form_widget(form.end_date) }}
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-6">
-                                {{ form_label(form.duration) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_widget(form.duration) }}
-                            </div>
-                            {{form_errors(form.duration)}}
-                        </div>
-                        {{ form_rest(form) }}
-                        <div class="container d-flex justify-content-end">
-                            <button class="btn btn-primary">{{ button_label|default('Enregistrer les dates') }}</button>
-                        </div>
-                    {{ form_end(form) }}
-                    </div>
+                        <p class="fs-3 mb-4">Dates associées à l'appel d'offre {{tender.getContractNumber()}}</p>
+                 
+                        {{ form_start(form) }}
+                            {{ form_errors(form) }}
+                                <div class="mb-3 row">
+                                    <div class="col-md-6">
+                                        {{ form_label(form.submissionDate) }}{{ form_widget(form.submissionDate) }}
+                                        {{ form_label(form.responseDate) }}{{ form_widget(form.responseDate) }}
+                                        {{ form_label(form.start_date) }}{{ form_widget(form.start_date) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form_label(form.negociationDate) }} {{ form_widget(form.negociationDate) }}
+                                        {{ form_label(form.attributionDate) }} {{ form_widget(form.attributionDate) }}
+                                        {{ form_label(form.end_date) }} {{ form_widget(form.end_date) }}
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <div class="col-md-6">
+                                        {{ form_label(form.duration) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form_widget(form.duration) }}
+                                    </div>
+                                    {{form_errors(form.duration)}}
+                                </div>
+                                <div class="container d-flex justify-content-end mt-4">
+                                    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+                                </div>
+                        {{ form_end(form) }}
 
+                        
+                      </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                    <p class="fs-4">Rappels</p>
+                    <div class="row">
+                        {{ form_start(form_reminder,{'action':path('app_add_reminder',{'id':tender.getTenderDate.getId}),'attr': {'id': 'form-reminder','class':'row'}}) }}
+                            <div class="col-md-5">{{form_widget(form_reminder.date_type)}}</div>
+                            <div class="col-md-5">{{form_widget(form_reminder.day_before)}}</div>
+                            <div class="col-md-2"> <button type="submit" form="form-reminder" class="btn btn-primary"><i class="bi bi-caret-right-fill"></i></button> </div>
+                        {{ form_end(form_reminder)}}
+                      </div>
+                   
+                    {% for reminder in tender.getTenderDate().getReminder() %}
+                        <div class="row mt-3">
+                            <div class="col-md-5">{{ reminder.getDateType() | getDateType }}</div>
+                            <div class="col-md-5">{{ reminder.getDayBefore() | getReminderDay }}</div>
+                            <div class="col-md-2">
+                            <form id="delete_reminder_{{reminder.id}}" class="m-0 p-0" name="delete_reminder" method="post" action="{{path('app_reminder_delete',{'reminder_id':reminder.id,'tender_id':tender.id})}}" >
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_reminder' ~ reminder.id) }}">
+                                    <button class="btn" form="delete_reminder_{{reminder.id}}" type="submit"><i class="bi bi-trash3-fill"></i></button>
+                            </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
         </div>
     </div>
 
 {% endblock %}
-

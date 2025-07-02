@@ -31,6 +31,17 @@
 			<div class="col-md-8">
 				<div class="row">
 					<div class="card card-body mb-3">
+						<p class="h4">Rappels</p>
+						{% for reminder in reminders %}
+						<div class="col clearfix p-2">
+							<a href="{{path('app_tender_edit_date',{'id':reminder.getTenderDate.getTender.getId})}}" class="link-secondary link-underline link-underline-opacity-0">Rappel pour la {{reminder.getDateType() | getDateType}} du projet {{reminder.getTenderDate.getTender.getContractNumber}}</a>
+						</div>
+						{% endfor %}
+						
+					</div>
+				</div>
+				<div class="row">
+					<div class="card card-body mb-3">
 						<p class="h4">Deadline dépassés</p>
 						{% for tender in expired_soumission_date %}
 						<div class="col clearfix p-2">
@@ -44,6 +55,8 @@
 						
 					</div>
 				</div>
+
+
 				<div class="row">
 					<div class="col-md-4 p-0 m-0">
 						<div class="pt-2 card card-body">
@@ -60,7 +73,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-8 p-0 m-0 ps-2">
+					<div class="col-md-8 p-0 m-0 ps-3">
 						<div class="card card-body">
 							<div class="clearfix">
 								<p class="h4 float-start">Agenda</p>

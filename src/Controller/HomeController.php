@@ -9,7 +9,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Document;
 use App\Entity\Notification;
+use App\Entity\Reminder;
 use App\Entity\Tender;
+use App\Repository\ReminderRepository;
 use App\Repository\TenderRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,13 +24,13 @@ final class HomeController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user=$this->getUser();
         $tenderRepository=$entityManager->getRepository(Tender::class);
-      
         switch (true) {
             case $this->isGranted('ROLE_ADMIN'):
                 $statistiques=$tenderRepository->findAllStatistic();
                 $tenders=$tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               
                 $weekly_tenders=$tenderRepository->findAllTenderForThisWeek();
                 $expiration=$tenderRepository->findAllExpiredTender();
+                $reminders=$entityManager->getRepository(Reminder::class)->findAllRemindersForToday();
                 break;
                 
             case $this->isGranted('ROLE_RESPO'):
@@ -36,6 +38,7 @@ final class HomeController extends AbstractController
                 $tenders=$tenderRepository->findBy(['responsable' => $user,'isArchived'=>false], ['createdAt' => 'DESC'],10);
                 $weekly_tenders=$tenderRepository->findFilteredTendersForThisWeek($user);
                 $expiration=$tenderRepository->findExpiredTender($user);
+                $reminders=$entityManager->getRepository(Reminder::class)->findRemindersForTodayByResponsable($user);
                 break;
             
             default:
@@ -43,11 +46,10 @@ final class HomeController extends AbstractController
                 break;
         }
         
-
-
         return $this->render('home/index.html.twig',[
             'user'=>$user,
             'tenders'=>$tenders,
+            'reminders'=>$reminders,
             'total_tenders'=>array_sum($statistiques),
             'total_tender_by_status'=>$statistiques,
             'documents'=> $entityManager->getRepository(Document::class)->findWeeklyRespoDocuments($user),

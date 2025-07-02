@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TenderDateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,6 +42,17 @@ class TenderDate
 
     #[ORM\Column]
     private ?float $duration = 0;
+
+    /**
+     * @var Collection<int, Reminder>
+     */
+    #[ORM\OneToMany(targetEntity: Reminder::class, mappedBy: 'tenderDate', cascade: ['persist','remove'])]
+    private Collection $reminder;
+
+    public function __construct()
+    {
+        $this->reminder = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -145,5 +158,34 @@ class TenderDate
     public function __toString(): string
     {
         return $this->id; 
+    }
+
+    /**
+     * @return Collection<int, Reminder>
+     */
+    public function getReminder(): Collection
+    {
+        return $this->reminder;
+    }
+
+    public function addReminder(Reminder $reminder): static
+    {
+        if (!$this->reminder->contains($reminder)) {
+            $this->reminder->add($reminder);
+            $reminder->setTenderDate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReminder(Reminder $reminder): static
+    {
+        if ($this->reminder->removeElement($reminder)) {
+            if ($reminder->getTenderDate() === $this) {
+                $reminder->setTenderDate(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -4,12 +4,12 @@ namespace App\Form;
 
 use App\Entity\TenderDate;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-
 class TenderDateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -67,8 +67,17 @@ class TenderDateType extends AbstractType
                 'min' => 0,
                 'max' => 10,
                 'notInRangeMessage' => 'Entrez une durrée valide',
-            ])]
-        ]);
+                ])
+            ]
+        ])
+       // ->add('reminder', CollectionType::class, [
+       //        'entry_type' => ReminderType::class,
+       //         'entry_options' => ['label' => false],
+        //        'allow_add' => true,
+        //        'by_reference'=>false,
+        //        'allow_delete' => true,
+        //    ])
+        ;
         
     }
 

@@ -135,7 +135,7 @@ final class TenderController extends AbstractController
 
 
 
-    #[Route('/{id}', name: 'app_tender_delete', methods: ['POST'])]   
+    #[Route('/delete/{id}', name: 'app_tender_delete', methods: ['POST'])]   
     #[IsGranted('operation', 'tender', 'Page not found', 404)]
     public function delete(Request $request, Tender $tender, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
     {   

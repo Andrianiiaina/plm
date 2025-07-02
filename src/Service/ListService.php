@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\Reminder;
+
 class ListService
 {
     public static array $listUserRoles = [
@@ -38,4 +40,24 @@ class ListService
         "0"=>"Tender",
         "1"=>"Document",
     ];
+    public static array  $reminders=[ 
+        "1 jour avant"=>1,
+        "2 jours avant"=>2,
+        "3 jours avant"=>3,
+        "4 jours avant"=>4,
+        "5 jours avant"=>5,
+        "1 semaine avant"=>7,
+        "2 semaine avant"=>14,
+        "3 semaine avant"=>21,
+    ];
+
+ public static array  $tender_date_type=[ 
+        "soumissions"=>Reminder::DATE_TYPE_SUBMISSION,
+        "négociation"=>Reminder::DATE_TYPE_NEGOCIATION,
+        "réponse"=>Reminder::DATE_TYPE_RESPONSE,
+        "attribution"=>Reminder::DATE_TYPE_ATTRIBUTION,
+        "début"=>Reminder::DATE_TYPE_START,
+        "fin"=>Reminder::DATE_TYPE_END,
+    ];
+        
 }
