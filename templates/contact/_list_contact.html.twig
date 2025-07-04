@@ -18,7 +18,7 @@
             <td>{{ contact.contactPro}}*</br>{{ contact.contactPerso }}</td>
             <td>
                 {% for tender in contact.getTender() %}
-                    <a href="{{ path('app_tender_show',{'id':tender.id})}}">{{ tender.getContractNumber()}}</a>
+                    <a href="{{ path('app_tender_show',{'id':tender.id})}}" class="link-offset-2 link-underline link-underline-opacity-0 text-wrap">-{{ tender.getContractNumber()}}</a><br/>
                 {% endfor %}
             </td>
             <td>{{ contact.organisation }}</td>

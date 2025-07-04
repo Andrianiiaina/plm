@@ -9,6 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
 class Document
 {
+
+    const TO_FILL = 0;
+    const TO_VERIFY = 1;
+    const TO_SIGN = 2;
+    const TO_SEND = 3;
+
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -54,9 +62,6 @@ class Document
         $this->modifiedAt = null;
     
     }
-
-
-
     public function getId(): ?int
     {
         return $this->id;

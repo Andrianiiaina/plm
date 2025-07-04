@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\Document;
 use App\Entity\Reminder;
+use App\Entity\Tender;
 
 class ListService
 {
@@ -13,11 +15,11 @@ class ListService
     ];
 
    public static array $tender_status=[
-     "A résumer"=>0,
-     "A soumettre"=>1,
-     "Soumis"=>2,
-     "Recalé"=>3,
-     "Remporté"=>4,
+     "A résumer"=>Tender::TO_RESUMED,
+     "A soumettre"=>Tender::TO_SUBMITED,
+     "Soumis"=>Tender::SUBMITED,
+     "Recalé"=>Tender::LOST,
+     "Remporté"=>Tender::WON,
    ];
 
    public static array $tender_type=[
@@ -25,10 +27,10 @@ class ListService
         "Marché public"=>1,
    ];
    public static array $document_status = [
-        "A compléter"=>0,
-        "A vérifier"=>1,
-        "A signer"=>2,
-        "A envoyer"=>3,
+        "A compléter"=>Document::TO_FILL,
+        "A vérifier"=>Document::TO_VERIFY,
+        "A signer"=>Document::TO_SIGN,
+        "A envoyer"=>Document::TO_SEND,
     ];
 
     public static array $notification_type = [
@@ -47,17 +49,18 @@ class ListService
         "4 jours avant"=>4,
         "5 jours avant"=>5,
         "1 semaine avant"=>7,
-        "2 semaine avant"=>14,
-        "3 semaine avant"=>21,
+        "2 semaines avant"=>14,
+        "3 semaines avant"=>21,
+        "1 mois avant"=>30,
     ];
 
  public static array  $tender_date_type=[ 
-        "soumissions"=>Reminder::DATE_TYPE_SUBMISSION,
-        "négociation"=>Reminder::DATE_TYPE_NEGOCIATION,
-        "réponse"=>Reminder::DATE_TYPE_RESPONSE,
-        "attribution"=>Reminder::DATE_TYPE_ATTRIBUTION,
-        "début"=>Reminder::DATE_TYPE_START,
-        "fin"=>Reminder::DATE_TYPE_END,
+        "Soumission"=>Reminder::DATE_TYPE_SUBMISSION,
+        "Négociation"=>Reminder::DATE_TYPE_NEGOCIATION,
+        "Réponse"=>Reminder::DATE_TYPE_RESPONSE,
+        "Attribution"=>Reminder::DATE_TYPE_ATTRIBUTION,
+        "Début"=>Reminder::DATE_TYPE_START,
+        "Fin"=>Reminder::DATE_TYPE_END,
     ];
         
 }

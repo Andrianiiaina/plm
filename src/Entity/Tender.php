@@ -16,6 +16,12 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[UniqueEntity(fields: ['contract_number'], message: 'Ce référence est déja utilisé.')]
 class Tender
 {
+    const TO_RESUMED = 0;
+    const TO_SUBMITED=1;
+    const SUBMITED=2;
+    const LOST=3;
+    const WON=4;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
