@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Document;
+use App\Entity\History;
 use App\Entity\Reminder;
 use App\Entity\Tender;
 
@@ -38,10 +39,12 @@ class ListService
         "1"=>'Un tender vous a été attribué',
         "2"=>'Un document vous a été attribué',
     ];
+
     public static array $history_type = [
-        "0"=>"Tender",
-        "1"=>"Document",
+        History::TENDER_TYPE=>"Tender",
+        History::DOCUMENT_TYPE=>"Document",
     ];
+
     public static array  $reminders=[ 
         "1 jour avant"=>1,
         "2 jours avant"=>2,

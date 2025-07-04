@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Document;
+use App\Entity\History;
 use App\Entity\Tender;
 use App\Event\HistoryEvent;
 use App\Event\UserAssignedToEntityEvent;
@@ -65,7 +66,7 @@ final class DocumentController extends AbstractController
                         $entityManager->persist($document);
                         $entityManager->flush(); 
                         $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));          
-                        $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"add_document"));
+                        $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::DOCUMENT_TYPE,$document->getId(),"add_document"));
                         $this->addFlash('success','Document enregistré ! ' );
                     } catch (FileException $e) {
                         $this->addFlash('error', "Erreur! Veuillez revérifier les informations.");
@@ -123,7 +124,7 @@ final class DocumentController extends AbstractController
                 $entityManager->persist($document);
                 $entityManager->flush(); 
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($document->getResponsable(),$document->getId(),2));
-                $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"edit_document"));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::DOCUMENT_TYPE,$document->getId(),"edit_document"));
                         
                 $this->addFlash('success','Document modifié ! ' );
             }
@@ -151,7 +152,8 @@ final class DocumentController extends AbstractController
             $entityManager->remove($document);
             $fileUploader->removeFileFromStorage('tender_documents',$document->getFilepath());
             $entityManager->flush();
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document_id,"delete_document"));
+            
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::DOCUMENT_TYPE,$document_id,"delete_document"));
             $this->addFlash('success','Document supprimé ! ' );
         }
 
@@ -177,7 +179,7 @@ final class DocumentController extends AbstractController
         $document=$em->getRepository(Document::class)->findOneBy(['id'=>$data['document_id']]);
         $document->setStatus($data['status_id']);
         $em->flush();
-        $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"change_status_document"));
+        $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::DOCUMENT_TYPE,$document->getId(),"change_status_document"));
         
         return $this->json([
             'message' => 'JSON bien reçu',
@@ -194,10 +196,10 @@ final class DocumentController extends AbstractController
             $document->setIsArchived(!$document->isArchived());
             $entityManager->flush();
             if($document->isArchived()){
-                $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"archive_document"));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::DOCUMENT_TYPE,$document->getId(),"archive_document"));
                 $this->addFlash('success','Document archivé ! ');
             }else{
-                $dispatcher->dispatch(new HistoryEvent($this->getUser(),1,$document->getId(),"reset_document"));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::DOCUMENT_TYPE,$document->getId(),"reset_document"));
                 $this->addFlash('success','Document restauré ! ') ;
             }
             

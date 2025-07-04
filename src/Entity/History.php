@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: HistoryRepository::class)]
 class History
 {
+    const TENDER_TYPE=0;
+    const DOCUMENT_TYPE=1;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

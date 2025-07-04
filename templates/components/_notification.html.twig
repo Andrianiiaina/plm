@@ -9,7 +9,7 @@
 
             {% endif %}
             {% if not notification.isRead %}
-                <a href="{{ path('notification_mark_read', {'id': notification.id}) }}" class="btn btn-sm">✔lu</a>
+                <a href="{{ path('notification_mark_read', {'id': notification.id}) }}" class="btn btn-sm"><i class="bi bi-x-lg"></i></a>
             {% endif %}
         </li>
     {% else %}

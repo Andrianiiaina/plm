@@ -16,7 +16,7 @@ final class NotificationController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $notification->setIsRead(true);
+        $em->remove($notification);
         $em->flush();
 
         return $this->redirectToRoute('app_home'); 

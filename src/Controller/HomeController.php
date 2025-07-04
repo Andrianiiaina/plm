@@ -54,7 +54,7 @@ final class HomeController extends AbstractController
             'total_tender_by_status'=>$statistiques,
             'documents'=> $entityManager->getRepository(Document::class)->findWeeklyRespoDocuments($user),
             'calendars'=>$entityManager->getRepository(Calendar::class)->findBy([],['beginAt'=>'ASC'],5),
-            'notifications'=> $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],15),
+            'notifications'=> $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],12),
             'week_tenders'=>$weekly_tenders,
             'expired_soumission_date'=>$expiration,
         ]);

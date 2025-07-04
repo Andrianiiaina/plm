@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Document;
+use App\Entity\History;
 use App\Entity\Tender;
 use App\Entity\TenderDate;
 use App\Event\HistoryEvent;
@@ -58,7 +59,7 @@ final class TenderController extends AbstractController
             $entityManager->persist($tender_date);
                 $entityManager->flush();
                 $dispatcher->dispatch(new UserAssignedToEntityEvent($tender->getResponsable(),$tender->getId(),1));
-                $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"create_tender"));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"create_tender"));
                 $this->addFlash('success','Tender enregistré ! ' );
             return $this->redirectToRoute('app_tender_edit_date', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -80,7 +81,7 @@ final class TenderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
             $this->addFlash('success','Tender modifié ! ' );
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_information_tender"));
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"edit_information_tender"));
             return $this->redirectToRoute('app_tender_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -104,7 +105,7 @@ final class TenderController extends AbstractController
 
         if ($form_status->isSubmitted() && $form_status->isValid()) {
             $entityManager->flush();
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_status_tender"));
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"edit_status_tender"));
 
             $this->addFlash('success','status modifié ! ' );
             return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
@@ -143,7 +144,7 @@ final class TenderController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$id, $request->getPayload()->getString('_token'))) {
             $entityManager->remove($tender);
             $entityManager->flush();
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$id,"delete_tender"));
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$id,"delete_tender"));
 
             $this->addFlash('success','Tender supprimé ! ' );
         }
