@@ -44,7 +44,7 @@
             </div>
             <div class="col-md-4">
                     <p class="fs-4">Rappels</p>
-                    <div class="row">
+                    <div class="row mb-3">
                         {{ form_start(form_reminder,{'action':path('app_add_reminder',{'id':tender.getTenderDate.getId}),'attr': {'id': 'form-reminder','class':'row'}}) }}
                             <div class="col-md-5">{{form_widget(form_reminder.date_type)}}</div>
                             <div class="col-md-5">{{form_widget(form_reminder.day_before)}}</div>
@@ -53,7 +53,7 @@
                       </div>
                    
                     {% for reminder in tender.getTenderDate().getReminder() %}
-                        <div class="row mt-3">
+                        <div class="row">
                             <div class="col-md-5">{{ reminder.getDateType() | getDateType }}</div>
                             <div class="col-md-5">{{ reminder.getDayBefore() | getReminderDay }}</div>
                             <div class="col-md-2">

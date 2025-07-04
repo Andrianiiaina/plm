@@ -26,9 +26,8 @@ class ReminderRepository extends ServiceEntityRepository
             ->join('r.tenderDate', 'td')
             ->join('td.tender', 'tender')
             ->where('tender.responsable = :responsable')
-            ->andWhere('r.reminder_date BETWEEN :startOfDay AND :endOfDay')
+            ->andWhere('r.reminder_date < :endOfDay')
             ->setParameter('responsable', $responsable)
-            ->setParameter('startOfDay', $startOfDay)
             ->setParameter('endOfDay', $endOfDay)
             ->getQuery()
             ->getResult();
@@ -41,8 +40,7 @@ class ReminderRepository extends ServiceEntityRepository
         $endOfDay = (clone $today)->setTime(23, 59, 59); 
 
         return $this->createQueryBuilder('r')
-            ->where('r.reminder_date BETWEEN :startOfDay AND :endOfDay')
-            ->setParameter('startOfDay', $startOfDay)
+            ->where('r.reminder_date < :endOfDay')
             ->setParameter('endOfDay', $endOfDay)
             ->getQuery()
             ->getResult();

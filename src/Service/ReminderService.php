@@ -47,6 +47,34 @@ class ReminderService
         }
     }
 
+   public function update_reminder(TenderDate $tenderDate): bool
+    {
+        $reminders = $this->entityManager->getRepository(Reminder::class)->findBy(['tenderDate' => $tenderDate]);
+
+        foreach ($reminders as $reminder) {
+            $date_tender = $this->getDateByType($tenderDate, $reminder->getDateType());
+            
+            if ($date_tender === null) {
+                $this->entityManager->remove($reminder);
+            } else {
+                // Cloner la date pour ne pas la modifier directement
+                $new_date = clone $date_tender;
+                
+                $new_date = $new_date->modify("-" . $reminder->getDayBefore() . " days");
+                
+                // Si la date a changé, on met à jour le rappel
+                if ($reminder->getReminderDate() != $new_date) {
+                    $reminder->setReminderDate($new_date);
+                    $this->entityManager->persist($reminder);
+                }
+            }
+        }
+        $this->entityManager->flush();
+        return true;
+    }
+
+
+
     
     public function createReminder(TenderDate $tenderDate, Reminder $reminder): bool
     {
@@ -56,7 +84,7 @@ class ReminderService
             return false;"La date pour ce type de rappel est vide. Enregistrez d'abord la date.";
         }
 
-        $reminderDate = $date->modify("-" . $reminder->getDayBefore() . " days");
+        $reminderDate = $date->modify("-".$reminder->getDayBefore()." days");
         $reminder->setTenderDate($tenderDate);
         $reminder->setReminderDate($reminderDate);
 

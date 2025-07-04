@@ -33,9 +33,15 @@
 					<div class="card card-body mb-3">
 						<p class="h4">Rappels</p>
 						{% for reminder in reminders %}
-						<div class="col clearfix p-2">
-							<a href="{{path('app_tender_edit_date',{'id':reminder.getTenderDate.getTender.getId})}}" class="link-secondary link-underline link-underline-opacity-0">Rappel pour la {{reminder.getDateType() | getDateType}} du projet {{reminder.getTenderDate.getTender.getContractNumber}}</a>
-						</div>
+							<div class="col clearfix">
+								<a href="{{path('app_tender_edit_date',{'id':reminder.getTenderDate.getTender.getId})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
+									{{reminder.getDateType() | getDateType}} du projet {{reminder.getTenderDate.getTender.getContractNumber}}
+								</a>
+								<form id="delete_reminder_{{reminder.id}}" class="m-0 p-0 float-end" name="delete_reminder" method="post" action="{{path('app_reminder_delete',{'reminder_id':reminder.id,'tender_id':reminder.tenderDate.tender.id})}}" >
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_reminder' ~ reminder.id) }}">
+                                    <button class="btn" form="delete_reminder_{{reminder.id}}" type="submit"><i class="bi bi-x-lg"></i></button>
+                            	</form>
+							</div>
 						{% endfor %}
 						
 					</div>

@@ -24,7 +24,7 @@ final class TenderInfoController extends AbstractController
 {
     
     #[Route('/edit_date/{id}', name: 'app_tender_edit_date', methods: ['GET', 'POST'])]
-    public function edit_date(Request $request, Tender $tender, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
+    public function edit_date(ReminderService $reminder_service,Request $request, Tender $tender, EntityManagerInterface $entityManager, EventDispatcherInterface $dispatcher): Response
     {
         $tenderDate=$tender->getTenderDate()? $tender->getTenderDate() : new TenderDate();
         $form_date = $this->createForm(\App\Form\TenderDateType::class, $tenderDate);
@@ -33,11 +33,12 @@ final class TenderInfoController extends AbstractController
             $tenderDate->setTender($tender);
             $entityManager->persist($tenderDate);
             $entityManager->flush();
+            $reminder_service->update_reminder($tenderDate);
             $this->addFlash('success','Information sur les dates enregistrée' );
             $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_date_tender"));
 
             if($tender->getContact()){
-                return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_tender_edit_date', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
             }
             return $this->redirectToRoute('app_tender_edit_organisation', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
         }
