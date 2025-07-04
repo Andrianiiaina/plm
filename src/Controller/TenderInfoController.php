@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\History;
 use App\Entity\Reminder;
 use App\Entity\Tender;
 use App\Entity\TenderDate;
@@ -35,7 +36,7 @@ final class TenderInfoController extends AbstractController
             $entityManager->flush();
             $reminder_service->update_reminder($tenderDate);
             $this->addFlash('success','Information sur les dates enregistrée' );
-            $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_date_tender"));
+            $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"edit_date_tender"));
 
             if($tender->getContact()){
                 return $this->redirectToRoute('app_tender_edit_date', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
@@ -78,7 +79,7 @@ final class TenderInfoController extends AbstractController
         
         $entityManager->flush();
         $this->addFlash('success',"Information sur l'organisation enregistrée!" );
-        $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"edit_organisation_tender"));
+        $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"edit_organisation_tender"));
         return $this->redirectToRoute('app_tender_show', ['id'=>$tender->getId()], Response::HTTP_SEE_OTHER);
     }
       
@@ -91,10 +92,10 @@ final class TenderInfoController extends AbstractController
 
             if($tender->isArchived()){
                 $this->addFlash('success','Tender archivé ! ');
-                $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"archive_tender"));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"archive_tender"));
             }else{
                 $this->addFlash('success','Tender restauré ! ') ;
-                $dispatcher->dispatch(new HistoryEvent($this->getUser(),0,$tender->getId(),"reset_tender"));
+                $dispatcher->dispatch(new HistoryEvent($this->getUser(),History::TENDER_TYPE,$tender->getId(),"reset_tender"));
             }
         }else{
             $this->addFlash('error','L\'Opération a échoué. Veuillez réessayer.');

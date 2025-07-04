@@ -109,7 +109,7 @@ final class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if(!$form->isValid()){
-                $this->addFlash('error', 'Un problème est survenu, veuillez réessayer.');
+                $this->addFlash('error', "Un problème est survenu, veuillez vérifier le format du fichier, et/ou que la date de fin prévu est > aujourd'hui.");
             }else{
                 $brochureDocument = $form['filepath']->getData();
                 if ($brochureDocument) {
@@ -118,7 +118,7 @@ final class DocumentController extends AbstractController
                         $document->setFilename($brochureDocument->getClientOriginalName());
                         $document->setFilepath($newFilename);
                     } catch (FileException $e) {
-                        $this->addFlash('error', "Erreur lors de la modification du document, veuillez réessayer.");
+                        $this->addFlash('error', "Erreur lors de la modification du document, veuillez vérifier le format du fichier.");
                     }
                 }
                 $entityManager->persist($document);
