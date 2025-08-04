@@ -19,24 +19,24 @@ class TenderRepositoryTest extends KernelTestCase
     }
 
 
-    public function testFindRespoTendersReturnsEmptyArrayForUserWithoutTenders(): void
+    public function testfindTendersByRespoReturnsEmptyArrayForUserWithoutTenders(): void
     {
         $user = static::getContainer()->get('doctrine')->getRepository(User::class)->find(1); // Un user sans tenders
 
         $this->assertNotNull($user, "L'utilisateur de test n'a pas été trouvé en base.");
 
-        $tenders = $this->tenderRepository->findRespoTenders($user, false);
+        $tenders = $this->tenderRepository->findTendersByRespo($user, false);
 
-        $this->assertIsArray($tenders, "La méthode findRespoTenders doit retourner un tableau.");
-        $this->assertEmpty($tenders, "La méthode findRespoTenders devrait retourner un tableau vide si aucun tender n'est associé à cet utilisateur.");
+        $this->assertIsArray($tenders, "La méthode findTendersByRespo doit retourner un tableau.");
+        $this->assertEmpty($tenders, "La méthode findTendersByRespo devrait retourner un tableau vide si aucun tender n'est associé à cet utilisateur.");
     }
     
-    public function testFindRespoTenders(): void
+    public function testfindTendersByRespo(): void
     {
         $user = static::getContainer()->get('doctrine')->getRepository(User::class)->find(2);  
         $this->assertNotNull($user, "L'utilisateur de test n'a pas été trouvé en base.");
-        $tenders = $this->tenderRepository->findRespoTenders($user, false);  
-        $this->assertIsArray($tenders, "La méthode findRespoTenders doit retourner un tableau.");
+        $tenders = $this->tenderRepository->findTendersByRespo($user, false);  
+        $this->assertIsArray($tenders, "La méthode findTendersByRespo doit retourner un tableau.");
     
         // Vérifier que le tableau n'est pas vide (si on s'attend à avoir des résultats)
         $this->assertNotEmpty($tenders, "Aucun tender trouvé pour cet utilisateur.");

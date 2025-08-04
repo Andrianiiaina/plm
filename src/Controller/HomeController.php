@@ -26,19 +26,20 @@ final class HomeController extends AbstractController
         $tenderRepository=$entityManager->getRepository(Tender::class);
         switch (true) {
             case $this->isGranted('ROLE_ADMIN'):
-                $statistiques=$tenderRepository->findAllStatistic();
-                $tenders=$tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               
-                $weekly_tenders=$tenderRepository->findAllTenderForThisWeek();
-                $expiration=$tenderRepository->findAllExpiredTender();
-                $reminders=$entityManager->getRepository(Reminder::class)->findAllRemindersForToday();
+                $statistiques = $tenderRepository->findAdminTenderStatistics();
+                $tenders = $tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               
+                $calendars = $entityManager->getRepository(Calendar::class)->findAdminCalendar();
+                $expiration = $tenderRepository->findAdminExpiredTenders();
+                $reminders = $entityManager->getRepository(Reminder::class)->findAdminRemindersForToday();
                 break;
                 
             case $this->isGranted('ROLE_RESPO'):
-                $statistiques=$tenderRepository->findRespoStatistic($user);
-                $tenders=$tenderRepository->findBy(['responsable' => $user,'isArchived'=>false], ['createdAt' => 'DESC'],10);
-                $weekly_tenders=$tenderRepository->findFilteredTendersForThisWeek($user);
-                $expiration=$tenderRepository->findExpiredTender($user);
-                $reminders=$entityManager->getRepository(Reminder::class)->findRemindersForTodayByResponsable($user);
+                $statistiques=$tenderRepository->findTenderStatisticByRespo($user);
+                $tenders=$tenderRepository->findBy(['responsable' => $user,'isArchived'=>false], ['createdAt' => 'DESC'],10);           
+                $calendars = $entityManager->getRepository(Calendar::class)->findUserCalendar($user);
+               
+                $expiration=$tenderRepository->findExpiredTendersByRespo($user);
+                $reminders=$entityManager->getRepository(Reminder::class)->findRespoRemindersForToday($user);
                 break;
             
             default:
@@ -53,9 +54,8 @@ final class HomeController extends AbstractController
             'total_tenders'=>array_sum($statistiques),
             'total_tender_by_status'=>$statistiques,
             'documents'=> $entityManager->getRepository(Document::class)->findWeeklyRespoDocuments($user),
-            'calendars'=>$entityManager->getRepository(Calendar::class)->findBy([],['beginAt'=>'ASC'],5),
+            'calendars'=>$calendars,
             'notifications'=> $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],12),
-            'week_tenders'=>$weekly_tenders,
             'expired_soumission_date'=>$expiration,
         ]);
     }
@@ -65,7 +65,7 @@ final class HomeController extends AbstractController
     {
         $tenders=$this->isGranted('ROLE_ADMIN')?
         $tenderRepository->findBy(['status'=>$status]):
-        $tenderRepository->getTenderByStatus($this->getUser(),$status);
+        $tenderRepository->findTenderStatusByRespo($this->getUser(),$status);
         $pagination = $paginator->paginate($tenders, $request->query->getInt('page', 1), 10);
 
         return $this->render('tender/components/tender_search_result.html.twig', [

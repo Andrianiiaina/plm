@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Repository\TenderRepository;
 use App\Entity\Calendar;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,16 +12,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CalendarRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public $tenderRepository;
+    public function __construct(ManagerRegistry $registry, TenderRepository $tenderRepository)
     {
         parent::__construct($registry, Calendar::class);
+        $this->tenderRepository = $tenderRepository;
     }
 
     public function findUserCalendar($responsable, $number_to_fetch=10, $term=''): array
     {
-        return $this->createQueryBuilder('c')
-              ->join('c.tender', 'p')
-            ->where('p.responsable = :responsable')
+        $calendars = $this->createQueryBuilder('c')
+            ->select('c.id, t.title as tender, c.title, c.beginAt, c.endAt')
+            ->join('c.tender', 't')
+            ->where('t.responsable = :responsable')
             ->andWhere('c.title LIKE :term')
             ->setParameter('responsable', $responsable)
             ->setParameter('term', '%' . $term . '%')
@@ -29,13 +33,23 @@ class CalendarRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+        $tenders = $this->tenderRepository->findTendersByRespo($responsable);
+        $tender_date = $this->tenderRepository->findTendersForCalendar($tenders);
+        $datas = array_merge($calendars , $tender_date);
+        usort($datas, function ($a, $b) {
+            return $a['beginAt'] <=> $b['beginAt'];
+        });
+        
+
+        return $datas;
     }
-      public function findAdminCalendar($number_to_fetch=10, $term=''): array
+    public function findAdminCalendar($number_to_fetch=10, $term=''): array
     {
         $date = new \DateTime();
         $date->modify('-10 days'); 
-        return $this->createQueryBuilder('c')
-            ->join('c.tender', 'p')
+        $calendars = $this->createQueryBuilder('c')
+            ->select('c.id, t.title as tender, c.title, c.beginAt')
+            ->join('c.tender', 't')
             ->where('c.title LIKE :term')
             ->andWhere('c.beginAt >= :date')
             ->orderBy('c.beginAt', 'ASC') 
@@ -46,30 +60,12 @@ class CalendarRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+        $tenders = $this->tenderRepository->findAdminTenders("");
+        $tender_date = $this->tenderRepository->findTendersForCalendar($tenders);
+        $datas = array_merge($calendars , $tender_date);
+        usort($datas, function ($a, $b) {
+            return $a['beginAt'] <=> $b['beginAt'];
+        });
+        return $datas;
     }
-
-    //    /**
-    //     * @return Calendar[] Returns an array of Calendar objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Calendar
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

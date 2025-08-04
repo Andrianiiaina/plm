@@ -16,7 +16,7 @@ class ReminderRepository extends ServiceEntityRepository
         parent::__construct($registry, Reminder::class);
     }
 
-    public function findRemindersForTodayByResponsable($responsable): array
+    public function findRespoRemindersForToday($responsable): array
     {
         $today = new \DateTime();
         $startOfDay = (clone $today)->setTime(0, 0, 0); 
@@ -32,8 +32,8 @@ class ReminderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    //for admin
-    public function findAllRemindersForToday(): array
+    
+    public function findAdminRemindersForToday(): array
     {
         $today = new \DateTime();
         $startOfDay = (clone $today)->setTime(0, 0, 0); 

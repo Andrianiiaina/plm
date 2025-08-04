@@ -11,6 +11,10 @@
                 <th>Titre</th>
                 <td>{{ calendar.title }}</td>
             </tr>
+              <tr>
+                <th>Tender</th>
+                <td>{{ calendar.getTender }}</td>
+            </tr>
             <tr>
                 <th>Debut</th>
                 <td>{{ calendar.beginAt ? calendar.beginAt|date('d-m-Y H:i') : '' }}</td>
@@ -19,7 +23,15 @@
                 <th>Fin</th>
                 <td>{{ calendar.endAt ? calendar.endAt|date('d-m-Y H:i') : '' }}</td>
             </tr>
-           
+            <tr>
+              <td>
+                  <form method="post" action="{{ path('app_calendar_delete', {'id': calendar.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce calendar?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_calendar' ~ calendar.id) }}">
+                    <button class="btn text-danger"></i>Supprimer</button>
+                </form>
+              
+              </td>
+            </tr>
         </tbody>
     </table>
 {% endblock %}

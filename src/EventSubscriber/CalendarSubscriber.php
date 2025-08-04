@@ -25,20 +25,22 @@ class CalendarSubscriber implements EventSubscriberInterface
         ];
     }
 
+
     public function onCalendarSetData(SetDataEvent $setDataEvent)
     {
         $user = $this->security->getUser();
         $calendars =$this->security->isGranted('ROLE_ADMIN')?
         $this->calendarRepository->findAdminCalendar():
         $this->calendarRepository->findUserCalendar($user,100,'');
-      
-        foreach ($calendars as $calendar) {
-        $calendarEvent = new Event(
-            $calendar->getTitle(),
-            $calendar->getBeginAt(),
-            $calendar->getEndAt() 
-        );
+    
 
+
+        foreach ($calendars as $calendar) {
+            $calendarEvent = new Event(
+                $calendar["title"],
+                $calendar["beginAt"],
+                $calendar["endAt"] ?? $calendar["beginAt"]
+            );
             /*
              * Add custom options to events
              *
@@ -48,13 +50,14 @@ class CalendarSubscriber implements EventSubscriberInterface
                 'backgroundColor' => 'purple',
                 'borderColor' => 'purple',
             ]);
-            $calendarEvent->addOption(
-                'url',
-                $this->router->generate('app_calendar_show', [
-                    'id' => $calendar->getId(),
-                ])
-            );
+            if(key_exists("type",$calendar)){
+                $calendarEvent->addOption('url', $this->router->generate('app_tender_show', ['id' => $calendar["id"]]));
+            }else{
+                $calendarEvent->addOption('url', $this->router->generate('app_calendar_show', ['id' => $calendar["id"]]));
 
+            
+            }
+           
             $setDataEvent->addEvent($calendarEvent);
         }
     }

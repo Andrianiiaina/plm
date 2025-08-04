@@ -17,7 +17,7 @@ final class ArchiveController extends AbstractController
         return $this->render('archives/archive.html.twig', [
             'tenders' => $this->isGranted('ROLE_ADMIN')? 
             $entityManager->getRepository(Tender::class)->findBy(['isArchived'=>true]) :
-            $entityManager->getRepository(Tender::class)->findRespoTenders($this->getUser(),true),
+            $entityManager->getRepository(Tender::class)->findTendersByRespo($this->getUser(),true),
             'documents' => $entityManager->getRepository(Document::class)->findBy(['isArchived'=>true], ['createdAt' => 'DESC']),
         ]);
     }

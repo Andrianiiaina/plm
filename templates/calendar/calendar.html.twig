@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Calendar index{% endblock %}
+{% block title %}Calendar{% endblock %}
 {% block body %}
     <div class="row">
-        <div class="col-md-4">
-            <div class="clearfix">
+        <div class="col-md-3">
+             <div class="clearfix">
                 <p class="h2 float-start">Agenda</p>
-                <a href="{{ path('app_calendar_index') }}" class="btn float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Nouveau</a>
+                <a href="{{ path('app_calendar_index') }}" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addGroupModal">Nouveau <i class="bi bi-calendar-plus-fill"></i></a>
             </div>
 
             <form method="get" action="{{ path('app_calendar_index') }}" class="row mb-3">
@@ -19,12 +19,9 @@
             </form>
 
             {% for calendar in calendars %}
-                <div class="col mb-3">
-                    <a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-                        <strong>{{ calendar.getBeginAt ? calendar.getBeginAt|date('d/m/Y H:i') : '' }}</strong>	
-                        {{ calendar.title | u.truncate(30, '...')}}<br/>
-                        <small><i>{{ calendar.tender.title | u.truncate(70, '...')}}</i></small>
-                    </a>
+                <div class="col mb-1">
+                    <small><strong>{{ calendar["beginAt"] ? calendar["beginAt"]|date('d/m/Y H:i') : '' }}</strong>
+                    <i>{{ calendar["title"] | u.truncate(30, '...')}}</i></small>
                 </div>
             {% else %}
                 <p>aucun.</p>
@@ -34,10 +31,10 @@
             </div>
         </div>
         <div class="col-md-8">
-            
             <div id="calendar-holder"></div>
         </div>
     </div>
+    
     <div class="modal fade" id="addGroupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -61,7 +58,6 @@
           </div>
         </div>
       </div>
-
 {% endblock %}
 {% block javascripts %}
     {% block importmap %}{{ importmap('calendar') }}{% endblock %}
@@ -92,6 +88,7 @@
                     right: 'dayGridMonth,timeGridWeek,timeGridDay',
                 },
                 timeZone: 'UTC',
+
             });
 
             calendar.render();

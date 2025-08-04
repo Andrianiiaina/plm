@@ -19,7 +19,7 @@ final class CalendarController extends AbstractController
     public function calendar(CalendarRepository $calendarRepository,PaginatorInterface $paginator,Request $request, EntityManagerInterface $entityManager): Response
     {               
         $calendar = new Calendar();
-        $form = $this->createForm(CalendarType::class, $calendar);
+        $form = $this->createForm(CalendarType::class, $calendar,["user"=>$this->getUser()]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if(!$form->isValid()){
@@ -29,8 +29,6 @@ final class CalendarController extends AbstractController
                 $entityManager->flush(); 
                 $this->addFlash('success','Evènement enregistré ! ' );
             }
-
-    
             return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
         }
         $searchTerm=$request->query->get('q','');
@@ -40,7 +38,7 @@ final class CalendarController extends AbstractController
             $calendarRepository->findAdminCalendar(100,$searchTerm):
             $calendarRepository->findUserCalendar($this->getUser(),100,$searchTerm),
             $request->query->getInt('page', 1), 
-            10
+            20
         );
 
         return $this->render('calendar/calendar.html.twig',

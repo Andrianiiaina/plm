@@ -8,24 +8,20 @@
 		<div class="col">
 			<i class="bi bi-person-circle fs-2"></i> {{user.email | capitalize}} 
 			<div class="btn-group float-end">
-				
 				<a href="{{ path('app_tender_new') }}" class="btn"> + Tender</a>
-			
-					<button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-						<i class="bi bi-bell"></i> Notifications <span class="badge bg-danger">{{ notifications|filter(n => not n.isRead)|length }}</span>
-					</button>
-					{{ include('components/_notification.html.twig',{'notifications':notifications})}}
-
-				
+				<button class="btn dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="bi bi-bell"></i> Notifications <span class="badge bg-danger">{{ notifications|filter(n => not n.isRead)|length }}</span>
+				</button>
+				{{ include('components/_notification.html.twig',{'notifications':notifications})}}
 			</div>
 		</div>
 		<div class="d-flex justify-content-center my-3 row">
 			{{ include('tender/components/tender_statistic.html.twig',{'total_tender_by_status':total_tender_by_status})}}
-				<div class="col-md-2 p-2">
-					<a href="{{path('app_tender_index')}}" class="fw-bold btn btn-outline-secondary d-flex align-items-center justify-content-between align-items-center"> 
-						Total <span class="fs-4">{{total_tenders}}</span>
-					</a>
-				</div>
+			<div class="col-md-2 p-2">
+				<a href="{{path('app_tender_index')}}" class="fw-bold btn btn-outline-secondary d-flex align-items-center justify-content-between align-items-center"> 
+					Total <span class="fs-4">{{total_tenders}}</span>
+				</a>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-8">
@@ -38,9 +34,9 @@
 									{{reminder.getDateType() | getDateType}} du projet {{reminder.getTenderDate.getTender.getContractNumber}}
 								</a>
 								<form id="delete_reminder_{{reminder.id}}" class="m-0 p-0 float-end" name="delete_reminder" method="post" action="{{path('app_reminder_delete',{'reminder_id':reminder.id,'tender_id':reminder.tenderDate.tender.id})}}" >
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_reminder' ~ reminder.id) }}">
-                                    <button class="btn" form="delete_reminder_{{reminder.id}}" type="submit"><i class="bi bi-x-lg"></i></button>
-                            	</form>
+									<input type="hidden" name="_token" value="{{ csrf_token('delete_reminder' ~ reminder.id) }}">
+									<button class="btn" form="delete_reminder_{{reminder.id}}" type="submit"><i class="bi bi-x-lg"></i></button>
+								</form>
 							</div>
 						{% endfor %}
 						
@@ -50,19 +46,17 @@
 					<div class="card card-body mb-3">
 						<p class="h4">Deadline dépassés</p>
 						{% for tender in expired_soumission_date %}
-						<div class="col clearfix p-2">
-							<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-								<b>{{tender.contract_number}}</b> devait etre soumis le <b>{{tender.submissionDate ? tender.submissionDate|date('d F') : '' }}</b> mais son status est encore
-								<b>{{tender.status | getTenderStatus}}</b>
-							</a>
-							
-						</div>
+							<div class="col clearfix p-2">
+								<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0">
+									<b>{{tender.contract_number}}</b> devait etre soumis le <b>{{tender.submissionDate ? tender.submissionDate|date('d F') : '' }}</b> mais son status est encore
+									<b>{{tender.status | getTenderStatus}}</b>
+								</a>
+								
+							</div>
 						{% endfor %}
 						
 					</div>
 				</div>
-
-
 				<div class="row">
 					<div class="col-md-4 p-0 m-0">
 						<div class="pt-2 card card-body">
@@ -82,58 +76,46 @@
 					<div class="col-md-8 p-0 m-0 ps-3">
 						<div class="card card-body">
 							<div class="clearfix">
-								<p class="h4 float-start">Agenda</p>
-								<a href="{{ path('app_calendar_index') }}" class="btn float-end">Voir tout</a>
+								<p class="h4 float-start">Documents cette semaine</p>
+								<a href="{{ path('app_document_index') }}" class="btn float-end">Voir tout</a>
 							</div>
-							{% for calendar in calendars %}
-							<div class="col p-2">
-								<a href="{{path('app_calendar_show', {'id': calendar.id})}}" class="link-secondary link-underline link-underline-opacity-0">
-									<strong>{{ calendar.getBeginAt ? calendar.getBeginAt|date('d/m/Y H:i') : '' }}</strong>	
-									{{ calendar.title | u.truncate(30, '...')}}<br/>
-									<small><i>{{ calendar.tender.title | u.truncate(70, '...')}}</i></small>
-								</a>
-								</div>
-							{% else %}
-							<p>aucun.</p>
-							{% endfor %}
+					
+								{% for document in documents %}
+									<div class="col clearfix p-2">
+										<a href="{{path('app_document_show', {'id': document.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
+											<strong>{{document.name}}</strong><br/>
+											<small><i>{{document.tender| u.truncate(45, '...')}}</i></small>
+										</a>	
+										<span class="float-end badge text-bg-{{ document.status| getStatusColor}}">
+											{{ document.limitDate ? document.limitDate|date('d F Y') : 'aucune' }}<br/>
+											<i>{{ document.status| getDocumentStatus}}</i>
+										</span>
+									</div>
+								{% endfor %}
 						</div>
 					
 						
 					</div>
 				</div>
 				
-
 			</div>
 			<div class="col-md-4">
-				<div class="card card-body mb-3">
-					<p class="h4">Tenders cette semaine:</p>
-					{% for tender in week_tenders %}
-					<div class="col clearfix p-2">
-						<a href="{{path('app_tender_show', {'id': tender.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
-							<strong>{{tender.dateType}} </strong><br/>
-							{{tender.contract_number}}<br/>
-						</a>	
-						<span class="float-end"> {{tender.dateValue ? tender.dateValue|date('d F Y') : '' }}</span>
+				<div class="card card-body">
+					<div class="clearfix">
+						<p class="h4 float-start">Agenda</p>
+						<a href="{{ path('app_calendar_index') }}" class="btn float-end">Voir tout</a>
 					</div>
-					{% endfor %}
-					
-				</div>
-				<div class="card card-body mt-3">
-					<p href="{{ path('app_document_index') }}" class="h4 float-end">Documents cette semaine</p>
-					
-					{% for document in documents %}
-						<div class="col clearfix p-2">
-							<a href="{{path('app_document_show', {'id': document.id})}}" class="link-secondary link-underline link-underline-opacity-0 float-start">
-								<strong>{{document.name}}</strong><br/>
-								<small><i>{{document.tender| u.truncate(45, '...')}}</i></small>
-							</a>	
-							<span class="float-end badge text-bg-{{ document.status| getStatusColor}}">
-								{{ document.limitDate ? document.limitDate|date('d F Y') : 'aucune' }}<br/>
-								<i>{{ document.status| getDocumentStatus}}</i>
-							</span>
+						
+					{% for calendar in calendars %}
+						<div class="col p-2">
+							<a href="#" class="link-secondary link-underline link-underline-opacity-0">
+								<strong>{{ calendar["beginAt"] ? calendar["beginAt"]|date('d/m/Y H:i') : '' }}</strong>	
+								{{ calendar["title"] | u.truncate(30, '...')}}<br/>
+							</a>
 						</div>
+					{% else %}
+					<p>aucun.</p>
 					{% endfor %}
-				</div>
 			</div>
 		</div>
     </div>
