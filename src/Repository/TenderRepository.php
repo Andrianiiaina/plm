@@ -95,6 +95,7 @@ class TenderRepository extends ServiceEntityRepository
                     'beginAt' => $tender->getTenderDate()->getSubmissionDate(),
                     'endAt' => $tender->getTenderDate()->getSubmissionDate(),
                     'id' => $tender->getId(),
+                    'tender' => $tender->getTitle(),
                     'type' => "tender",
                 ];
             }
@@ -104,6 +105,7 @@ class TenderRepository extends ServiceEntityRepository
                     'beginAt' => $tender->getTenderDate()->getResponseDate(),
                     'endAt' => $tender->getTenderDate()->getResponseDate(),
                     'id' => $tender->getId(),
+                    'tender' => $tender->getTitle(),
                     'type' => "tender",
                 ];
             }
@@ -113,6 +115,7 @@ class TenderRepository extends ServiceEntityRepository
                     'beginAt' => $tender->getTenderDate()->getAttributionDate(),
                     'endAt' => $tender->getTenderDate()->getAttributionDate(),
                     'id' => $tender->getId(),
+                    'tender' => $tender->getTitle(),
                     'type' => "tender",
                 ];
             }
@@ -122,6 +125,7 @@ class TenderRepository extends ServiceEntityRepository
                     'beginAt' => $tender->getTenderDate()->getNegociationDate(),
                     'endAt' => $tender->getTenderDate()->getNegociationDate(),
                     'id' => $tender->getId(),
+                    'tender' => $tender->getTitle(),
                     'type' => "tender",
                 ];
             }
@@ -173,5 +177,11 @@ class TenderRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult()
     ;
+    }
+
+    public function getTenders($user,$is_admin,$search_term=""){
+        return $is_admin 
+            ? $this->findAdminTenders($search_term) 
+            : $this->findTendersByRespo($user,false,$search_term);
     }
 }

@@ -27,13 +27,10 @@ final class TenderController extends AbstractController
     public function index(TenderRepository $tenderRepository, Request $request,PaginatorInterface $paginator): Response
     {
         $searchTerm = $request->query->get('q','');
-        $tenders = $this->isGranted('ROLE_ADMIN') 
-            ? $tenderRepository->findAdminTenders($searchTerm) 
-            : $tenderRepository->findTendersByRespo($this->getUser(),false,$searchTerm);
-
+        $tenders = $tenderRepository->getTenders($this->getUser(),$this->isGranted('ROLE_ADMIN'),$searchTerm);
         $pagination = $paginator->paginate($tenders, $request->query->getInt('page', 1), 10);
       
-       
+    
         $statistiques=$this->isGranted('ROLE_ADMIN')?$tenderRepository->findAdminTenderStatistics():$tenderRepository->findTenderStatisticByRespo($this->getUser());
         return $this->render('tender/index.html.twig', [
             'tenders' => $pagination,

@@ -37,7 +37,7 @@ class CalendarType extends AbstractType
             ->add('title',TextType::class,['label'=> "Titre"])
             ->add('tender', EntityType::class, [
                 'class' => Tender::class,
-                'choices' => $this->tenderRepository->findTendersByRespo($options['user']),
+                'choices' =>$this->tenderRepository->getTenders($options['user'],$options['is_admin']),
                 'choice_label' => 'title',
                 'multiple' => false,
                 'disabled' => $options['is_edited'],
@@ -51,6 +51,7 @@ class CalendarType extends AbstractType
             'data_class' => Calendar::class,
             'is_edited' => false,
             'user' => null,
+            'is_admin' => true,
             'csrf_protection' => true, 
             'csrf_token_id' => 'form_calendar',
         ]);

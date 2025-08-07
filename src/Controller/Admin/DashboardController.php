@@ -56,6 +56,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Tender_dates', 'fa fa-calendar-check-o', TenderDate::class);
         yield MenuItem::linkToCrud('Documents', 'fa fa-folder', Document::class);
         yield MenuItem::linkToCrud('Allotissement', 'fa fa-clone', Allotissement::class);
+        yield MenuItem::linkToCrud('Calendar', 'fa fa-calendar', Calendar::class);
 
         yield MenuItem::section('Contacts');
         yield MenuItem::linkToCrud('Contacts', 'fa fa-address-book', Contact::class);

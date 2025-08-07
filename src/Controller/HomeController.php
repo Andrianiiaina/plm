@@ -27,21 +27,17 @@ final class HomeController extends AbstractController
         switch (true) {
             case $this->isGranted('ROLE_ADMIN'):
                 $statistiques = $tenderRepository->findAdminTenderStatistics();
-                $tenders = $tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);               
-                $calendars = $entityManager->getRepository(Calendar::class)->findAdminCalendar();
+                $tenders = $tenderRepository->findBy(['isArchived'=>false],['createdAt'=>'DESC'],10);   
                 $expiration = $tenderRepository->findAdminExpiredTenders();
                 $reminders = $entityManager->getRepository(Reminder::class)->findAdminRemindersForToday();
                 break;
                 
             case $this->isGranted('ROLE_RESPO'):
                 $statistiques=$tenderRepository->findTenderStatisticByRespo($user);
-                $tenders=$tenderRepository->findBy(['responsable' => $user,'isArchived'=>false], ['createdAt' => 'DESC'],10);           
-                $calendars = $entityManager->getRepository(Calendar::class)->findUserCalendar($user);
-               
+                $tenders=$tenderRepository->findBy(['responsable' => $user,'isArchived'=>false], ['createdAt' => 'DESC'],10);       
                 $expiration=$tenderRepository->findExpiredTendersByRespo($user);
                 $reminders=$entityManager->getRepository(Reminder::class)->findRespoRemindersForToday($user);
                 break;
-            
             default:
                 return $this->render('home/reader.html.twig');
                 break;
@@ -54,7 +50,7 @@ final class HomeController extends AbstractController
             'total_tenders'=>array_sum($statistiques),
             'total_tender_by_status'=>$statistiques,
             'documents'=> $entityManager->getRepository(Document::class)->findWeeklyRespoDocuments($user),
-            'calendars'=>$calendars,
+            'calendars'=>$entityManager->getRepository(Calendar::class)->getCalendars($this->getUser(),$this->isGranted('ROLE_ADMIN'),""),
             'notifications'=> $entityManager->getRepository(Notification::class)->findBy(['user'=>$user],['createdAt'=>'DESC'],12),
             'expired_soumission_date'=>$expiration,
         ]);

@@ -31,15 +31,12 @@ class CalendarSubscriber implements EventSubscriberInterface
         $user = $this->security->getUser();
         $calendars =$this->security->isGranted('ROLE_ADMIN')?
         $this->calendarRepository->findAdminCalendar():
-        $this->calendarRepository->findUserCalendar($user,100,'');
-    
-
-
+        $this->calendarRepository->findRespoCalendar($user);
         foreach ($calendars as $calendar) {
             $calendarEvent = new Event(
                 $calendar["title"],
                 $calendar["beginAt"],
-                $calendar["endAt"] ?? $calendar["beginAt"]
+                $calendar["endAt"]
             );
             /*
              * Add custom options to events
@@ -47,8 +44,8 @@ class CalendarSubscriber implements EventSubscriberInterface
              * For more information see: https://fullcalendar.io/docs/event-object
              */
             $calendarEvent->setOptions([
-                'backgroundColor' => 'purple',
-                'borderColor' => 'purple',
+                #'backgroundColor' => 'purple',
+                #'borderColor' => 'purple',
                 'allDay' => key_exists("type",$calendar),
 
             ]);
@@ -63,4 +60,5 @@ class CalendarSubscriber implements EventSubscriberInterface
             $setDataEvent->addEvent($calendarEvent);
         }
     }
+  
 }

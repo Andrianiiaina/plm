@@ -19,7 +19,7 @@ final class CalendarController extends AbstractController
     public function calendar(CalendarRepository $calendarRepository,PaginatorInterface $paginator,Request $request, EntityManagerInterface $entityManager): Response
     {               
         $calendar = new Calendar();
-        $form = $this->createForm(CalendarType::class, $calendar,["user"=>$this->getUser()]);
+        $form = $this->createForm(CalendarType::class, $calendar,["is_admin"=>true,"user"=>$this->getUser()]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if(!$form->isValid()){
@@ -31,19 +31,13 @@ final class CalendarController extends AbstractController
             }
             return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
         }
-        $searchTerm=$request->query->get('q','');
-    
-        $pagination = $paginator->paginate(
-            $this->isGranted('ROLE_ADMIN')?
-            $calendarRepository->findAdminCalendar(100,$searchTerm):
-            $calendarRepository->findUserCalendar($this->getUser(),100,$searchTerm),
-            $request->query->getInt('page', 1), 
-            20
-        );
+
+        $searchTerm = $request->query->get('q','');
+        $calendars = $calendarRepository->getCalendars($this->getUser(),$this->isGranted('ROLE_ADMIN'),$searchTerm);
 
         return $this->render('calendar/calendar.html.twig',
         [
-            'calendars' => $pagination,
+            'calendars' => $paginator->paginate($calendars, $request->query->getInt('page', 1), 20),
             'form'=>$form,
             'searchTerm'=>$searchTerm??'',
         ]
@@ -57,23 +51,6 @@ final class CalendarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_calendar_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(CalendarType::class, $calendar,['is_edited'=>true]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            $this->addFlash('success', 'Evènement bien modifié ! ' );
-            return $this->redirectToRoute('app_calendar_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('calendar/edit.html.twig', [
-            'calendar' => $calendar,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/{id}', name: 'app_calendar_delete', methods: ['POST'])]
     public function delete(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
