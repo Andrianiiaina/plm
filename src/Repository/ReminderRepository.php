@@ -19,7 +19,7 @@ class ReminderRepository extends ServiceEntityRepository
     public function findRespoRemindersForToday($responsable): array
     {
         $today = new \DateTime();
-        $startOfDay = (clone $today)->setTime(0, 0, 0); 
+        #$startOfDay = (clone $today)->setTime(0, 0, 0); 
         $endOfDay = (clone $today)->setTime(23, 59, 59);  
 
         return $this->createQueryBuilder('r')
@@ -27,8 +27,10 @@ class ReminderRepository extends ServiceEntityRepository
             ->join('td.tender', 'tender')
             ->where('tender.responsable = :responsable')
             ->andWhere('r.reminder_date < :endOfDay')
+            #->andWhere('r.reminder_date > :startOfDay')
             ->setParameter('responsable', $responsable)
             ->setParameter('endOfDay', $endOfDay)
+            #->setParameter('startOfDay', $startOfDay)
             ->getQuery()
             ->getResult();
     }
@@ -36,12 +38,14 @@ class ReminderRepository extends ServiceEntityRepository
     public function findAdminRemindersForToday(): array
     {
         $today = new \DateTime();
-        $startOfDay = (clone $today)->setTime(0, 0, 0); 
+        #$startOfDay = (clone $today)->setTime(0, 0, 0); 
         $endOfDay = (clone $today)->setTime(23, 59, 59); 
 
         return $this->createQueryBuilder('r')
             ->where('r.reminder_date < :endOfDay')
+            #->andWhere('r.reminder_date > :startOfDay')
             ->setParameter('endOfDay', $endOfDay)
+            #->setParameter('startOfDay', $startOfDay)
             ->getQuery()
             ->getResult();
     }

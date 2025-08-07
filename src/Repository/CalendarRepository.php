@@ -21,15 +21,18 @@ class CalendarRepository extends ServiceEntityRepository
 
     public function findUserCalendar($responsable, $number_to_fetch=10, $term=''): array
     {
+        $date = new \DateTime();
+        $date->modify('-10 days'); 
         $calendars = $this->createQueryBuilder('c')
             ->select('c.id, t.title as tender, c.title, c.beginAt, c.endAt')
             ->join('c.tender', 't')
             ->where('t.responsable = :responsable')
             ->andWhere('c.title LIKE :term')
+            ->andWhere('c.beginAt >= :date')
             ->setParameter('responsable', $responsable)
             ->setParameter('term', '%' . $term . '%')
+            ->setParameter('date', $date)
             ->setMaxResults($number_to_fetch)
-            ->orderBy('c.beginAt','ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -48,11 +51,10 @@ class CalendarRepository extends ServiceEntityRepository
         $date = new \DateTime();
         $date->modify('-10 days'); 
         $calendars = $this->createQueryBuilder('c')
-            ->select('c.id, t.title as tender, c.title, c.beginAt')
+            ->select('c.id, t.title as tender, c.title, c.beginAt, c.endAt')
             ->join('c.tender', 't')
             ->where('c.title LIKE :term')
             ->andWhere('c.beginAt >= :date')
-            ->orderBy('c.beginAt', 'ASC') 
             ->setParameter('date', $date)
             ->setParameter('term', '%' . $term . '%')
             ->setMaxResults($number_to_fetch)

@@ -49,6 +49,8 @@ class CalendarSubscriber implements EventSubscriberInterface
             $calendarEvent->setOptions([
                 'backgroundColor' => 'purple',
                 'borderColor' => 'purple',
+                'allDay' => key_exists("type",$calendar),
+
             ]);
             if(key_exists("type",$calendar)){
                 $calendarEvent->addOption('url', $this->router->generate('app_tender_show', ['id' => $calendar["id"]]));
